@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="background_tab_pressed">#6633B5E5</color>
+    <!--&lt;!&ndash;Indigo 500&ndash;&gt;-->
+    <!--<color name="primary_500">#3F51B5</color>-->
+    <!--&lt;!&ndash;Indigo 700&ndash;&gt;-->
+    <!--<color name="primary_700">#303F9F</color>-->
+    <!--&lt;!&ndash;Pink 500&ndash;&gt;-->
+    <!--<color name="accent_500">#E91E63</color>-->
+    <!--<color name="bg_light">#FAFAFA</color>-->
+</resources>
