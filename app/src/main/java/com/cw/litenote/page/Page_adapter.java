@@ -42,12 +42,10 @@ import com.mobeta.android.dslv.SimpleDragSortCursorAdapter;
 //import static com.cw.litenote.page.Page_new.mDb_page;
 
 //todo
-//import static com.cw.litenote.page.Page.mAct;
-import static com.cw.litenote.page.Page.mDb_page;
+//import static com.cw.litenote.page.Page.mDb_page;
 
 //todo
-//import static com.cw.litenote.page.Page_new.mAct;
-//import static com.cw.litenote.page.Page_new.mDb_page;
+import static com.cw.litenote.page.Page_new.mDb_page;
 
 
 // Pager adapter
@@ -130,7 +128,7 @@ public class Page_adapter extends SimpleDragSortCursorAdapter // DragSortCursorA
 
 		if (convertView == null)
 		{
-			System.out.println("Page_adapter / _getView / convertView = null");
+//			System.out.println("Page_adapter / _getView / convertView = null");
 			view = mAct.getLayoutInflater().inflate(R.layout.page_view_row, parent, false);
 
 			// set rectangular background

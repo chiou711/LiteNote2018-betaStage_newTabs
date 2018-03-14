@@ -66,7 +66,7 @@ public class Page_simple extends UilListViewBaseFragment
 	static ProgressBar mSpinner;
     public static int currPlayPosition;
     static boolean en_dbg_msg = true;//true //false
-	static public int pageTableId;
+	public int pageTableId;
 
     public Page_simple(){
     }
@@ -83,20 +83,20 @@ public class Page_simple extends UilListViewBaseFragment
 		DB_page.setFocusPage_tableId(pageTableId);
 
 		if(en_dbg_msg)
-			System.out.println("Page_new / _onCreate / pageTableId = " + pageTableId);
+			System.out.println("Page_simple / _onCreate / pageTableId = " + pageTableId);
 	}
 
 	View rootView;
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		if(en_dbg_msg)
-			System.out.println("Page_new / _onCreateView / pageTableId = " + pageTableId);
+			System.out.println("Page_simple / _onCreateView / pageTableId = " + pageTableId);
 
 
         if(savedInstanceState == null)
-            System.out.println("Page_new / _onCreateView / savedInstanceState = null");
+            System.out.println("Page_simple / _onCreateView / savedInstanceState = null");
         else
-            System.out.println("Page_new / _onCreateView / savedInstanceState != null");
+            System.out.println("Page_simple / _onCreateView / savedInstanceState != null");
 
 //        mDb_page = new DB_page(getActivity(), pageTableId);
 
@@ -136,7 +136,7 @@ public class Page_simple extends UilListViewBaseFragment
 //		Util.setScrollThumb(getActivity(),mDndListView);
 //
 //		mStyle = Util.getCurrentPageStyle();
-////    	System.out.println("Page_new / _onActivityCreated / mStyle = " + mStyle);
+////    	System.out.println("Page_simple / _onActivityCreated / mStyle = " + mStyle);
 //
 //		UilCommon.init();
 //
@@ -178,7 +178,7 @@ public class Page_simple extends UilListViewBaseFragment
 
 		// Prepare the loader. Either re-connect with an existing one or start a new one.
 //        getLoaderManager().initLoader(0, null, this);
-//        getLoaderManager().initLoader(pageTableId, null, Page_new.this);
+//        getLoaderManager().initLoader(pageTableId, null, Page_simple.this);
 
         fillData(mAct,mDndListView);
 		return rootView;
@@ -190,7 +190,7 @@ public class Page_simple extends UilListViewBaseFragment
 	{
 		super.onActivityCreated(savedInstanceState);
 //		if(en_dbg_msg)
-//			System.out.println("Page_new / _onActivityCreated");
+//			System.out.println("Page_simple / _onActivityCreated");
 	}
 
 	int mFirstVisibleIndex;
@@ -203,7 +203,7 @@ public class Page_simple extends UilListViewBaseFragment
 	public void fillData(FragmentActivity mAct,DragSortListView listView)
 	{
 		if(en_dbg_msg)
-			System.out.println("Page_new / _fillData / pageTableId = " + pageTableId);
+			System.out.println("Page_simple / _fillData / pageTableId = " + pageTableId);
 
 		// save index and top position
 //    	int index = mDndListView.getFirstVisiblePosition();
@@ -227,8 +227,11 @@ public class Page_simple extends UilListViewBaseFragment
         mDb_page = new DB_page(getActivity(), pageTableId);
 		mDb_page.open();
 		int count = mDb_page.getNotesCount(false);
-		for(int i=0;i<count;i++)
-			list.add(mDb_page.getNoteTitle(i,false));
+		for(int i=0;i<count;i++) {
+		    String title = mDb_page.getNoteTitle(i, false);
+            list.add(title);
+            System.out.println("Page_simple / _fillData / title = " + title);
+        }
 		mDb_page.close();
 
 		// set adapter
@@ -245,7 +248,7 @@ public class Page_simple extends UilListViewBaseFragment
 		}
 
 		if(en_dbg_msg)
-			System.out.println("Page_new / _fillData / mFirstVisibleIndex = " + mFirstVisibleIndex +
+			System.out.println("Page_simple / _fillData / mFirstVisibleIndex = " + mFirstVisibleIndex +
 					" , mFirstVisibleIndexTop = " + mFirstVisibleIndexTop);
 		// restore index and top position
 		listView.setSelectionFromTop(mFirstVisibleIndex, mFirstVisibleIndexTop);
@@ -262,7 +265,6 @@ public class Page_simple extends UilListViewBaseFragment
 		if((AudioManager.getPlayerState() != AudioManager.PLAYER_AT_STOP) && (!Page.isOnAudioClick))
 			AudioPlayer_page.scrollHighlightAudioItemToVisible();
 
-//        mItemAdapter.notifyDataSetChanged();
 	}
 
 
@@ -271,7 +273,7 @@ public class Page_simple extends UilListViewBaseFragment
 	static void openClickedItem(FragmentActivity mAct,int position)
     {
 		if(en_dbg_msg)
-			System.out.println("Page_new / _openClickedItem");
+			System.out.println("Page_simple / _openClickedItem");
 
 		currPlayPosition = position;
         DB_page mDb_page = new DB_page(mAct, DB_page.getFocusPage_tableId());
@@ -462,7 +464,7 @@ public class Page_simple extends UilListViewBaseFragment
     @Override
     public void onResume() {
 		if(en_dbg_msg)
-			System.out.println("Page_new / _onResume / pageTableId = " + pageTableId);
+			System.out.println("Page_simple / _onResume / pageTableId = " + pageTableId);
 //        mDb_page = new DB_page(getActivity(), Pref.getPref_focusView_page_tableId(getActivity()));
 
         super.onResume();
@@ -499,7 +501,7 @@ public class Page_simple extends UilListViewBaseFragment
         Util.setScrollThumb(getActivity(),mDndListView);
 
         mStyle = 1;//Util.getCurrentPageStyle();
-//    	System.out.println("Page_new / _onActivityCreated / mStyle = " + mStyle);
+//    	System.out.println("Page_simple / _onActivityCreated / mStyle = " + mStyle);
 
         UilCommon.init();
 
@@ -548,7 +550,7 @@ public class Page_simple extends UilListViewBaseFragment
     public void onPause() {
     	super.onPause();
 		if(en_dbg_msg)
-			System.out.println("Page_new / _onPause");
+			System.out.println("Page_simple / _onPause");
 	 }
     
     @Override
@@ -570,7 +572,7 @@ public class Page_simple extends UilListViewBaseFragment
 //							   List<String> data)
 //	{
 //		if(en_dbg_msg)
-//			System.out.println("Page_new / _onLoadFinished / pageTableId = " + pageTableId);
+//			System.out.println("Page_simple / _onLoadFinished / pageTableId = " + pageTableId);
 //
 //        // Set the new data in the adapter.
 //		mAdapter.setData(data);
@@ -702,7 +704,7 @@ public class Page_simple extends UilListViewBaseFragment
         public void mark(int position) 
 		{
 			if(en_dbg_msg)
-				System.out.println("Page_new / _onMark");
+				System.out.println("Page_simple / _onMark");
 
             // toggle marking
 			int markingNow = toggleNoteMarking(mAct,position);
@@ -771,7 +773,7 @@ public class Page_simple extends UilListViewBaseFragment
         public void audio(int position) 
 		{
 			if(en_dbg_msg)
-				System.out.println("Page_new / _onAudio");
+				System.out.println("Page_simple / _onAudio");
 			AudioManager.setAudioPlayMode(AudioManager.PAGE_PLAY_MODE);
 
 			int notesCount = mDb_page.getNotesCount(true);
@@ -786,7 +788,7 @@ public class Page_simple extends UilListViewBaseFragment
     			isAudioUri = true;
 
 			if(en_dbg_msg)
-				System.out.println("Page_new / _onAudio / isAudioUri = " + isAudioUri);
+				System.out.println("Page_simple / _onAudio / isAudioUri = " + isAudioUri);
 
             if(position < notesCount) // avoid footer error
 			{
@@ -844,7 +846,7 @@ public class Page_simple extends UilListViewBaseFragment
     public static void showFooter(FragmentActivity mAct)
     {
 		if(en_dbg_msg)
-			System.out.println("Page_new / _showFooter ");
+			System.out.println("Page_simple / _showFooter ");
 
 		// show footer
 //		mFooterMessage.setVisibility(View.VISIBLE);
