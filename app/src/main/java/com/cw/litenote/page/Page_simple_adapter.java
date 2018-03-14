@@ -18,75 +18,55 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.cw.litenote.R;
 import com.cw.litenote.db.DB_page;
-import com.cw.litenote.main.MainAct;
 import com.cw.litenote.operation.audio.AudioManager;
+import com.cw.litenote.util.ColorSet;
+import com.cw.litenote.util.CustomWebView;
+import com.cw.litenote.util.Util;
 import com.cw.litenote.util.audio.UtilAudio;
 import com.cw.litenote.util.image.AsyncTaskAudioBitmap;
 import com.cw.litenote.util.image.UtilImage;
 import com.cw.litenote.util.image.UtilImage_bitmapLoader;
-import com.cw.litenote.util.video.UtilVideo;
-import com.cw.litenote.util.CustomWebView;
 import com.cw.litenote.util.uil.UilCommon;
-import com.cw.litenote.util.Util;
-import com.cw.litenote.util.ColorSet;
-import com.mobeta.android.dslv.DragSortCursorAdapter;
-import com.mobeta.android.dslv.ResourceDragSortCursorAdapter;
+import com.cw.litenote.util.video.UtilVideo;
 import com.mobeta.android.dslv.SimpleDragSortCursorAdapter;
 
-//import static com.cw.litenote.page.Page_new.mDb_page;
+import java.util.ArrayList;
 
 //todo
 //import static com.cw.litenote.page.Page.mAct;
-import static com.cw.litenote.page.Page.mDb_page;
-
-//todo
+//import static com.cw.litenote.page.Page.mDb_page;
 //import static com.cw.litenote.page.Page_new.mAct;
 //import static com.cw.litenote.page.Page_new.mDb_page;
 
 
 // Pager adapter
-public class Page_adapter extends SimpleDragSortCursorAdapter // DragSortCursorAdapter //ResourceDragSortCursorAdapter//SimpleDragSortCursorAdapter
+public class Page_simple_adapter extends BaseAdapter //SimpleDragSortCursorAdapter//BaseAdapter
 {
 	FragmentActivity mAct;
-//    DB_page mDb_page;
-
-    Page_adapter(Context context, int layout, Cursor c,
-						String[] from, int[] to, int flags)
-	{
-		super(context, layout, c, from, to, flags);
-		mAct = (FragmentActivity) context;
-//		int pageTableId = Page_new.pageTableId;
-//		System.out.println("Page_adapter / _Page_adapter / pageTableId = " +  pageTableId);
-//        mDb_page = new DB_page(mAct, pageTableId);
-	}
-
-    ///??? 改變class可以解決錯頁?
-//    Page_adapter(Context context, Cursor c, int flags)
-//    {
-//        super(context,c, flags);
-//        mAct = (FragmentActivity) context;
+    DB_page mDb_page;
+    int number;
+    ArrayList<String> list;
+//	Page_simple_adapter(Context context, int layout, Cursor c,
+//					String[] from, int[] to, int flags)
+//	{
+//		super(context, layout, c, from, to, flags);
+//		mAct = (FragmentActivity) context;
 //        mDb_page = new DB_page(mAct, DB_page.getFocusPage_tableId());
-//    }
+//	}
 
-
-    @Override
-    public void bindView(View view, Context context, Cursor cursor) {
-
+    public Page_simple_adapter(FragmentActivity c, ArrayList<String> _list) {
+        this.mAct = c;
+        this.list = _list;
     }
 
-    @Override
-    public View newView(Context context, Cursor cursor, ViewGroup parent) {
-        return null;
-    }
-    ///
-
-    private class ViewHolder {
+	private class ViewHolder {
 		ImageView imageCheck;
 		TextView rowId;
 		View audioBlock;
@@ -107,7 +87,7 @@ public class Page_adapter extends SimpleDragSortCursorAdapter // DragSortCursorA
 	
 	@Override
 	public int getCount() {
-		return mDb_page.getNotesCount(true);
+		return list.size();//mDb_page.getNotesCount(true);
 	}
 
 	@Override
@@ -203,12 +183,12 @@ public class Page_adapter extends SimpleDragSortCursorAdapter // DragSortCursorA
 		holder.rowId.setTextColor(ColorSet.mText_ColorArray[Page.mStyle]);
 		
 		// show check box, title , picture
-		String strTitle = mDb_page.getNoteTitle(position,true);
-		System.out.println("Page_adapter / _getView / strTitle = " +  strTitle);
+//		String strTitle = mDb_page.getNoteTitle(position,true);
+//		System.out.println("Page_adapter / _getView / strTitle = " +  strTitle);
 //		String pictureUri = mDb_page.getNotePictureUri(position,true);
 //		String audioUri = mDb_page.getNoteAudioUri(position,true);
 //		String linkUri = mDb_page.getNoteLinkUri(position,true);
-
+//
 //		// set title
 //		if( Util.isEmptyString(strTitle) )
 //		{
@@ -234,7 +214,7 @@ public class Page_adapter extends SimpleDragSortCursorAdapter // DragSortCursorA
 //		else
 //		{
 			holder.textTitle.setVisibility(View.VISIBLE);
-			holder.textTitle.setText(strTitle);
+			holder.textTitle.setText(list.get(position));
 			holder.textTitle.setTextColor(ColorSet.mText_ColorArray[Page.mStyle]);
 //		}
 //
@@ -273,7 +253,7 @@ public class Page_adapter extends SimpleDragSortCursorAdapter // DragSortCursorA
 //			holder.imageAudio.setImageResource(R.drawable.ic_audio);
 //
 //			// set animation
-//			Animation animation = AnimationUtils.loadAnimation(mContext , R.anim.right_in);
+//			Animation animation = AnimationUtils.loadAnimation(mAct , R.anim.right_in);
 //			holder.audioBlock.startAnimation(animation);
 //		}
 //		else

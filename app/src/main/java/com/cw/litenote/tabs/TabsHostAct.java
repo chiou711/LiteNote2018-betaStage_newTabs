@@ -42,6 +42,7 @@ import com.cw.litenote.mFragments.DramaFrgament;
 import com.cw.litenote.mFragments.MyPagerAdapter;
 import com.cw.litenote.main.MainAct;
 import com.cw.litenote.page.Page_new;
+import com.cw.litenote.page.Page_simple;
 import com.cw.litenote.util.Util;
 import com.cw.litenote.util.preferences.Pref;
 
@@ -102,21 +103,28 @@ public class TabsHostAct extends AppCompatActivity implements TabLayout.OnTabSel
 
     private void addPages(ViewPagerAdapter adapter)
     {
-        int pageCount = mDbFolder.getPagesCount(true);
-        for(int i=0;i<pageCount;i++)
-        {
-            int pageTableId = mDbFolder.getPageTableId(i, true);
-            System.out.println("TabsHosAct / _addPages / pageTableId = " + pageTableId);
-            Page_new.mDb_page = new DB_page(mAct, pageTableId);
-            adapter.addFragment(new Page_new(pageTableId));
-        }
+        //todo
+        // case 1
+//        int pageCount = mDbFolder.getPagesCount(true);
+//        for(int i=0;i<pageCount;i++)
+//        {
+//            int pageTableId = mDbFolder.getPageTableId(i, true);
+//            System.out.println("TabsHosAct / _addPages / pageTableId = " + pageTableId);
+//            Page_new.mDb_page = new DB_page(mAct, pageTableId);
+//            adapter.addFragment(new Page_new(pageTableId));
+//        }
 
+        // todo
+        // case 2
 //        pagerAdapter.addFragment(new CrimeFragment());
 //        pagerAdapter.addFragment(new DramaFrgament());
 //        pagerAdapter.addFragment(new DocumentaryFragment());
-//        pagerAdapter.addFragment(new Page1(1));
-//        pagerAdapter.addFragment(new Page2(1));
-//        pagerAdapter.addFragment(new Page3(1));
+
+        // todo
+        // case 3
+        adapter.addFragment(new Page_simple(1));
+        adapter.addFragment(new Page_simple(2));
+//        adapter.addFragment(new Page_simple(3));
     }
 
     @Override
@@ -172,7 +180,9 @@ public class TabsHostAct extends AppCompatActivity implements TabLayout.OnTabSel
      *  View Pager Adapter Class
      */
 	public class ViewPagerAdapter extends FragmentPagerAdapter {
-        ArrayList<Page_new> mFragmentList = new ArrayList<>();
+	    // todo
+//        ArrayList<Page_new> mFragmentList = new ArrayList<>();
+        ArrayList<Page_simple> mFragmentList = new ArrayList<>();
 
 		public ViewPagerAdapter(FragmentManager fm) {super(fm);}
 
@@ -183,8 +193,10 @@ public class TabsHostAct extends AppCompatActivity implements TabLayout.OnTabSel
             return mFragmentList.get(position);
         }
 
+        // todo
         // add fragment
-        public void addFragment(Page_new fragment) {
+//        public void addFragment(Page_new fragment) {
+            public void addFragment(Page_simple fragment) {
 			mFragmentList.add(fragment);
 		}
 

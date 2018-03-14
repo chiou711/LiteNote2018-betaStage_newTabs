@@ -582,18 +582,19 @@ public class FolderUi
         	System.out.println("FolderUi / mTabsHostRun");
 
         	//todo
-////            Fragment fragment = new TabsHost();
+            Fragment fragment = new TabsHost();
 //            Fragment fragment = new TabsHost_new();
-////            Fragment fragment = new TabAnimation();
-//
-//        	FragmentTransaction fragmentTransaction = MainAct.fragmentManager.beginTransaction();
-//            fragmentTransaction.replace(R.id.content_frame, fragment).commit();
-//        	MainAct.fragmentManager.executePendingTransactions();
+//            Fragment fragment = new TabAnimation();
+
+        	FragmentTransaction fragmentTransaction = MainAct.fragmentManager.beginTransaction();
+            fragmentTransaction.replace(R.id.content_frame, fragment).commit();
+        	MainAct.fragmentManager.executePendingTransactions();
 
         	///
+            //todo
             // new intent
-            Intent intent = new Intent(MainAct.mAct, TabsHostAct.class);
-            MainAct.mAct.startActivity(intent);
+//            Intent intent = new Intent(MainAct.mAct, TabsHostAct.class);
+//            MainAct.mAct.startActivity(intent);
             ///
         }
     };

@@ -476,9 +476,9 @@ public class Util
     // get current page style
 	static public int getCurrentPageStyle()
 	{
-		//todo
-		return TabsHost_new.mDbFolder.getPageStyle(PageUi.getFocus_pagePos(), true);
-//		return TabsHost.mDbFolder.getPageStyle(PageUi.getFocus_pagePos(), true);
+		//todo: page style
+//		return TabsHost_new.mDbFolder.getPageStyle(PageUi.getFocus_pagePos(), true);
+		return TabsHost.mDbFolder.getPageStyle(PageUi.getFocus_pagePos(), true);
 	}
 
 	// get style count

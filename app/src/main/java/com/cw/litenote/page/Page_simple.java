@@ -1,27 +1,5 @@
 package com.cw.litenote.page;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import com.cw.litenote.R;
-import com.cw.litenote.db.DB_drawer;
-import com.cw.litenote.db.DB_page;
-import com.cw.litenote.folder.FolderUi;
-import com.cw.litenote.operation.audio.AudioManager;
-import com.cw.litenote.operation.audio.AudioPlayer_page;
-import com.cw.litenote.tabs.TabsHost;
-import com.cw.litenote.main.MainAct;
-import com.cw.litenote.note.Note;
-import com.cw.litenote.util.audio.UtilAudio;
-import com.cw.litenote.note.Note_edit;
-import com.cw.litenote.util.ColorSet;
-import com.cw.litenote.util.uil.UilCommon;
-import com.cw.litenote.util.uil.UilListViewBaseFragment;
-import com.cw.litenote.util.Util;
-import com.cw.litenote.util.preferences.Pref;
-import com.mobeta.android.dslv.DragSortController;
-import com.mobeta.android.dslv.DragSortListView;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
@@ -32,31 +10,50 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
-import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
-import android.widget.AbsListView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-public class Page_new extends UilListViewBaseFragment
+import com.cw.litenote.R;
+import com.cw.litenote.db.DB_drawer;
+import com.cw.litenote.db.DB_page;
+import com.cw.litenote.folder.FolderUi;
+import com.cw.litenote.main.MainAct;
+import com.cw.litenote.note.Note;
+import com.cw.litenote.note.Note_edit;
+import com.cw.litenote.operation.audio.AudioManager;
+import com.cw.litenote.operation.audio.AudioPlayer_page;
+import com.cw.litenote.tabs.TabsHost;
+import com.cw.litenote.util.ColorSet;
+import com.cw.litenote.util.Util;
+import com.cw.litenote.util.audio.UtilAudio;
+import com.cw.litenote.util.preferences.Pref;
+import com.cw.litenote.util.uil.UilCommon;
+import com.cw.litenote.util.uil.UilListViewBaseFragment;
+import com.mobeta.android.dslv.DragSortController;
+import com.mobeta.android.dslv.DragSortListView;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class Page_simple extends UilListViewBaseFragment
 //						  implements LoaderManager.LoaderCallbacks<List<String>>
 {
 	private Cursor mCursor_note;
 	public static DB_page mDb_page;
 	public static SharedPreferences mPref_show_note_attribute;
 	private List<Boolean> mSelectedList = new ArrayList<>();
-	
+
 	// This is the Adapter being used to display the list's data.
 //	NoteListAdapter mAdapter;
 	public DragSortListView mDndListView;
@@ -71,11 +68,11 @@ public class Page_new extends UilListViewBaseFragment
     static boolean en_dbg_msg = true;//true //false
 	static public int pageTableId;
 
-    public Page_new(){
+    public Page_simple(){
     }
 
 	@SuppressLint("ValidFragment")
-	public Page_new(int id){
+	public Page_simple(int id){
     	pageTableId = id;
 	}
 
@@ -201,7 +198,8 @@ public class Page_new extends UilListViewBaseFragment
 	/**
 	 * fill data
 	 */
-	public Page_adapter mItemAdapter;
+	public Page_simple_adapter mItemAdapter;
+	ArrayList<String> list;
 	public void fillData(FragmentActivity mAct,DragSortListView listView)
 	{
 		if(en_dbg_msg)
@@ -224,28 +222,17 @@ public class Page_new extends UilListViewBaseFragment
 
         mDndListView.setDividerHeight(3);
         */
-		if(mDb_page == null)
-			return;
 
-//        mDb_page = new DB_page(mAct,DB_page.getFocusPage_tableId());
+		list = new ArrayList<String>();
         mDb_page = new DB_page(getActivity(), pageTableId);
 		mDb_page.open();
-		mCursor_note = mDb_page.mCursor_note;
 		int count = mDb_page.getNotesCount(false);
+		for(int i=0;i<count;i++)
+			list.add(mDb_page.getNoteTitle(i,false));
+		mDb_page.close();
 
 		// set adapter
-		String[] from = new String[] { DB_page.KEY_NOTE_TITLE};
-		int[] to = new int[] { R.id.row_whole};
-
-		mItemAdapter = new Page_adapter(
-				mAct,
-				R.layout.page_view_row,
-				mCursor_note,
-				from,
-				to,
-				0
-		);
-		mDb_page.close();
+		mItemAdapter = new Page_simple_adapter(mAct,list);
 
 		mItemAdapter.notifyDataSetChanged();
 		listView.setAdapter(mItemAdapter);

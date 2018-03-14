@@ -26,11 +26,11 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme"
         >
+        <!--todo: .main.MainAct / .tabs.TabsHostAct-->
         <!--todo: CustomTheme / MyTheme  -->
-        <!--.main.MainAct-->
         <activity
-            android:name=".tabs.TabsHostAct"
-            android:theme="@style/MyTheme"
+            android:name=".main.MainAct"
+            android:theme="@style/CustomTheme"
             android:launchMode="singleTop"
             android:configChanges="orientation|keyboard|keyboardHidden|screenSize|screenLayout|uiMode"
             android:label="@string/app_name">
