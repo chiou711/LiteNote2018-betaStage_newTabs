@@ -45,7 +45,9 @@ import com.mobeta.android.dslv.SimpleDragSortCursorAdapter;
 //import static com.cw.litenote.page.Page.mDb_page;
 
 //todo
+import static com.cw.litenote.db.DB_page.KEY_NOTE_TITLE;
 import static com.cw.litenote.page.Page_new.mDb_page;
+//import static com.cw.litenote.page.Page_new.mDb_page;
 
 
 // Pager adapter
@@ -53,25 +55,23 @@ public class Page_adapter extends SimpleDragSortCursorAdapter // DragSortCursorA
 {
 	FragmentActivity mAct;
 //    DB_page mDb_page;
+	Cursor cursor;
+    int count;
 
     Page_adapter(Context context, int layout, Cursor c,
 						String[] from, int[] to, int flags)
 	{
 		super(context, layout, c, from, to, flags);
 		mAct = (FragmentActivity) context;
-//		int pageTableId = Page_new.pageTableId;
-//		System.out.println("Page_adapter / _Page_adapter / pageTableId = " +  pageTableId);
-//        mDb_page = new DB_page(mAct, pageTableId);
+		cursor = c;
+		count = c.getCount();
+        System.out.println("Page_adapter / _Page_adapter / count =" + count);
+
+        // add this for fixing java.lang.IllegalStateException: attempt to re-open an already-closed object
+        mDb_page.open();
+        mDb_page.close();
+
 	}
-
-    ///??? 改變class可以解決錯頁?
-//    Page_adapter(Context context, Cursor c, int flags)
-//    {
-//        super(context,c, flags);
-//        mAct = (FragmentActivity) context;
-//        mDb_page = new DB_page(mAct, DB_page.getFocusPage_tableId());
-//    }
-
 
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
@@ -82,7 +82,6 @@ public class Page_adapter extends SimpleDragSortCursorAdapter // DragSortCursorA
     public View newView(Context context, Cursor cursor, ViewGroup parent) {
         return null;
     }
-    ///
 
     private class ViewHolder {
 		ImageView imageCheck;
@@ -105,7 +104,9 @@ public class Page_adapter extends SimpleDragSortCursorAdapter // DragSortCursorA
 	
 	@Override
 	public int getCount() {
-		return mDb_page.getNotesCount(true);
+//        System.out.println("Page_adapter / _getCount / count = "+ cnt);
+//		DB_page mDb_page = new DB_page(mAct, DB_page.getFocusPage_tableId());//??? Why not working?
+		return count;
 	}
 
 	@Override
@@ -192,7 +193,7 @@ public class Page_adapter extends SimpleDragSortCursorAdapter // DragSortCursorA
 		} 
 		else
 		{
-			System.out.println("Page_adapter / _getView / convertView != null");
+//			System.out.println("Page_adapter / _getView / convertView != null");
 			holder = (ViewHolder) view.getTag();
 		}
 
@@ -201,7 +202,13 @@ public class Page_adapter extends SimpleDragSortCursorAdapter // DragSortCursorA
 		holder.rowId.setTextColor(ColorSet.mText_ColorArray[Page.mStyle]);
 		
 		// show check box, title , picture
-		String strTitle = mDb_page.getNoteTitle(position,true);
+//		String strTitle = mDb_page.getNoteTitle(position,true);
+		String strTitle = null;
+		if(cursor.moveToPosition(position))
+			strTitle = cursor.getString(cursor.getColumnIndex(KEY_NOTE_TITLE));
+//		else
+//			mDb_page.getNoteTitle(position,true);
+
 		System.out.println("Page_adapter / _getView / strTitle = " +  strTitle);
 //		String pictureUri = mDb_page.getNotePictureUri(position,true);
 //		String audioUri = mDb_page.getNoteAudioUri(position,true);

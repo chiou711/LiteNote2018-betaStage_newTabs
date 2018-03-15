@@ -69,7 +69,7 @@ public class Page_new extends UilListViewBaseFragment
 	static ProgressBar mSpinner;
     public static int currPlayPosition;
     static boolean en_dbg_msg = true;//true //false
-	static public int pageTableId;
+	public int pageTableId;
 
     public Page_new(){
     }
@@ -109,64 +109,64 @@ public class Page_new extends UilListViewBaseFragment
 		mClassName = getClass().getSimpleName();
         listView = (DragSortListView)rootView.findViewById(android.R.id.list);
 		mDndListView = listView;
-//
-////        mDndListView.setBackgroundColor(Color.RED);
-//
-//		if(Build.VERSION.SDK_INT >= 21)
-//			mDndListView.setSelector(R.drawable.ripple);
-//
-//		mFooterMessage = (TextView) rootView.findViewById(R.id.footerText);
-//        mFooterMessage.setBackgroundColor(Color.BLUE);
-//        mFooterMessage.setVisibility(View.VISIBLE);
-////		mSpinner = (ProgressBar) rootView.findViewById(R.id.list1_progress);
-////		new SpinnerTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-////		new ProgressBarTask().execute();
-//
-//		//refer to
-//		// http://stackoverflow.com/questions/9119627/android-sdk-asynctask-doinbackground-not-running-subclass
-//		//Behavior of AsyncTask().execute(); has changed through Android versions.
-//		// -Before Donut (Android:1.6 API:4) tasks were executed serially,
-//		// -from Donut to Gingerbread (Android:2.3 API:9) tasks executed paralleled;
-//		// -since Honeycomb (Android:3.0 API:11) execution was switched back to sequential;
-//		// a new method AsyncTask().executeOnExecutor(Executor) however, was added for parallel execution.
-//
-//		// show scroll thumb
-//		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
-//			mDndListView.setFastScrollAlwaysVisible(true);
-//
-//		mDndListView.setScrollbarFadingEnabled(true);
-//		mDndListView.setScrollBarStyle(ListView.SCROLLBARS_OUTSIDE_OVERLAY);
-//		Util.setScrollThumb(getActivity(),mDndListView);
-//
-//		mStyle = Util.getCurrentPageStyle();
-////    	System.out.println("Page_new / _onActivityCreated / mStyle = " + mStyle);
-//
-//		UilCommon.init();
-//
-//		//listener: view note
-//		mDndListView.setOnItemClickListener(new OnItemClickListener()
-//		{   @Override
-//			public void onItemClick(AdapterView<?> arg0, View view, int position, long id)
-//			{
-//				openClickedItem(position);
-//			}
-//		});
-//
-//		// listener: edit note
-//		mDndListView.setOnItemLongClickListener(new OnItemLongClickListener()
-//		{
-//			public boolean onItemLongClick(AdapterView<?> parent, View v, int position, long id)
-//			{
-//				openLongClickedItem(position);
-//				return true;
-//			}
-//		});
-//
-//		mController = buildController(mDndListView);
-//		mDndListView.setFloatViewManager(mController);
-//		mDndListView.setOnTouchListener(mController);
-//		//called on it but does not override performClick
-//		mDndListView.setDragEnabled(true);
+
+//        mDndListView.setBackgroundColor(Color.RED);
+
+		if(Build.VERSION.SDK_INT >= 21)
+			mDndListView.setSelector(R.drawable.ripple);
+
+		mFooterMessage = (TextView) rootView.findViewById(R.id.footerText);
+        mFooterMessage.setBackgroundColor(Color.BLUE);
+        mFooterMessage.setVisibility(View.VISIBLE);
+//		mSpinner = (ProgressBar) rootView.findViewById(R.id.list1_progress);
+//		new SpinnerTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+//		new ProgressBarTask().execute();
+
+		//refer to
+		// http://stackoverflow.com/questions/9119627/android-sdk-asynctask-doinbackground-not-running-subclass
+		//Behavior of AsyncTask().execute(); has changed through Android versions.
+		// -Before Donut (Android:1.6 API:4) tasks were executed serially,
+		// -from Donut to Gingerbread (Android:2.3 API:9) tasks executed paralleled;
+		// -since Honeycomb (Android:3.0 API:11) execution was switched back to sequential;
+		// a new method AsyncTask().executeOnExecutor(Executor) however, was added for parallel execution.
+
+		// show scroll thumb
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
+			mDndListView.setFastScrollAlwaysVisible(true);
+
+		mDndListView.setScrollbarFadingEnabled(true);
+		mDndListView.setScrollBarStyle(ListView.SCROLLBARS_OUTSIDE_OVERLAY);
+		Util.setScrollThumb(getActivity(),mDndListView);
+
+		mStyle = Util.getCurrentPageStyle();
+//    	System.out.println("Page_new / _onActivityCreated / mStyle = " + mStyle);
+
+		UilCommon.init();
+
+		//listener: view note
+		mDndListView.setOnItemClickListener(new OnItemClickListener()
+		{   @Override
+			public void onItemClick(AdapterView<?> arg0, View view, int position, long id)
+			{
+				openClickedItem(mAct,position);
+			}
+		});
+
+		// listener: edit note
+		mDndListView.setOnItemLongClickListener(new OnItemLongClickListener()
+		{
+			public boolean onItemLongClick(AdapterView<?> parent, View v, int position, long id)
+			{
+				openLongClickedItem(position);
+				return true;
+			}
+		});
+
+		mController = buildController(mDndListView);
+		mDndListView.setFloatViewManager(mController);
+		mDndListView.setOnTouchListener(mController);
+		//called on it but does not override performClick
+		mDndListView.setDragEnabled(true);
 
 		// We have a menu item to show in action bar.
 //		setHasOptionsMenu(true);
@@ -224,8 +224,8 @@ public class Page_new extends UilListViewBaseFragment
 
         mDndListView.setDividerHeight(3);
         */
-		if(mDb_page == null)
-			return;
+//		if(mDb_page == null)
+//			return;
 
 //        mDb_page = new DB_page(mAct,DB_page.getFocusPage_tableId());
         mDb_page = new DB_page(getActivity(), pageTableId);
@@ -245,10 +245,11 @@ public class Page_new extends UilListViewBaseFragment
 				to,
 				0
 		);
-		mDb_page.close();
+//		mDb_page.close();
 
 		mItemAdapter.notifyDataSetChanged();
 		listView.setAdapter(mItemAdapter);
+		mDb_page.close();// set close here, if cursor is used in adapter
 
 		// selected list
 		for(int i=0; i< count ; i++ )
@@ -269,7 +270,7 @@ public class Page_new extends UilListViewBaseFragment
 		listView.setAudioListener(onAudio);
 		listView.setOnScrollListener(onScroll);
 
-//        showFooter();
+        showFooter(mAct);
 
 		// scroll highlight audio item to be visible
 		if((AudioManager.getPlayerState() != AudioManager.PLAYER_AT_STOP) && (!Page.isOnAudioClick))
@@ -479,69 +480,6 @@ public class Page_new extends UilListViewBaseFragment
 //        mDb_page = new DB_page(getActivity(), Pref.getPref_focusView_page_tableId(getActivity()));
 
         super.onResume();
-
-///
-//        mDndListView = listView;
-
-//        mDndListView.setBackgroundColor(Color.RED);
-
-        if(Build.VERSION.SDK_INT >= 21)
-            mDndListView.setSelector(R.drawable.ripple);
-
-        mFooterMessage = (TextView) rootView.findViewById(R.id.footerText);
-        mFooterMessage.setBackgroundColor(Color.BLUE);
-        mFooterMessage.setVisibility(View.VISIBLE);
-//		mSpinner = (ProgressBar) rootView.findViewById(R.id.list1_progress);
-//		new SpinnerTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-//		new ProgressBarTask().execute();
-
-        //refer to
-        // http://stackoverflow.com/questions/9119627/android-sdk-asynctask-doinbackground-not-running-subclass
-        //Behavior of AsyncTask().execute(); has changed through Android versions.
-        // -Before Donut (Android:1.6 API:4) tasks were executed serially,
-        // -from Donut to Gingerbread (Android:2.3 API:9) tasks executed paralleled;
-        // -since Honeycomb (Android:3.0 API:11) execution was switched back to sequential;
-        // a new method AsyncTask().executeOnExecutor(Executor) however, was added for parallel execution.
-
-        // show scroll thumb
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
-            mDndListView.setFastScrollAlwaysVisible(true);
-
-        mDndListView.setScrollbarFadingEnabled(true);
-        mDndListView.setScrollBarStyle(ListView.SCROLLBARS_OUTSIDE_OVERLAY);
-        Util.setScrollThumb(getActivity(),mDndListView);
-
-        mStyle = 1;//Util.getCurrentPageStyle();
-//    	System.out.println("Page_new / _onActivityCreated / mStyle = " + mStyle);
-
-        UilCommon.init();
-
-        //listener: view note
-        mDndListView.setOnItemClickListener(new OnItemClickListener()
-        {   @Override
-        public void onItemClick(AdapterView<?> arg0, View view, int position, long id)
-        {
-            openClickedItem(mAct,position);
-        }
-        });
-
-        // listener: edit note
-        mDndListView.setOnItemLongClickListener(new OnItemLongClickListener()
-        {
-            public boolean onItemLongClick(AdapterView<?> parent, View v, int position, long id)
-            {
-                openLongClickedItem(position);
-                return true;
-            }
-        });
-
-        mController = buildController(mDndListView);
-        mDndListView.setFloatViewManager(mController);
-        mDndListView.setOnTouchListener(mController);
-        //called on it but does not override performClick
-        mDndListView.setDragEnabled(true);
-        showFooter(mAct);
-///
 
         // recover scroll Y
         mFirstVisibleIndex = Pref.getPref_focusView_list_view_first_visible_index(getActivity());

@@ -52,7 +52,7 @@ public class Page_simple_adapter extends BaseAdapter //SimpleDragSortCursorAdapt
 	FragmentActivity mAct;
     ArrayList<String> list;
 
-    public Page_simple_adapter(FragmentActivity c, ArrayList<String> _list) {
+    Page_simple_adapter(FragmentActivity c, ArrayList<String> _list) {
         this.mAct = c;
         this.list = _list;
     }

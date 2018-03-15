@@ -34,6 +34,7 @@ import com.cw.litenote.tabs.TabsHost;
 import com.cw.litenote.db.DB_folder;
 import com.cw.litenote.db.DB_page;
 import com.cw.litenote.note.Note;
+import com.cw.litenote.tabs.TabsHostAct;
 import com.cw.litenote.tabs.TabsHost_new;
 import com.cw.litenote.util.audio.UtilAudio;
 import com.cw.litenote.util.image.UtilImage;
@@ -478,7 +479,8 @@ public class Util
 	{
 		//todo: page style
 //		return TabsHost_new.mDbFolder.getPageStyle(PageUi.getFocus_pagePos(), true);
-		return TabsHost.mDbFolder.getPageStyle(PageUi.getFocus_pagePos(), true);
+//		return TabsHost.mDbFolder.getPageStyle(PageUi.getFocus_pagePos(), true);
+		return TabsHostAct.mDbFolder.getPageStyle(PageUi.getFocus_pagePos(), true);
 	}
 
 	// get style count
