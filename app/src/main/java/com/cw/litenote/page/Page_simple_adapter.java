@@ -50,18 +50,9 @@ import java.util.ArrayList;
 public class Page_simple_adapter extends BaseAdapter //SimpleDragSortCursorAdapter//BaseAdapter
 {
 	FragmentActivity mAct;
-    DB_page mDb_page;
-    int number;
     ArrayList<String> list;
-//	Page_simple_adapter(Context context, int layout, Cursor c,
-//					String[] from, int[] to, int flags)
-//	{
-//		super(context, layout, c, from, to, flags);
-//		mAct = (FragmentActivity) context;
-//        mDb_page = new DB_page(mAct, DB_page.getFocusPage_tableId());
-//	}
 
-    public Page_simple_adapter(FragmentActivity c, ArrayList<String> _list) {
+    Page_simple_adapter(FragmentActivity c, ArrayList<String> _list) {
         this.mAct = c;
         this.list = _list;
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 Andreas Stuetz <andreas.stuetz@gmail.com>
+ * Copyright (C) 2018 CW Chiu <chiou711@gmail.com>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,19 +16,13 @@
 
 package com.cw.litenote.tabs;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.app.AppCompatDialogFragment;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 import android.view.ViewGroup;
 
 import com.cw.litenote.R;
@@ -36,22 +30,14 @@ import com.cw.litenote.db.DB_drawer;
 import com.cw.litenote.db.DB_folder;
 import com.cw.litenote.db.DB_page;
 import com.cw.litenote.folder.FolderUi;
-import com.cw.litenote.mFragments.CrimeFragment;
-import com.cw.litenote.mFragments.DocumentaryFragment;
-import com.cw.litenote.mFragments.DramaFrgament;
-import com.cw.litenote.mFragments.MyPagerAdapter;
-import com.cw.litenote.main.MainAct;
 import com.cw.litenote.page.Page_new;
 import com.cw.litenote.page.Page_simple;
-import com.cw.litenote.util.Util;
 import com.cw.litenote.util.preferences.Pref;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class TabsHostAct extends AppCompatActivity implements TabLayout.OnTabSelectedListener
 {
-    FragmentActivity mAct;
 	ViewPager viewPager;
 	public static DB_folder mDbFolder;
 
@@ -105,25 +91,18 @@ public class TabsHostAct extends AppCompatActivity implements TabLayout.OnTabSel
     {
         //todo
         // case 1
-//        int pageCount = mDbFolder.getPagesCount(true);
-//        for(int i=0;i<pageCount;i++)
-//        {
-//            int pageTableId = mDbFolder.getPageTableId(i, true);
-//            System.out.println("TabsHosAct / _addPages / pageTableId = " + pageTableId);
-//            Page_new.mDb_page = new DB_page(mAct, pageTableId);
-//            adapter.addFragment(new Page_new(pageTableId));
-//        }
+        int pageCount = mDbFolder.getPagesCount(true);
+        for(int i=0;i<pageCount;i++)
+        {
+            int pageTableId = mDbFolder.getPageTableId(i, true);
+            System.out.println("TabsHosAct / _addPages / pageTableId = " + pageTableId);
+            adapter.addFragment(new Page_new(pageTableId));
+        }
 
         // todo
         // case 2
-//        pagerAdapter.addFragment(new CrimeFragment());
-//        pagerAdapter.addFragment(new DramaFrgament());
-//        pagerAdapter.addFragment(new DocumentaryFragment());
-
-        // todo
-        // case 3
-        adapter.addFragment(new Page_simple(1));
-        adapter.addFragment(new Page_simple(2));
+//        adapter.addFragment(new Page_simple(1));
+//        adapter.addFragment(new Page_simple(2));
 //        adapter.addFragment(new Page_simple(3));
     }
 
@@ -132,12 +111,8 @@ public class TabsHostAct extends AppCompatActivity implements TabLayout.OnTabSel
         System.out.println("-> TabsHosAct / _onTabSelected: " + tab.getPosition());
 
         selectedPos = tab.getPosition();
-
         int pageTableId = mDbFolder.getPageTableId(selectedPos, true);
-
         Pref.setPref_focusView_page_tableId(this, pageTableId);
-
-        Page_new.pageTableId = pageTableId;
 
         viewPager.setCurrentItem(selectedPos);
     }
@@ -157,21 +132,20 @@ public class TabsHostAct extends AppCompatActivity implements TabLayout.OnTabSel
 	public void onResume() {
 		super.onResume();
 
-		// Get current position
+		// default
+        selectedPos = 0;
+
+        // Get current position
         int pageCount = mDbFolder.getPagesCount(true);
         for(int i=0;i<pageCount;i++)
         {
             int pageTableId = mDbFolder.getPageTableId(i, true);
 
             if(pageTableId == Pref.getPref_focusView_page_tableId(this))
-            {
                 selectedPos = i;
-                Page_new.pageTableId = pageTableId;
-            }
         }
 
         viewPager.setCurrentItem(selectedPos);
-//        viewPagerAdapter.notifyDataSetChanged();
         System.out.println("TabsHostAct / _onResume / selectedPos = " + selectedPos);
 	}
 
@@ -181,13 +155,15 @@ public class TabsHostAct extends AppCompatActivity implements TabLayout.OnTabSel
      */
 	public class ViewPagerAdapter extends FragmentPagerAdapter {
 	    // todo
-//        ArrayList<Page_new> mFragmentList = new ArrayList<>();
-        ArrayList<Page_simple> mFragmentList = new ArrayList<>();
+        ArrayList<Page_new> mFragmentList = new ArrayList<>();
+//        ArrayList<Page_simple> mFragmentList = new ArrayList<>();
 
 		public ViewPagerAdapter(FragmentManager fm) {super(fm);}
 
         @Override
-        public Fragment getItem(int position)
+//        public Fragment getItem(int position)
+//        public Page_simple getItem(int position)
+        public Page_new getItem(int position)
         {
             System.out.println("TabsHosAct / ViewPagerAdapter / _getItem / position = " + position);
             return mFragmentList.get(position);
@@ -195,14 +171,15 @@ public class TabsHostAct extends AppCompatActivity implements TabLayout.OnTabSel
 
         // todo
         // add fragment
-//        public void addFragment(Page_new fragment) {
-            public void addFragment(Page_simple fragment) {
+        public void addFragment(Page_new fragment) {
+//            public void addFragment(Page_simple fragment) {
 			mFragmentList.add(fragment);
 		}
 
         @Override
         public int getCount(){
-            return mDbFolder.getPagesCount(true);
+//            return mDbFolder.getPagesCount(true);
+            return mFragmentList.size();
         }
 
 		@Override
@@ -213,7 +190,7 @@ public class TabsHostAct extends AppCompatActivity implements TabLayout.OnTabSel
         @Override
         public void setPrimaryItem(ViewGroup container, int position, Object object) {
             super.setPrimaryItem(container, position, object);
-			System.out.println("TabsHosAct / ViewPagerAdapter / _setPrimaryItem / position = " + position);
+//			System.out.println("TabsHosAct / ViewPagerAdapter / _setPrimaryItem / position = " + position);
         }
 
     }
