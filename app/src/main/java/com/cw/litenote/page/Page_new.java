@@ -56,7 +56,7 @@ public class Page_new extends UilListViewBaseFragment
 	public static DB_page mDb_page;
 	public static SharedPreferences mPref_show_note_attribute;
 	private List<Boolean> mSelectedList = new ArrayList<>();
-	
+
 	// This is the Adapter being used to display the list's data.
 //	NoteListAdapter mAdapter;
 	public DragSortListView mDndListView;
@@ -108,7 +108,7 @@ public class Page_new extends UilListViewBaseFragment
 		mAct = getActivity();
 		mClassName = getClass().getSimpleName();
         listView = (DragSortListView)rootView.findViewById(android.R.id.list);
-		mDndListView = listView;
+		this.mDndListView = listView;
 
 //        mDndListView.setBackgroundColor(Color.RED);
 
@@ -148,6 +148,7 @@ public class Page_new extends UilListViewBaseFragment
 		{   @Override
 			public void onItemClick(AdapterView<?> arg0, View view, int position, long id)
 			{
+				System.out.println("Page_new / _setOnItemClickListener");
 				openClickedItem(mAct,position);
 			}
 		});
@@ -157,6 +158,7 @@ public class Page_new extends UilListViewBaseFragment
 		{
 			public boolean onItemLongClick(AdapterView<?> parent, View v, int position, long id)
 			{
+				System.out.println("Page_new / _setOnItemLongClickListener");
 				openLongClickedItem(position);
 				return true;
 			}
@@ -345,7 +347,7 @@ public class Page_new extends UilListViewBaseFragment
 
 	    @Override
 	    protected Void doInBackground(Void... arg0) {
-			return null;   
+			return null;
 	    }
 
 	    @Override
@@ -359,7 +361,7 @@ public class Page_new extends UilListViewBaseFragment
 			}
 	    }
 	}
-	
+
     // list view listener: on drag
     private DragSortListView.DragListener onDrag = new DragSortListView.DragListener()
     {
@@ -372,23 +374,23 @@ public class Page_new extends UilListViewBaseFragment
 //                    v.setPadding(0, 4, 0,4);
                 }
     };
-	
+
     // list view listener: on drop
-    private DragSortListView.DropListener onDrop = new DragSortListView.DropListener() 
+    private DragSortListView.DropListener onDrop = new DragSortListView.DropListener()
     {
         @Override
         public void drop(int startPosition, int endPosition) {
 
         	int oriStartPos = startPosition;
         	int oriEndPos = endPosition;
-        	
+
 			if(startPosition >= mDb_page.getNotesCount(true)) // avoid footer error
 				return;
 
 			mSelectedList.set(startPosition, true);
 			mSelectedList.set(endPosition, true);
-			
-			
+
+
 			//reorder data base storage
 			int loop = Math.abs(startPosition-endPosition);
 			for(int i=0;i< loop;i++)
@@ -399,11 +401,11 @@ public class Page_new extends UilListViewBaseFragment
 				else
 					endPosition--;
 			}
-			
+
 			if( PageUi.isSamePageTable() &&
 	     		(AudioManager.mMediaPlayer != null)				   )
 			{
-				if( (mHighlightPosition == oriEndPos)  && (oriStartPos > oriEndPos))      
+				if( (mHighlightPosition == oriEndPos)  && (oriStartPos > oriEndPos))
 				{
 					mHighlightPosition = oriEndPos+1;
 				}
@@ -411,20 +413,20 @@ public class Page_new extends UilListViewBaseFragment
 				{
 					mHighlightPosition = oriEndPos-1;
 				}
-				else if( (mHighlightPosition == oriStartPos)  && (oriStartPos > oriEndPos))      
+				else if( (mHighlightPosition == oriStartPos)  && (oriStartPos > oriEndPos))
 				{
 					mHighlightPosition = oriEndPos;
 				}
 				else if( (mHighlightPosition == oriStartPos) && (oriStartPos < oriEndPos))
 				{
 					mHighlightPosition = oriEndPos;
-				}				
-				else if(  (mHighlightPosition < oriEndPos) && 
-						  (mHighlightPosition > oriStartPos)   )    
+				}
+				else if(  (mHighlightPosition < oriEndPos) &&
+						  (mHighlightPosition > oriStartPos)   )
 				{
 					mHighlightPosition--;
 				}
-				else if( (mHighlightPosition > oriEndPos) && 
+				else if( (mHighlightPosition > oriEndPos) &&
 						 (mHighlightPosition < oriStartPos)  )
 				{
 					mHighlightPosition++;
@@ -437,7 +439,7 @@ public class Page_new extends UilListViewBaseFragment
 			showFooter(mAct);
         }
     };
-	
+
     /**
      * Called in onCreateView. Override this to provide a custom
      * DragSortController.
@@ -447,19 +449,19 @@ public class Page_new extends UilListViewBaseFragment
         // defaults are
         DragSortController controller = new DragSortController(dslv);
         controller.setSortEnabled(true);
-        
+
         //drag
 	  	mPref_show_note_attribute = getActivity().getSharedPreferences("show_note_attribute", 0);
 	  	if(mPref_show_note_attribute.getString("KEY_ENABLE_DRAGGABLE", "no").equalsIgnoreCase("yes"))
 	  		controller.setDragInitMode(DragSortController.ON_DOWN); // click
 	  	else
-	        controller.setDragInitMode(DragSortController.MISS); 
+	        controller.setDragInitMode(DragSortController.MISS);
 
 	  	controller.setDragHandleId(R.id.img_dragger);// handler
 //        controller.setDragInitMode(DragSortController.ON_LONG_PRESS); //long click to drag
 	  	controller.setBackgroundColor(Color.argb(128,128,64,0));// background color when dragging
 //        controller.setBackgroundColor(Util.mBG_ColorArray[mStyle]);// background color when dragging
-        
+
 	  	// mark
         controller.setMarkEnabled(true);
         controller.setClickMarkId(R.id.img_check);
@@ -471,7 +473,7 @@ public class Page_new extends UilListViewBaseFragment
         controller.setAudioMode(DragSortController.ON_DOWN);
 
         return controller;
-    }        
+    }
 
     @Override
     public void onResume() {
@@ -501,14 +503,14 @@ public class Page_new extends UilListViewBaseFragment
 		if(en_dbg_msg)
 			System.out.println("Page_new / _onPause");
 	 }
-    
+
     @Override
     public void onSaveInstanceState(Bundle outState) {
     	super.onSaveInstanceState(outState);
 		if(en_dbg_msg)
 			System.out.println(mClassName + " / onSaveInstanceState");
     }
-    
+
 //	@Override
 //	public Loader<List<String>> onCreateLoader(int id, Bundle args)
 //	{
@@ -538,7 +540,7 @@ public class Page_new extends UilListViewBaseFragment
 //        getLoaderManager().destroyLoader(pageTableId); // add for fixing callback twice
 //
 //	}
-	
+
 //	@Override
 //	public void onLoaderReset(Loader<List<String>> loader) {
 //		// Clear the data in the adapter.
@@ -547,7 +549,7 @@ public class Page_new extends UilListViewBaseFragment
 
 
     OnScrollListener onScroll = new OnScrollListener() {
-		
+
 		@Override
 		public void onScrollStateChanged(AbsListView view, int scrollState) {
 	        mFirstVisibleIndex = mDndListView.getFirstVisiblePosition();
@@ -570,11 +572,11 @@ public class Page_new extends UilListViewBaseFragment
 				Pref.setPref_focusView_list_view_first_visible_index_top(getActivity(), mFirstVisibleIndexTop);
 			}
 		}
-		
+
 		@Override
 		public void onScroll(AbsListView view, int firstVisibleItem,
 				int visibleItemCount, int totalItemCount) {
-			
+
 //			System.out.println("_onScroll / firstVisibleItem " + firstVisibleItem);
 //			System.out.println("_onScroll / visibleItemCount " + visibleItemCount);
 //			System.out.println("_onScroll / totalItemCount " + totalItemCount);
@@ -582,8 +584,8 @@ public class Page_new extends UilListViewBaseFragment
 		}
 	};
 
-	
-	
+
+
     // swap rows
 	protected static void swapRows(DB_page dB_page, int startPosition, int endPosition)
 	{
@@ -626,17 +628,17 @@ public class Page_new extends UilListViewBaseFragment
         dB_page.updateNote(mNoteNumber2,
 				 mNoteTitle1,
 				 mNotePictureUri1,
-				 mNoteAudioUri1, 
+				 mNoteAudioUri1,
 				 "",
 				 mNoteLinkUri1,
 				 mNoteBodyString1,
 				 mMarkingIndex1,
-				 mCreateTime1,false);		        
-		
+				 mCreateTime1,false);
+
 		dB_page.updateNote(mNoteNumber1,
 		 		 mNoteTitle2,
 		 		 mNotePictureUri2,
-		 		 mNoteAudioUri2, 
+		 		 mNoteAudioUri2,
 				 "",
 				 mNoteLinkUri2,
 		 		 mNoteBodyString2,
@@ -648,34 +650,41 @@ public class Page_new extends UilListViewBaseFragment
 
     // list view listener: on mark
     private DragSortListView.MarkListener onMark =
-    new DragSortListView.MarkListener() 
+    new DragSortListView.MarkListener()
 	{   @Override
-        public void mark(int position) 
+        public void mark(int position)
 		{
 			if(en_dbg_msg)
 				System.out.println("Page_new / _onMark");
 
+			//todo temp for YouTube launcher
+			///
+            openClickedItem(mAct,position);
+            return;
+			///
+
+            //todo ori
             // toggle marking
-			int markingNow = toggleNoteMarking(mAct,position);
-
-            // Stop if unmarked item is at playing state
-            if(AudioManager.mAudioPos == position) {
-				UtilAudio.stopAudioIfNeeded();
-				if(markingNow == 0)
-                    TabsHost.setAudioPlayingTab_WithHighlight(false);
-			}
-
-			// update list view
-            mItemAdapter.notifyDataSetChanged(); //note: add this can avoid conflict of onMark and onItemClick
-
-			// update footer
-            showFooter(mAct);
-
-			// update audio info
-            if(PageUi.isSamePageTable())
-            	AudioPlayer_page.prepareAudioInfo();
+//			int markingNow = toggleNoteMarking(mAct,position);
+//
+//            // Stop if unmarked item is at playing state
+//            if(AudioManager.mAudioPos == position) {
+//				UtilAudio.stopAudioIfNeeded();
+//				if(markingNow == 0)
+//                    TabsHost.setAudioPlayingTab_WithHighlight(false);
+//			}
+//
+//			// update list view
+//            mItemAdapter.notifyDataSetChanged(); //note: add this can avoid conflict of onMark and onItemClick
+//
+//			// update footer
+//            showFooter(mAct);
+//
+//			// update audio info
+//            if(PageUi.isSamePageTable())
+//            	AudioPlayer_page.prepareAudioInfo();
         }
-    };    
+    };
 
 	// toggle mark of note
 	public static int toggleNoteMarking(FragmentActivity mAct,int position)
@@ -717,9 +726,9 @@ public class Page_new extends UilListViewBaseFragment
 	AudioPlayer_page audioPlayer_page;
 	public static Page_audio page_audio;
     // list view listener: on audio
-    private DragSortListView.AudioListener onAudio = new DragSortListView.AudioListener() 
+    private DragSortListView.AudioListener onAudio = new DragSortListView.AudioListener()
 	{   @Override
-        public void audio(int position) 
+        public void audio(int position)
 		{
 			if(en_dbg_msg)
 				System.out.println("Page_new / _onAudio");
@@ -782,12 +791,12 @@ public class Page_new extends UilListViewBaseFragment
 				    // update playing folder table Id
 					DB_drawer dB_drawer = new DB_drawer(mAct);
 					MainAct.mPlaying_folderTableId = dB_drawer.getFolderTableId(MainAct.mPlaying_folderPos,true);
-					
+
 		            mItemAdapter.notifyDataSetChanged();
 				}
 			}
         }
-	};            
+	};
 
     static TextView mFooterMessage;
 
@@ -824,7 +833,7 @@ public class Page_new extends UilListViewBaseFragment
 	{
         int startCursor = dB_page.getNotesCount(true)-1;
         int endCursor = 0;
-		
+
 		//reorder data base storage for ADD_NEW_TO_TOP option
 		int loop = Math.abs(startCursor-endCursor);
 		for(int i=0;i< loop;i++)
@@ -850,7 +859,7 @@ public class Page_new extends UilListViewBaseFragment
 	/*
 	 * inner class for note list loader
 	 */
-	public static class NoteListLoader extends AsyncTaskLoader<List<String>> 
+	public static class NoteListLoader extends AsyncTaskLoader<List<String>>
 	{
 		List<String> mApps;
 

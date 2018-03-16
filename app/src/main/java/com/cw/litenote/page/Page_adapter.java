@@ -39,15 +39,17 @@ import com.mobeta.android.dslv.DragSortCursorAdapter;
 import com.mobeta.android.dslv.ResourceDragSortCursorAdapter;
 import com.mobeta.android.dslv.SimpleDragSortCursorAdapter;
 
-//import static com.cw.litenote.page.Page_new.mDb_page;
-
 //todo
+// case 1
 //import static com.cw.litenote.page.Page.mDb_page;
+// case 2
+import static com.cw.litenote.db.DB_page.KEY_NOTE_AUDIO_URI;
+import static com.cw.litenote.db.DB_page.KEY_NOTE_LINK_URI;
+import static com.cw.litenote.db.DB_page.KEY_NOTE_PICTURE_URI;
+import static com.cw.litenote.page.Page_new.mDb_page;
 
 //todo
 import static com.cw.litenote.db.DB_page.KEY_NOTE_TITLE;
-import static com.cw.litenote.page.Page_new.mDb_page;
-//import static com.cw.litenote.page.Page_new.mDb_page;
 
 
 // Pager adapter
@@ -202,295 +204,304 @@ public class Page_adapter extends SimpleDragSortCursorAdapter // DragSortCursorA
 		holder.rowId.setTextColor(ColorSet.mText_ColorArray[Page.mStyle]);
 		
 		// show check box, title , picture
+		// case 1
 //		String strTitle = mDb_page.getNoteTitle(position,true);
+//        String pictureUri = mDb_page.getNotePictureUri(position,true);
+//        String audioUri = mDb_page.getNoteAudioUri(position,true);
+//        String linkUri = mDb_page.getNoteLinkUri(position,true);
+
+		//todo
+		// case 2
 		String strTitle = null;
-		if(cursor.moveToPosition(position))
-			strTitle = cursor.getString(cursor.getColumnIndex(KEY_NOTE_TITLE));
-//		else
-//			mDb_page.getNoteTitle(position,true);
+        String pictureUri = null;
+        String audioUri = null;
+        String linkUri = null;
+		if(cursor.moveToPosition(position)) {
+            strTitle = cursor.getString(cursor.getColumnIndex(KEY_NOTE_TITLE));
+            pictureUri = cursor.getString(cursor.getColumnIndex(KEY_NOTE_PICTURE_URI));
+            audioUri = cursor.getString(cursor.getColumnIndex(KEY_NOTE_AUDIO_URI));
+            linkUri = cursor.getString(cursor.getColumnIndex(KEY_NOTE_LINK_URI));
+        }
 
 		System.out.println("Page_adapter / _getView / strTitle = " +  strTitle);
-//		String pictureUri = mDb_page.getNotePictureUri(position,true);
-//		String audioUri = mDb_page.getNoteAudioUri(position,true);
-//		String linkUri = mDb_page.getNoteLinkUri(position,true);
 
-//		// set title
-//		if( Util.isEmptyString(strTitle) )
-//		{
-//
-//			if(Util.isYouTubeLink(linkUri)) {
-//				strTitle = Util.getYouTubeTitle(linkUri);
-//				holder.textTitle.setVisibility(View.VISIBLE);
-//				holder.textTitle.setText(strTitle);
-//				holder.textTitle.setTextColor(Color.GRAY);
-//			}
-//			else if(linkUri.startsWith("http"))
-//			{
-//				holder.textTitle.setVisibility(View.VISIBLE);
-//				Util.setHttpTitle(linkUri, mAct,holder.textTitle);
-//			}
-//			else
-//			{
-//				// make sure empty title is empty after scrolling
-//				holder.textTitle.setVisibility(View.VISIBLE);
-//				holder.textTitle.setText("");
-//			}
-//		}
-//		else
-//		{
+		// set title
+		if( Util.isEmptyString(strTitle) )
+		{
+
+			if(Util.isYouTubeLink(linkUri)) {
+				strTitle = Util.getYouTubeTitle(linkUri);
+				holder.textTitle.setVisibility(View.VISIBLE);
+				holder.textTitle.setText(strTitle);
+				holder.textTitle.setTextColor(Color.GRAY);
+			}
+			else if(linkUri.startsWith("http"))
+			{
+				holder.textTitle.setVisibility(View.VISIBLE);
+				Util.setHttpTitle(linkUri, mAct,holder.textTitle);
+			}
+			else
+			{
+				// make sure empty title is empty after scrolling
+				holder.textTitle.setVisibility(View.VISIBLE);
+				holder.textTitle.setText("");
+			}
+		}
+		else
+		{
 			holder.textTitle.setVisibility(View.VISIBLE);
 			holder.textTitle.setText(strTitle);
 			holder.textTitle.setTextColor(ColorSet.mText_ColorArray[Page.mStyle]);
-//		}
-//
-//
-//		// set audio name
-//		String audio_name = null;
-//		if(!Util.isEmptyString(audioUri))
-//			audio_name = Util.getDisplayNameByUriString(audioUri, mAct);
-//
-//		if(Util.isUriExisted(audioUri, mAct))
-//			holder.audioName.setText(audio_name);
-//		else
-//			holder.audioName.setText(R.string.file_not_found);
-//
-////			holder.audioName.setTextSize(12.0f);
-//
-//		if(!Util.isEmptyString(audioUri))
-//			holder.audioName.setTextColor(ColorSet.mText_ColorArray[Page.mStyle]);
-//
-//		// show audio highlight if audio is not at Stop
-//		if( PageUi.isSamePageTable() &&
-//			(position == AudioManager.mAudioPos)  &&
-//			(AudioManager.mMediaPlayer != null) &&
-//			(AudioManager.getPlayerState() != AudioManager.PLAYER_AT_STOP) &&
-//			(AudioManager.getAudioPlayMode() == AudioManager.PAGE_PLAY_MODE))
-//		{
-//			Page.mHighlightPosition = position;
-//			holder.audioBlock.setBackgroundResource(R.drawable.bg_highlight_border);
-//			holder.audioBlock.setVisibility(View.VISIBLE);
-//
-//			// set type face
-//			holder.audioName.setTypeface(Typeface.DEFAULT, Typeface.BOLD);
-//
-//			// set icon
-//			holder.imageAudio.setVisibility(View.VISIBLE);
-//			holder.imageAudio.setImageResource(R.drawable.ic_audio);
-//
-//			// set animation
-//			Animation animation = AnimationUtils.loadAnimation(mContext , R.anim.right_in);
-//			holder.audioBlock.startAnimation(animation);
-//		}
-//		else
-//		{
-//
-//			holder.audioBlock.setBackgroundResource(R.drawable.bg_gray_border);
-//			holder.audioBlock.setVisibility(View.VISIBLE);
-//
-//			// set type face
-//			holder.audioName.setTypeface(Typeface.DEFAULT, Typeface.NORMAL);
-//
-//			// set icon
-//			holder.imageAudio.setVisibility(View.VISIBLE);
-//			if(Page.mStyle % 2 == 0)
-//				holder.imageAudio.setImageResource(R.drawable.ic_audio_off_white);
-//			else
-//				holder.imageAudio.setImageResource(R.drawable.ic_audio_off_black);
-//		}
-//
-//		// audio icon and block
-//		if(Util.isEmptyString(audioUri))
-//		{
-//			holder.imageAudio.setVisibility(View.INVISIBLE);
-//			holder.audioBlock.setVisibility(View.INVISIBLE);
-//		}
-//
-//
-//		// Show image thumb nail if picture Uri is none and YouTube link exists
-//		if(Util.isEmptyString(pictureUri) &&
-//		   Util.isYouTubeLink(linkUri)      )
-//		{
-//			pictureUri = "http://img.youtube.com/vi/"+Util.getYoutubeId(linkUri)+"/0.jpg";
-//		}
-////		System.out.println("Page_adapter / _getView / pictureUri = " + pictureUri);
-//
-//		// show thumb nail if picture Uri exists
-//		if(UtilImage.hasImageExtension(pictureUri, mAct ) ||
-//		   UtilVideo.hasVideoExtension(pictureUri, mAct )   )
-//		{
-//			holder.thumbBlock.setVisibility(View.VISIBLE);
-//			holder.thumbPicture.setVisibility(View.VISIBLE);
-//			holder.thumbAudio.setVisibility(View.GONE);
-//			holder.thumbWeb.setVisibility(View.GONE);
-//			// load bitmap to image view
-//			try
-//			{
-//				new UtilImage_bitmapLoader(holder.thumbPicture,
-//										   pictureUri,
-//										   holder.progressBar,
-//										   (Page.mStyle % 2 == 1 ?
-//											UilCommon.optionsForRounded_light:
-//											UilCommon.optionsForRounded_dark),
-//										   mAct);
-//			}
-//			catch(Exception e)
-//			{
-//				Log.e("Page_adapter", "UtilImage_bitmapLoader error");
-//				holder.thumbBlock.setVisibility(View.GONE);
-//				holder.thumbPicture.setVisibility(View.GONE);
-//				holder.thumbAudio.setVisibility(View.GONE);
-//				holder.thumbWeb.setVisibility(View.GONE);
-//			}
-//		}
-//		// show audio thumb nail if picture Uri is none and audio Uri exists
-//		else if((Util.isEmptyString(pictureUri) && UtilAudio.hasAudioExtension(audioUri) ) )
-//		{
-//			holder.thumbBlock.setVisibility(View.VISIBLE);
-//			holder.thumbPicture.setVisibility(View.GONE);
-//			holder.thumbAudio.setVisibility(View.VISIBLE);
-//			holder.thumbWeb.setVisibility(View.GONE);
-//			try
-//			{
-//			    AsyncTaskAudioBitmap audioAsyncTask;
-//			    audioAsyncTask = new AsyncTaskAudioBitmap(mAct,
-//						    							  audioUri,
-//						    							  holder.thumbAudio,
-//						    							  holder.progressBar,
-//                                                          true);
-//				audioAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,"Searching media ...");
-//			}
-//			catch(Exception e)
-//			{
-//				Log.e("Page_adapter", "AsyncTaskAudioBitmap error");
-//				holder.thumbBlock.setVisibility(View.GONE);
-//				holder.thumbPicture.setVisibility(View.GONE);
-//				holder.thumbAudio.setVisibility(View.GONE);
-//				holder.thumbWeb.setVisibility(View.GONE);
-//			}
-//		}
-//		// set web title and web view thumb nail of link if no title content
-//		else if(!Util.isEmptyString(linkUri) &&
-//                linkUri.startsWith("http")   &&
-//				!Util.isYouTubeLink(linkUri)   )
-//		{
-//			// reset web view
-//			CustomWebView.pauseWebView(holder.thumbWeb);
-//			CustomWebView.blankWebView(holder.thumbWeb);
-//
-//			holder.thumbBlock.setVisibility(View.VISIBLE);
-//			holder.thumbWeb.setInitialScale(50);
-//			holder.thumbWeb.getSettings().setJavaScriptEnabled(true);//Using setJavaScriptEnabled can introduce XSS vulnerabilities
-//			holder.thumbWeb.getSettings().setCacheMode(WebSettings.LOAD_DEFAULT );
-////            // speed up
-////            if (Build.VERSION.SDK_INT >= 19) {
-////                // chromium, enable hardware acceleration
-////                holder.thumbWeb.setLayerType(View.LAYER_TYPE_HARDWARE, null);
-////            } else {
-////                // older android version, disable hardware acceleration
-////                holder.thumbWeb.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
-////            }
-//			holder.thumbWeb.loadUrl(linkUri);
-//			holder.thumbWeb.setVisibility(View.VISIBLE);
-//
-//			// no interactive response
-//			holder.thumbWeb.setOnTouchListener(new View.OnTouchListener() {
-//				@Override
-//				public boolean onTouch(View v, MotionEvent event) {
-//                    if( (event.getAction() == MotionEvent.ACTION_POINTER_UP) ||
-//                        (event.getAction() == MotionEvent.ACTION_UP)            )
-//                    {
-//                        Page.openClickedItem(position);
-//                    }
-//					return true;
-//				}
-//			});
-//
-//			holder.thumbPicture.setVisibility(View.GONE);
-//			holder.thumbAudio.setVisibility(View.GONE);
-//
-//			//Add for non-stop showing of full screen web view
-//			holder.thumbWeb.setWebViewClient(new WebViewClient() {
-//				@Override
-//			    public boolean shouldOverrideUrlLoading(WebView view, String url)
-//			    {
-//			        view.loadUrl(url);
-//			        return true;
-//			    }
-//			});
-//
-//
-//			if (Util.isEmptyString(strTitle)) {
-//
-//				holder.thumbWeb.setWebChromeClient(new WebChromeClient() {
-//					@Override
-//					public void onReceivedTitle(WebView view, String title) {
-//						super.onReceivedTitle(view, title);
-//						if (!TextUtils.isEmpty(title) &&
-//								!title.equalsIgnoreCase("about:blank")) {
-//							holder.textTitle.setVisibility(View.VISIBLE);
-//							holder.rowId.setText(String.valueOf(position + 1));
-//							holder.rowId.setTextColor(ColorSet.mText_ColorArray[Page.mStyle]);
-//
-//						}
-//					}
-//				});
-//			}
-//		}
-//		else
-//		{
+		}
+
+
+		// set audio name
+		String audio_name = null;
+		if(!Util.isEmptyString(audioUri))
+			audio_name = Util.getDisplayNameByUriString(audioUri, mAct);
+
+		if(Util.isUriExisted(audioUri, mAct))
+			holder.audioName.setText(audio_name);
+		else
+			holder.audioName.setText(R.string.file_not_found);
+
+//			holder.audioName.setTextSize(12.0f);
+
+		if(!Util.isEmptyString(audioUri))
+			holder.audioName.setTextColor(ColorSet.mText_ColorArray[Page.mStyle]);
+
+		// show audio highlight if audio is not at Stop
+		if( PageUi.isSamePageTable() &&
+			(position == AudioManager.mAudioPos)  &&
+			(AudioManager.mMediaPlayer != null) &&
+			(AudioManager.getPlayerState() != AudioManager.PLAYER_AT_STOP) &&
+			(AudioManager.getAudioPlayMode() == AudioManager.PAGE_PLAY_MODE))
+		{
+			Page.mHighlightPosition = position;
+			holder.audioBlock.setBackgroundResource(R.drawable.bg_highlight_border);
+			holder.audioBlock.setVisibility(View.VISIBLE);
+
+			// set type face
+			holder.audioName.setTypeface(Typeface.DEFAULT, Typeface.BOLD);
+
+			// set icon
+			holder.imageAudio.setVisibility(View.VISIBLE);
+			holder.imageAudio.setImageResource(R.drawable.ic_audio);
+
+			// set animation
+			Animation animation = AnimationUtils.loadAnimation(mContext , R.anim.right_in);
+			holder.audioBlock.startAnimation(animation);
+		}
+		else
+		{
+
+			holder.audioBlock.setBackgroundResource(R.drawable.bg_gray_border);
+			holder.audioBlock.setVisibility(View.VISIBLE);
+
+			// set type face
+			holder.audioName.setTypeface(Typeface.DEFAULT, Typeface.NORMAL);
+
+			// set icon
+			holder.imageAudio.setVisibility(View.VISIBLE);
+			if(Page.mStyle % 2 == 0)
+				holder.imageAudio.setImageResource(R.drawable.ic_audio_off_white);
+			else
+				holder.imageAudio.setImageResource(R.drawable.ic_audio_off_black);
+		}
+
+		// audio icon and block
+		if(Util.isEmptyString(audioUri))
+		{
+			holder.imageAudio.setVisibility(View.INVISIBLE);
+			holder.audioBlock.setVisibility(View.INVISIBLE);
+		}
+
+
+		// Show image thumb nail if picture Uri is none and YouTube link exists
+		if(Util.isEmptyString(pictureUri) &&
+		   Util.isYouTubeLink(linkUri)      )
+		{
+			pictureUri = "http://img.youtube.com/vi/"+Util.getYoutubeId(linkUri)+"/0.jpg";
+		}
+//		System.out.println("Page_adapter / _getView / pictureUri = " + pictureUri);
+
+		// show thumb nail if picture Uri exists
+		if(UtilImage.hasImageExtension(pictureUri, mAct ) ||
+		   UtilVideo.hasVideoExtension(pictureUri, mAct )   )
+		{
+			holder.thumbBlock.setVisibility(View.VISIBLE);
+			holder.thumbPicture.setVisibility(View.VISIBLE);
+			holder.thumbAudio.setVisibility(View.GONE);
+			holder.thumbWeb.setVisibility(View.GONE);
+			// load bitmap to image view
+			try
+			{
+				new UtilImage_bitmapLoader(holder.thumbPicture,
+										   pictureUri,
+										   holder.progressBar,
+										   (Page.mStyle % 2 == 1 ?
+											UilCommon.optionsForRounded_light:
+											UilCommon.optionsForRounded_dark),
+										   mAct);
+			}
+			catch(Exception e)
+			{
+				Log.e("Page_adapter", "UtilImage_bitmapLoader error");
+				holder.thumbBlock.setVisibility(View.GONE);
+				holder.thumbPicture.setVisibility(View.GONE);
+				holder.thumbAudio.setVisibility(View.GONE);
+				holder.thumbWeb.setVisibility(View.GONE);
+			}
+		}
+		// show audio thumb nail if picture Uri is none and audio Uri exists
+		else if((Util.isEmptyString(pictureUri) && UtilAudio.hasAudioExtension(audioUri) ) )
+		{
+			holder.thumbBlock.setVisibility(View.VISIBLE);
+			holder.thumbPicture.setVisibility(View.GONE);
+			holder.thumbAudio.setVisibility(View.VISIBLE);
+			holder.thumbWeb.setVisibility(View.GONE);
+			try
+			{
+			    AsyncTaskAudioBitmap audioAsyncTask;
+			    audioAsyncTask = new AsyncTaskAudioBitmap(mAct,
+						    							  audioUri,
+						    							  holder.thumbAudio,
+						    							  holder.progressBar,
+                                                          true);
+				audioAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,"Searching media ...");
+			}
+			catch(Exception e)
+			{
+				Log.e("Page_adapter", "AsyncTaskAudioBitmap error");
+				holder.thumbBlock.setVisibility(View.GONE);
+				holder.thumbPicture.setVisibility(View.GONE);
+				holder.thumbAudio.setVisibility(View.GONE);
+				holder.thumbWeb.setVisibility(View.GONE);
+			}
+		}
+		// set web title and web view thumb nail of link if no title content
+		else if(!Util.isEmptyString(linkUri) &&
+                linkUri.startsWith("http")   &&
+				!Util.isYouTubeLink(linkUri)   )
+		{
+			// reset web view
+			CustomWebView.pauseWebView(holder.thumbWeb);
+			CustomWebView.blankWebView(holder.thumbWeb);
+
+			holder.thumbBlock.setVisibility(View.VISIBLE);
+			holder.thumbWeb.setInitialScale(50);
+			holder.thumbWeb.getSettings().setJavaScriptEnabled(true);//Using setJavaScriptEnabled can introduce XSS vulnerabilities
+			holder.thumbWeb.getSettings().setCacheMode(WebSettings.LOAD_DEFAULT );
+//            // speed up
+//            if (Build.VERSION.SDK_INT >= 19) {
+//                // chromium, enable hardware acceleration
+//                holder.thumbWeb.setLayerType(View.LAYER_TYPE_HARDWARE, null);
+//            } else {
+//                // older android version, disable hardware acceleration
+//                holder.thumbWeb.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+//            }
+			holder.thumbWeb.loadUrl(linkUri);
+			holder.thumbWeb.setVisibility(View.VISIBLE);
+
+			// no interactive response
+			holder.thumbWeb.setOnTouchListener(new View.OnTouchListener() {
+				@Override
+				public boolean onTouch(View v, MotionEvent event) {
+                    if( (event.getAction() == MotionEvent.ACTION_POINTER_UP) ||
+                        (event.getAction() == MotionEvent.ACTION_UP)            )
+                    {
+                        Page.openClickedItem(position);
+                    }
+					return true;
+				}
+			});
+
+			holder.thumbPicture.setVisibility(View.GONE);
+			holder.thumbAudio.setVisibility(View.GONE);
+
+			//Add for non-stop showing of full screen web view
+			holder.thumbWeb.setWebViewClient(new WebViewClient() {
+				@Override
+			    public boolean shouldOverrideUrlLoading(WebView view, String url)
+			    {
+			        view.loadUrl(url);
+			        return true;
+			    }
+			});
+
+
+			if (Util.isEmptyString(strTitle)) {
+
+				holder.thumbWeb.setWebChromeClient(new WebChromeClient() {
+					@Override
+					public void onReceivedTitle(WebView view, String title) {
+						super.onReceivedTitle(view, title);
+						if (!TextUtils.isEmpty(title) &&
+								!title.equalsIgnoreCase("about:blank")) {
+							holder.textTitle.setVisibility(View.VISIBLE);
+							holder.rowId.setText(String.valueOf(position + 1));
+							holder.rowId.setTextColor(ColorSet.mText_ColorArray[Page.mStyle]);
+
+						}
+					}
+				});
+			}
+		}
+		else
+		{
 			holder.thumbBlock.setVisibility(View.GONE);
 			holder.thumbPicture.setVisibility(View.GONE);
-//			holder.thumbAudio.setVisibility(View.GONE);
-//			holder.thumbWeb.setVisibility(View.GONE);
-//		}
-//
-//
-//		// Show note body or not
-//	  	if(pref_show_note_attribute.getString("KEY_SHOW_BODY", "yes").equalsIgnoreCase("yes"))
-//	  	{
-//	  		// test only: enabled for showing picture path
-//	  		String strBody = mDb_page.getNoteBody(position,true);
-//	  		if(!Util.isEmptyString(strBody)){
-//				//normal: do nothing
-//			}
-//	  		else if(!Util.isEmptyString(pictureUri)) {
-////				strBody = pictureUri;//show picture Uri
-//			}
-//	  		else if(!Util.isEmptyString(linkUri)) {
-////				strBody = linkUri; //show link Uri
-//			}
-//
-//			holder.textBody.setText(strBody);
-////			holder.textBody.setTextSize(12);
-//
-//			holder.rowDivider.setVisibility(View.VISIBLE);
-//			holder.textBody.setTextColor(ColorSet.mText_ColorArray[Page.mStyle]);
-//			// time stamp
-//			holder.textTime.setText(Util.getTimeString(mDb_page.getNoteCreatedTime(position,true)));
-//			holder.textTime.setTextColor(ColorSet.mText_ColorArray[Page.mStyle]);
-//	  	}
-//	  	else
-//	  	{
-//			holder.rowDivider.setVisibility(View.GONE);
-//	  		holder.textBodyBlock.setVisibility(View.GONE);
-//	  	}
-//
-//
-//	  	// dragger
-//	  	if(pref_show_note_attribute.getString("KEY_ENABLE_DRAGGABLE", "no").equalsIgnoreCase("yes"))
-//	  		holder.imageDragger.setVisibility(View.VISIBLE);
-//	  	else
-//	  		holder.imageDragger.setVisibility(View.GONE);
-//
-//	  	// marking
-//		if( mDb_page.getNoteMarking(position, true) == 1)
-//			holder.imageCheck.setBackgroundResource(Page.mStyle%2 == 1 ?
-//	    			R.drawable.btn_check_on_holo_light:
-//	    			R.drawable.btn_check_on_holo_dark);
-//		else
-//			holder.imageCheck.setBackgroundResource(Page.mStyle%2 == 1 ?
-//					R.drawable.btn_check_off_holo_light:
-//					R.drawable.btn_check_off_holo_dark);
+			holder.thumbAudio.setVisibility(View.GONE);
+			holder.thumbWeb.setVisibility(View.GONE);
+		}
+
+
+		// Show note body or not
+	  	if(pref_show_note_attribute.getString("KEY_SHOW_BODY", "yes").equalsIgnoreCase("yes"))
+	  	{
+	  		// test only: enabled for showing picture path
+	  		String strBody = mDb_page.getNoteBody(position,true);
+	  		if(!Util.isEmptyString(strBody)){
+				//normal: do nothing
+			}
+	  		else if(!Util.isEmptyString(pictureUri)) {
+//				strBody = pictureUri;//show picture Uri
+			}
+	  		else if(!Util.isEmptyString(linkUri)) {
+//				strBody = linkUri; //show link Uri
+			}
+
+			holder.textBody.setText(strBody);
+//			holder.textBody.setTextSize(12);
+
+			holder.rowDivider.setVisibility(View.VISIBLE);
+			holder.textBody.setTextColor(ColorSet.mText_ColorArray[Page.mStyle]);
+			// time stamp
+			holder.textTime.setText(Util.getTimeString(mDb_page.getNoteCreatedTime(position,true)));
+			holder.textTime.setTextColor(ColorSet.mText_ColorArray[Page.mStyle]);
+	  	}
+	  	else
+	  	{
+			holder.rowDivider.setVisibility(View.GONE);
+	  		holder.textBodyBlock.setVisibility(View.GONE);
+	  	}
+
+
+	  	// dragger
+	  	if(pref_show_note_attribute.getString("KEY_ENABLE_DRAGGABLE", "no").equalsIgnoreCase("yes"))
+	  		holder.imageDragger.setVisibility(View.VISIBLE);
+	  	else
+	  		holder.imageDragger.setVisibility(View.GONE);
+
+	  	// marking
+		if( mDb_page.getNoteMarking(position, true) == 1)
+			holder.imageCheck.setBackgroundResource(Page.mStyle%2 == 1 ?
+	    			R.drawable.btn_check_on_holo_light:
+	    			R.drawable.btn_check_on_holo_dark);
+		else
+			holder.imageCheck.setBackgroundResource(Page.mStyle%2 == 1 ?
+					R.drawable.btn_check_off_holo_light:
+					R.drawable.btn_check_off_holo_dark);
 
 		return view;
 	}
