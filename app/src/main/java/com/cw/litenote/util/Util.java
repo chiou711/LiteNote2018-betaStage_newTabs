@@ -478,8 +478,11 @@ public class Util
 	static public int getCurrentPageStyle()
 	{
 		//todo: page style
+		// case 1
 //		return TabsHost_new.mDbFolder.getPageStyle(PageUi.getFocus_pagePos(), true);
+		// case 2
 //		return TabsHost.mDbFolder.getPageStyle(PageUi.getFocus_pagePos(), true);
+		// case 3
 		return TabsHostAct.mDbFolder.getPageStyle(PageUi.getFocus_pagePos(), true);
 	}
 
