@@ -144,12 +144,25 @@ public class Page_new extends UilListViewBaseFragment
 		UilCommon.init();
 
 		//listener: view note
+        mDndListView.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                System.out.println("Page_new / _onItemSelected / position = " + position);
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
 		mDndListView.setOnItemClickListener(new OnItemClickListener()
 		{   @Override
 			public void onItemClick(AdapterView<?> arg0, View view, int position, long id)
 			{
-				System.out.println("Page_new / _setOnItemClickListener");
-				openClickedItem(mAct,position);
+				System.out.println("Page_new / _setOnItemClickListener / position = " + position);
+//				openClickedItem(mAct,position);
 			}
 		});
 
@@ -284,19 +297,22 @@ public class Page_new extends UilListViewBaseFragment
 
 
 	// Open clicked item of list view
-	static void openClickedItem(FragmentActivity mAct,int position)
+	static void openClickedItem(FragmentActivity mAct,int position, String linkStr)
     {
-		if(en_dbg_msg)
-			System.out.println("Page_new / _openClickedItem");
+		if(en_dbg_msg) {
+			System.out.println("Page_new / _openClickedItem / position = " + position);
+			System.out.println("連結 Page_new / _openClickedItem / linkStr = " + linkStr);
+		}
 
 		currPlayPosition = position;
-        DB_page mDb_page = new DB_page(mAct, DB_page.getFocusPage_tableId());
-        mDb_page.open();
-        int count = mDb_page.getNotesCount(false);
-        String linkStr = mDb_page.getNoteLinkUri(position,false);
-        mDb_page.close();
+//        DB_page mDb_page = new DB_page(mAct, DB_page.getFocusPage_tableId());
+//        mDb_page.open();
+//        int count = mDb_page.getNotesCount(false);
+//        String linkStr = mDb_page.getNoteLinkUri(position,false);
+//        mDb_page.close();
 
-        if(position < count) {
+//        if(position < count)
+        {
 
             SharedPreferences pref_open_youtube;
             pref_open_youtube = mAct.getSharedPreferences("show_note_attribute", 0);
@@ -659,30 +675,30 @@ public class Page_new extends UilListViewBaseFragment
 
 			//todo temp for YouTube launcher
 			///
-            openClickedItem(mAct,position);
-            return;
+//            openClickedItem(mAct,position);
+//            return;
 			///
 
             //todo ori
             // toggle marking
-//			int markingNow = toggleNoteMarking(mAct,position);
-//
-//            // Stop if unmarked item is at playing state
-//            if(AudioManager.mAudioPos == position) {
-//				UtilAudio.stopAudioIfNeeded();
-//				if(markingNow == 0)
-//                    TabsHost.setAudioPlayingTab_WithHighlight(false);
-//			}
-//
-//			// update list view
-//            mItemAdapter.notifyDataSetChanged(); //note: add this can avoid conflict of onMark and onItemClick
-//
-//			// update footer
-//            showFooter(mAct);
-//
-//			// update audio info
-//            if(PageUi.isSamePageTable())
-//            	AudioPlayer_page.prepareAudioInfo();
+			int markingNow = toggleNoteMarking(mAct,position);
+
+            // Stop if unmarked item is at playing state
+            if(AudioManager.mAudioPos == position) {
+				UtilAudio.stopAudioIfNeeded();
+				if(markingNow == 0)
+                    TabsHost.setAudioPlayingTab_WithHighlight(false);
+			}
+
+			// update list view
+            mItemAdapter.notifyDataSetChanged(); //note: add this can avoid conflict of onMark and onItemClick
+
+			// update footer
+            showFooter(mAct);
+
+			// update audio info
+            if(PageUi.isSamePageTable())
+            	AudioPlayer_page.prepareAudioInfo();
         }
     };
 

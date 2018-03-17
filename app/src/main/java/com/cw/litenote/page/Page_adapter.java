@@ -44,7 +44,10 @@ import com.mobeta.android.dslv.SimpleDragSortCursorAdapter;
 //import static com.cw.litenote.page.Page.mDb_page;
 // case 2
 import static com.cw.litenote.db.DB_page.KEY_NOTE_AUDIO_URI;
+import static com.cw.litenote.db.DB_page.KEY_NOTE_BODY;
+import static com.cw.litenote.db.DB_page.KEY_NOTE_CREATED;
 import static com.cw.litenote.db.DB_page.KEY_NOTE_LINK_URI;
+import static com.cw.litenote.db.DB_page.KEY_NOTE_MARKING;
 import static com.cw.litenote.db.DB_page.KEY_NOTE_PICTURE_URI;
 import static com.cw.litenote.page.Page_new.mDb_page;
 
@@ -59,6 +62,7 @@ public class Page_adapter extends SimpleDragSortCursorAdapter // DragSortCursorA
 //    DB_page mDb_page;
 	Cursor cursor;
     int count;
+//    String linkUri;
 
     Page_adapter(Context context, int layout, Cursor c,
 						String[] from, int[] to, int flags)
@@ -74,16 +78,6 @@ public class Page_adapter extends SimpleDragSortCursorAdapter // DragSortCursorA
         mDb_page.close();
 
 	}
-
-    @Override
-    public void bindView(View view, Context context, Cursor cursor) {
-
-    }
-
-    @Override
-    public View newView(Context context, Cursor cursor, ViewGroup parent) {
-        return null;
-    }
 
     private class ViewHolder {
 		ImageView imageCheck;
@@ -124,7 +118,7 @@ public class Page_adapter extends SimpleDragSortCursorAdapter // DragSortCursorA
 	@Override
 	public View getView(final int position, View convertView, ViewGroup parent) {
 		System.out.println("Page_adapter / _getView / position = " +  position);
-		View view = convertView;
+//		View view = convertView;
 		final ViewHolder holder;
 
 		SharedPreferences pref_show_note_attribute = mAct.getSharedPreferences("show_note_attribute", 0);
@@ -132,7 +126,7 @@ public class Page_adapter extends SimpleDragSortCursorAdapter // DragSortCursorA
 		if (convertView == null)
 		{
 //			System.out.println("Page_adapter / _getView / convertView = null");
-			view = mAct.getLayoutInflater().inflate(R.layout.page_view_row, parent, false);
+			convertView = mAct.getLayoutInflater().inflate(R.layout.page_view_row, parent, false);
 
 			// set rectangular background
 //				view.setBackgroundColor(Util.mBG_ColorArray[mStyle]);
@@ -141,62 +135,63 @@ public class Page_adapter extends SimpleDragSortCursorAdapter // DragSortCursorA
     		switch(Page.mStyle)
     		{
     			case 0:
-    				view.setBackgroundResource(R.drawable.bg_0);
+                    convertView.setBackgroundResource(R.drawable.bg_0);
     				break;
     			case 1:
-    				view.setBackgroundResource(R.drawable.bg_1);
+					convertView.setBackgroundResource(R.drawable.bg_1);
     				break;
     			case 2:
-    				view.setBackgroundResource(R.drawable.bg_2);
+					convertView.setBackgroundResource(R.drawable.bg_2);
     				break;
     			case 3:
-    				view.setBackgroundResource(R.drawable.bg_3);
+					convertView.setBackgroundResource(R.drawable.bg_3);
     				break;
     			case 4:
-    				view.setBackgroundResource(R.drawable.bg_4);
+					convertView.setBackgroundResource(R.drawable.bg_4);
     				break;
     			case 5:
-    				view.setBackgroundResource(R.drawable.bg_5);
+					convertView.setBackgroundResource(R.drawable.bg_5);
     				break;
     			case 6:
-    				view.setBackgroundResource(R.drawable.bg_6);
+					convertView.setBackgroundResource(R.drawable.bg_6);
     				break;
     			case 7:
-    				view.setBackgroundResource(R.drawable.bg_7);
+					convertView.setBackgroundResource(R.drawable.bg_7);
     				break;
     			case 8:
-    				view.setBackgroundResource(R.drawable.bg_8);
+					convertView.setBackgroundResource(R.drawable.bg_8);
     				break;
     			case 9:
-    				view.setBackgroundResource(R.drawable.bg_9);
+					convertView.setBackgroundResource(R.drawable.bg_9);
     				break;
     			default:
     				break;
     		}
     		
 			holder = new ViewHolder();
-			holder.rowId= (TextView) view.findViewById(R.id.row_id);
-			holder.audioBlock = view.findViewById(R.id.audio_block);
-			holder.imageAudio = (ImageView) view.findViewById(R.id.img_audio);
-			holder.audioName = (TextView) view.findViewById(R.id.row_audio_name);
-			holder.imageCheck= (ImageView) view.findViewById(R.id.img_check);
-			holder.thumbBlock = view.findViewById(R.id.row_thumb_nail);
-			holder.thumbPicture = (ImageView) view.findViewById(R.id.thumb_picture);
-			holder.thumbAudio = (ImageView) view.findViewById(R.id.thumb_audio);
-			holder.thumbWeb = (CustomWebView) view.findViewById(R.id.thumb_web);
-			holder.imageDragger = (ImageView) view.findViewById(R.id.img_dragger);
-			holder.progressBar = (ProgressBar) view.findViewById(R.id.thumb_progress);
-			holder.textTitle = (TextView) view.findViewById(R.id.row_title);
-			holder.rowDivider = view.findViewById(R.id.row_divider);
-			holder.textBodyBlock = view.findViewById(R.id.row_body);
-			holder.textBody = (TextView) view.findViewById(R.id.row_body_text_view);
-			holder.textTime = (TextView) view.findViewById(R.id.row_time);
-			view.setTag(holder);
-		} 
+			holder.rowId= (TextView) convertView.findViewById(R.id.row_id);
+			holder.audioBlock = convertView.findViewById(R.id.audio_block);
+			holder.imageAudio = (ImageView) convertView.findViewById(R.id.img_audio);
+			holder.audioName = (TextView) convertView.findViewById(R.id.row_audio_name);
+			holder.imageCheck= (ImageView) convertView.findViewById(R.id.img_check);
+			holder.thumbBlock = convertView.findViewById(R.id.row_thumb_nail);
+			holder.thumbPicture = (ImageView) convertView.findViewById(R.id.thumb_picture);
+			holder.thumbAudio = (ImageView) convertView.findViewById(R.id.thumb_audio);
+			holder.thumbWeb = (CustomWebView) convertView.findViewById(R.id.thumb_web);
+			holder.imageDragger = (ImageView) convertView.findViewById(R.id.img_dragger);
+			holder.progressBar = (ProgressBar) convertView.findViewById(R.id.thumb_progress);
+			holder.textTitle = (TextView) convertView.findViewById(R.id.row_title);
+			holder.rowDivider = convertView.findViewById(R.id.row_divider);
+			holder.textBodyBlock = convertView.findViewById(R.id.row_body);
+			holder.textBody = (TextView) convertView.findViewById(R.id.row_body_text_view);
+			holder.textTime = (TextView) convertView.findViewById(R.id.row_time);
+			convertView.setTag(holder);
+
+		}
 		else
 		{
 //			System.out.println("Page_adapter / _getView / convertView != null");
-			holder = (ViewHolder) view.getTag();
+			holder = (ViewHolder) convertView.getTag();
 		}
 
 		// show row Id
@@ -460,7 +455,11 @@ public class Page_adapter extends SimpleDragSortCursorAdapter // DragSortCursorA
 	  	if(pref_show_note_attribute.getString("KEY_SHOW_BODY", "yes").equalsIgnoreCase("yes"))
 	  	{
 	  		// test only: enabled for showing picture path
-	  		String strBody = mDb_page.getNoteBody(position,true);
+            // todo
+            // case 1
+//	  		String strBody = mDb_page.getNoteBody(position,true);
+            // case 2
+            String strBody = cursor.getString(cursor.getColumnIndex(KEY_NOTE_BODY));
 	  		if(!Util.isEmptyString(strBody)){
 				//normal: do nothing
 			}
@@ -477,7 +476,11 @@ public class Page_adapter extends SimpleDragSortCursorAdapter // DragSortCursorA
 			holder.rowDivider.setVisibility(View.VISIBLE);
 			holder.textBody.setTextColor(ColorSet.mText_ColorArray[Page.mStyle]);
 			// time stamp
-			holder.textTime.setText(Util.getTimeString(mDb_page.getNoteCreatedTime(position,true)));
+            // todo
+            // case 1
+//            holder.textTime.setText(Util.getTimeString(mDb_page.getNoteCreatedTime(position,true)));
+            // case 2
+            holder.textTime.setText(Util.getTimeString((long)cursor.getColumnIndex(KEY_NOTE_CREATED)));
 			holder.textTime.setTextColor(ColorSet.mText_ColorArray[Page.mStyle]);
 	  	}
 	  	else
@@ -494,7 +497,11 @@ public class Page_adapter extends SimpleDragSortCursorAdapter // DragSortCursorA
 	  		holder.imageDragger.setVisibility(View.GONE);
 
 	  	// marking
-		if( mDb_page.getNoteMarking(position, true) == 1)
+        // todo
+        // case 1
+//        if( mDb_page.getNoteMarking(position, true) == 1)
+        // case 2
+        if( cursor.getColumnIndex(KEY_NOTE_MARKING) == 1)
 			holder.imageCheck.setBackgroundResource(Page.mStyle%2 == 1 ?
 	    			R.drawable.btn_check_on_holo_light:
 	    			R.drawable.btn_check_on_holo_dark);
@@ -503,7 +510,21 @@ public class Page_adapter extends SimpleDragSortCursorAdapter // DragSortCursorA
 					R.drawable.btn_check_off_holo_light:
 					R.drawable.btn_check_off_holo_dark);
 
-		return view;
+
+
+		///
+		convertView.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+
+				cursor.moveToPosition(position);
+				String linkUri = cursor.getString(cursor.getColumnIndex(KEY_NOTE_LINK_URI));
+				Page_new.openClickedItem(mAct,position,linkUri);
+			}
+		});
+		///
+
+		return convertView;
 	}
 
 }
