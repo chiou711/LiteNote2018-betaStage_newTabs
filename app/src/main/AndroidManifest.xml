@@ -26,8 +26,15 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme"
         >
-        <!--todo: .main.MainAct / .tabs.TabsHostAct-->
-        <!--todo: CustomTheme / MyTheme  -->
+
+        <!--case 1 original -->
+        <!--android:name=".main.MainAct"-->
+        <!--android:theme="@style/CustomTheme"-->
+
+        <!--case 2 new tabs -->
+        <!--android:name=".tabs.TabsHostAct"-->
+        <!--android:theme="@style/MyTheme"-->
+
         <activity
             android:name=".tabs.TabsHostAct"
             android:theme="@style/MyTheme"

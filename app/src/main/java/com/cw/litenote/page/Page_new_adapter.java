@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
+import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -23,31 +24,58 @@ import android.widget.TextView;
 
 import com.cw.litenote.R;
 import com.cw.litenote.operation.audio.AudioManager;
+import com.cw.litenote.util.ColorSet;
+import com.cw.litenote.util.CustomWebView;
+import com.cw.litenote.util.Util;
 import com.cw.litenote.util.audio.UtilAudio;
 import com.cw.litenote.util.image.AsyncTaskAudioBitmap;
 import com.cw.litenote.util.image.UtilImage;
 import com.cw.litenote.util.image.UtilImage_bitmapLoader;
-import com.cw.litenote.util.video.UtilVideo;
-import com.cw.litenote.util.CustomWebView;
 import com.cw.litenote.util.uil.UilCommon;
-import com.cw.litenote.util.Util;
-import com.cw.litenote.util.ColorSet;
+import com.cw.litenote.util.video.UtilVideo;
 import com.mobeta.android.dslv.SimpleDragSortCursorAdapter;
 
-import static com.cw.litenote.page.Page.mAct;
-import static com.cw.litenote.page.Page.mDb_page;
+//todo
+// case 1
+import static com.cw.litenote.db.DB_page.KEY_NOTE_AUDIO_URI;
+import static com.cw.litenote.db.DB_page.KEY_NOTE_BODY;
+import static com.cw.litenote.db.DB_page.KEY_NOTE_CREATED;
+import static com.cw.litenote.db.DB_page.KEY_NOTE_LINK_URI;
+import static com.cw.litenote.db.DB_page.KEY_NOTE_MARKING;
+import static com.cw.litenote.db.DB_page.KEY_NOTE_PICTURE_URI;
+import static com.cw.litenote.db.DB_page.KEY_NOTE_TITLE;
+import static com.cw.litenote.page.Page_new.mDb_page;
+
+//todo
+// case 2
+//import static com.cw.litenote.page.Page.mDb_page;
 
 
 // Pager adapter
-public class Page_adapter extends SimpleDragSortCursorAdapter
+public class Page_new_adapter extends SimpleDragSortCursorAdapter // DragSortCursorAdapter //ResourceDragSortCursorAdapter//SimpleDragSortCursorAdapter
 {
-	Page_adapter(Context context, int layout, Cursor c,
-				 String[] from, int[] to, int flags)
+	FragmentActivity mAct;
+//    DB_page mDb_page;
+	Cursor cursor;
+    int count;
+//    String linkUri;
+
+    Page_new_adapter(Context context, int layout, Cursor c,
+                     String[] from, int[] to, int flags)
 	{
 		super(context, layout, c, from, to, flags);
+		mAct = (FragmentActivity) context;
+		cursor = c;
+		count = c.getCount();
+        System.out.println("Page_adapter / _Page_adapter / count =" + count);
+
+        // add this for fixing java.lang.IllegalStateException: attempt to re-open an already-closed object
+        mDb_page.open();
+        mDb_page.close();
+
 	}
 
-	private class ViewHolder {
+    private class ViewHolder {
 		ImageView imageCheck;
 		TextView rowId;
 		View audioBlock;
@@ -65,10 +93,12 @@ public class Page_adapter extends SimpleDragSortCursorAdapter
 		CustomWebView thumbWeb;
 		ProgressBar progressBar;
 	}
-
+	
 	@Override
 	public int getCount() {
-		return mDb_page.getNotesCount(true);
+//        System.out.println("Page_adapter / _getCount / count = "+ cnt);
+//		DB_page mDb_page = new DB_page(mAct, DB_page.getFocusPage_tableId());//??? Why not working?
+		return count;
 	}
 
 	@Override
@@ -83,89 +113,108 @@ public class Page_adapter extends SimpleDragSortCursorAdapter
 
 	@Override
 	public View getView(final int position, View convertView, ViewGroup parent) {
-//		System.out.println("Page_adapter / _getView / position = " +  position);
-		View view = convertView;
+		System.out.println("Page_adapter / _getView / position = " +  position);
+//		View view = convertView;
 		final ViewHolder holder;
 
 		SharedPreferences pref_show_note_attribute = mAct.getSharedPreferences("show_note_attribute", 0);
 
 		if (convertView == null)
 		{
-			view = mAct.getLayoutInflater().inflate(R.layout.page_view_row, parent, false);
+//			System.out.println("Page_adapter / _getView / convertView = null");
+			convertView = mAct.getLayoutInflater().inflate(R.layout.page_view_row, parent, false);
 
 			// set rectangular background
 //				view.setBackgroundColor(Util.mBG_ColorArray[mStyle]);
-
+			
 			//set round corner and background color
-			switch(Page.mStyle)
-			{
-				case 0:
-					view.setBackgroundResource(R.drawable.bg_0);
-					break;
-				case 1:
-					view.setBackgroundResource(R.drawable.bg_1);
-					break;
-				case 2:
-					view.setBackgroundResource(R.drawable.bg_2);
-					break;
-				case 3:
-					view.setBackgroundResource(R.drawable.bg_3);
-					break;
-				case 4:
-					view.setBackgroundResource(R.drawable.bg_4);
-					break;
-				case 5:
-					view.setBackgroundResource(R.drawable.bg_5);
-					break;
-				case 6:
-					view.setBackgroundResource(R.drawable.bg_6);
-					break;
-				case 7:
-					view.setBackgroundResource(R.drawable.bg_7);
-					break;
-				case 8:
-					view.setBackgroundResource(R.drawable.bg_8);
-					break;
-				case 9:
-					view.setBackgroundResource(R.drawable.bg_9);
-					break;
-				default:
-					break;
-			}
-
+    		switch(Page.mStyle)
+    		{
+    			case 0:
+                    convertView.setBackgroundResource(R.drawable.bg_0);
+    				break;
+    			case 1:
+					convertView.setBackgroundResource(R.drawable.bg_1);
+    				break;
+    			case 2:
+					convertView.setBackgroundResource(R.drawable.bg_2);
+    				break;
+    			case 3:
+					convertView.setBackgroundResource(R.drawable.bg_3);
+    				break;
+    			case 4:
+					convertView.setBackgroundResource(R.drawable.bg_4);
+    				break;
+    			case 5:
+					convertView.setBackgroundResource(R.drawable.bg_5);
+    				break;
+    			case 6:
+					convertView.setBackgroundResource(R.drawable.bg_6);
+    				break;
+    			case 7:
+					convertView.setBackgroundResource(R.drawable.bg_7);
+    				break;
+    			case 8:
+					convertView.setBackgroundResource(R.drawable.bg_8);
+    				break;
+    			case 9:
+					convertView.setBackgroundResource(R.drawable.bg_9);
+    				break;
+    			default:
+    				break;
+    		}
+    		
 			holder = new ViewHolder();
-			holder.rowId= (TextView) view.findViewById(R.id.row_id);
-			holder.audioBlock = view.findViewById(R.id.audio_block);
-			holder.imageAudio = (ImageView) view.findViewById(R.id.img_audio);
-			holder.audioName = (TextView) view.findViewById(R.id.row_audio_name);
-			holder.imageCheck= (ImageView) view.findViewById(R.id.img_check);
-			holder.thumbBlock = view.findViewById(R.id.row_thumb_nail);
-			holder.thumbPicture = (ImageView) view.findViewById(R.id.thumb_picture);
-			holder.thumbAudio = (ImageView) view.findViewById(R.id.thumb_audio);
-			holder.thumbWeb = (CustomWebView) view.findViewById(R.id.thumb_web);
-			holder.imageDragger = (ImageView) view.findViewById(R.id.img_dragger);
-			holder.progressBar = (ProgressBar) view.findViewById(R.id.thumb_progress);
-			holder.textTitle = (TextView) view.findViewById(R.id.row_title);
-			holder.rowDivider = view.findViewById(R.id.row_divider);
-			holder.textBodyBlock = view.findViewById(R.id.row_body);
-			holder.textBody = (TextView) view.findViewById(R.id.row_body_text_view);
-			holder.textTime = (TextView) view.findViewById(R.id.row_time);
-			view.setTag(holder);
+			holder.rowId= (TextView) convertView.findViewById(R.id.row_id);
+			holder.audioBlock = convertView.findViewById(R.id.audio_block);
+			holder.imageAudio = (ImageView) convertView.findViewById(R.id.img_audio);
+			holder.audioName = (TextView) convertView.findViewById(R.id.row_audio_name);
+			holder.imageCheck= (ImageView) convertView.findViewById(R.id.img_check);
+			holder.thumbBlock = convertView.findViewById(R.id.row_thumb_nail);
+			holder.thumbPicture = (ImageView) convertView.findViewById(R.id.thumb_picture);
+			holder.thumbAudio = (ImageView) convertView.findViewById(R.id.thumb_audio);
+			holder.thumbWeb = (CustomWebView) convertView.findViewById(R.id.thumb_web);
+			holder.imageDragger = (ImageView) convertView.findViewById(R.id.img_dragger);
+			holder.progressBar = (ProgressBar) convertView.findViewById(R.id.thumb_progress);
+			holder.textTitle = (TextView) convertView.findViewById(R.id.row_title);
+			holder.rowDivider = convertView.findViewById(R.id.row_divider);
+			holder.textBodyBlock = convertView.findViewById(R.id.row_body);
+			holder.textBody = (TextView) convertView.findViewById(R.id.row_body_text_view);
+			holder.textTime = (TextView) convertView.findViewById(R.id.row_time);
+			convertView.setTag(holder);
+
 		}
 		else
 		{
-			holder = (ViewHolder) view.getTag();
+//			System.out.println("Page_adapter / _getView / convertView != null");
+			holder = (ViewHolder) convertView.getTag();
 		}
 
 		// show row Id
 		holder.rowId.setText(String.valueOf(position+1));
 		holder.rowId.setTextColor(ColorSet.mText_ColorArray[Page.mStyle]);
-
+		
 		// show check box, title , picture
-		String strTitle = mDb_page.getNoteTitle(position,true);
-		String pictureUri = mDb_page.getNotePictureUri(position,true);
-		String audioUri = mDb_page.getNoteAudioUri(position,true);
-		String linkUri = mDb_page.getNoteLinkUri(position,true);
+		// case 1
+//		String strTitle = mDb_page.getNoteTitle(position,true);
+//        String pictureUri = mDb_page.getNotePictureUri(position,true);
+//        String audioUri = mDb_page.getNoteAudioUri(position,true);
+//        String linkUri = mDb_page.getNoteLinkUri(position,true);
+
+		//todo
+		// case 2
+		String strTitle = null;
+        String pictureUri = null;
+        String audioUri = null;
+        String linkUri = null;
+		if(cursor.moveToPosition(position)) {
+            strTitle = cursor.getString(cursor.getColumnIndex(KEY_NOTE_TITLE));
+            pictureUri = cursor.getString(cursor.getColumnIndex(KEY_NOTE_PICTURE_URI));
+            audioUri = cursor.getString(cursor.getColumnIndex(KEY_NOTE_AUDIO_URI));
+            linkUri = cursor.getString(cursor.getColumnIndex(KEY_NOTE_LINK_URI));
+        }
+
+		System.out.println("Page_adapter / _getView / strTitle = " +  strTitle);
 
 		// set title
 		if( Util.isEmptyString(strTitle) )
@@ -214,10 +263,10 @@ public class Page_adapter extends SimpleDragSortCursorAdapter
 
 		// show audio highlight if audio is not at Stop
 		if( PageUi.isSamePageTable() &&
-				(position == AudioManager.mAudioPos)  &&
-				(AudioManager.mMediaPlayer != null) &&
-				(AudioManager.getPlayerState() != AudioManager.PLAYER_AT_STOP) &&
-				(AudioManager.getAudioPlayMode() == AudioManager.PAGE_PLAY_MODE))
+			(position == AudioManager.mAudioPos)  &&
+			(AudioManager.mMediaPlayer != null) &&
+			(AudioManager.getPlayerState() != AudioManager.PLAYER_AT_STOP) &&
+			(AudioManager.getAudioPlayMode() == AudioManager.PAGE_PLAY_MODE))
 		{
 			Page.mHighlightPosition = position;
 			holder.audioBlock.setBackgroundResource(R.drawable.bg_highlight_border);
@@ -261,7 +310,7 @@ public class Page_adapter extends SimpleDragSortCursorAdapter
 
 		// Show image thumb nail if picture Uri is none and YouTube link exists
 		if(Util.isEmptyString(pictureUri) &&
-				Util.isYouTubeLink(linkUri)      )
+		   Util.isYouTubeLink(linkUri)      )
 		{
 			pictureUri = "http://img.youtube.com/vi/"+Util.getYoutubeId(linkUri)+"/0.jpg";
 		}
@@ -269,7 +318,7 @@ public class Page_adapter extends SimpleDragSortCursorAdapter
 
 		// show thumb nail if picture Uri exists
 		if(UtilImage.hasImageExtension(pictureUri, mAct ) ||
-				UtilVideo.hasVideoExtension(pictureUri, mAct )   )
+		   UtilVideo.hasVideoExtension(pictureUri, mAct )   )
 		{
 			holder.thumbBlock.setVisibility(View.VISIBLE);
 			holder.thumbPicture.setVisibility(View.VISIBLE);
@@ -279,12 +328,12 @@ public class Page_adapter extends SimpleDragSortCursorAdapter
 			try
 			{
 				new UtilImage_bitmapLoader(holder.thumbPicture,
-						pictureUri,
-						holder.progressBar,
-						(Page.mStyle % 2 == 1 ?
-								UilCommon.optionsForRounded_light:
-								UilCommon.optionsForRounded_dark),
-						mAct);
+										   pictureUri,
+										   holder.progressBar,
+										   (Page.mStyle % 2 == 1 ?
+											UilCommon.optionsForRounded_light:
+											UilCommon.optionsForRounded_dark),
+										   mAct);
 			}
 			catch(Exception e)
 			{
@@ -304,12 +353,12 @@ public class Page_adapter extends SimpleDragSortCursorAdapter
 			holder.thumbWeb.setVisibility(View.GONE);
 			try
 			{
-				AsyncTaskAudioBitmap audioAsyncTask;
-				audioAsyncTask = new AsyncTaskAudioBitmap(mAct,
-						audioUri,
-						holder.thumbAudio,
-						holder.progressBar,
-						true);
+			    AsyncTaskAudioBitmap audioAsyncTask;
+			    audioAsyncTask = new AsyncTaskAudioBitmap(mAct,
+						    							  audioUri,
+						    							  holder.thumbAudio,
+						    							  holder.progressBar,
+                                                          true);
 				audioAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,"Searching media ...");
 			}
 			catch(Exception e)
@@ -323,7 +372,7 @@ public class Page_adapter extends SimpleDragSortCursorAdapter
 		}
 		// set web title and web view thumb nail of link if no title content
 		else if(!Util.isEmptyString(linkUri) &&
-				linkUri.startsWith("http")   &&
+                linkUri.startsWith("http")   &&
 				!Util.isYouTubeLink(linkUri)   )
 		{
 			// reset web view
@@ -349,11 +398,11 @@ public class Page_adapter extends SimpleDragSortCursorAdapter
 			holder.thumbWeb.setOnTouchListener(new View.OnTouchListener() {
 				@Override
 				public boolean onTouch(View v, MotionEvent event) {
-					if( (event.getAction() == MotionEvent.ACTION_POINTER_UP) ||
-							(event.getAction() == MotionEvent.ACTION_UP)            )
-					{
-						Page.openClickedItem(position);
-					}
+                    if( (event.getAction() == MotionEvent.ACTION_POINTER_UP) ||
+                        (event.getAction() == MotionEvent.ACTION_UP)            )
+                    {
+                        Page.openClickedItem(position);
+                    }
 					return true;
 				}
 			});
@@ -364,11 +413,11 @@ public class Page_adapter extends SimpleDragSortCursorAdapter
 			//Add for non-stop showing of full screen web view
 			holder.thumbWeb.setWebViewClient(new WebViewClient() {
 				@Override
-				public boolean shouldOverrideUrlLoading(WebView view, String url)
-				{
-					view.loadUrl(url);
-					return true;
-				}
+			    public boolean shouldOverrideUrlLoading(WebView view, String url)
+			    {
+			        view.loadUrl(url);
+			        return true;
+			    }
 			});
 
 
@@ -399,17 +448,21 @@ public class Page_adapter extends SimpleDragSortCursorAdapter
 
 
 		// Show note body or not
-		if(pref_show_note_attribute.getString("KEY_SHOW_BODY", "yes").equalsIgnoreCase("yes"))
-		{
-			// test only: enabled for showing picture path
-			String strBody = mDb_page.getNoteBody(position,true);
-			if(!Util.isEmptyString(strBody)){
+	  	if(pref_show_note_attribute.getString("KEY_SHOW_BODY", "yes").equalsIgnoreCase("yes"))
+	  	{
+	  		// test only: enabled for showing picture path
+            // todo
+            // case 1
+//	  		String strBody = mDb_page.getNoteBody(position,true);
+            // case 2
+            String strBody = cursor.getString(cursor.getColumnIndex(KEY_NOTE_BODY));
+	  		if(!Util.isEmptyString(strBody)){
 				//normal: do nothing
 			}
-			else if(!Util.isEmptyString(pictureUri)) {
+	  		else if(!Util.isEmptyString(pictureUri)) {
 //				strBody = pictureUri;//show picture Uri
 			}
-			else if(!Util.isEmptyString(linkUri)) {
+	  		else if(!Util.isEmptyString(linkUri)) {
 //				strBody = linkUri; //show link Uri
 			}
 
@@ -419,33 +472,55 @@ public class Page_adapter extends SimpleDragSortCursorAdapter
 			holder.rowDivider.setVisibility(View.VISIBLE);
 			holder.textBody.setTextColor(ColorSet.mText_ColorArray[Page.mStyle]);
 			// time stamp
-			holder.textTime.setText(Util.getTimeString(mDb_page.getNoteCreatedTime(position,true)));
+            // todo
+            // case 1
+//            holder.textTime.setText(Util.getTimeString(mDb_page.getNoteCreatedTime(position,true)));
+            // case 2
+            holder.textTime.setText(Util.getTimeString((long)cursor.getColumnIndex(KEY_NOTE_CREATED)));
 			holder.textTime.setTextColor(ColorSet.mText_ColorArray[Page.mStyle]);
-		}
-		else
-		{
+	  	}
+	  	else
+	  	{
 			holder.rowDivider.setVisibility(View.GONE);
-			holder.textBodyBlock.setVisibility(View.GONE);
-		}
+	  		holder.textBodyBlock.setVisibility(View.GONE);
+	  	}
 
 
-		// dragger
-		if(pref_show_note_attribute.getString("KEY_ENABLE_DRAGGABLE", "no").equalsIgnoreCase("yes"))
-			holder.imageDragger.setVisibility(View.VISIBLE);
-		else
-			holder.imageDragger.setVisibility(View.GONE);
+	  	// dragger
+	  	if(pref_show_note_attribute.getString("KEY_ENABLE_DRAGGABLE", "no").equalsIgnoreCase("yes"))
+	  		holder.imageDragger.setVisibility(View.VISIBLE);
+	  	else
+	  		holder.imageDragger.setVisibility(View.GONE);
 
-		// marking
-		if( mDb_page.getNoteMarking(position, true) == 1)
+	  	// marking
+        // todo
+        // case 1
+//        if( mDb_page.getNoteMarking(position, true) == 1)
+        // case 2
+        if( cursor.getColumnIndex(KEY_NOTE_MARKING) == 1)
 			holder.imageCheck.setBackgroundResource(Page.mStyle%2 == 1 ?
-					R.drawable.btn_check_on_holo_light:
-					R.drawable.btn_check_on_holo_dark);
+	    			R.drawable.btn_check_on_holo_light:
+	    			R.drawable.btn_check_on_holo_dark);
 		else
 			holder.imageCheck.setBackgroundResource(Page.mStyle%2 == 1 ?
 					R.drawable.btn_check_off_holo_light:
 					R.drawable.btn_check_off_holo_dark);
 
-		return view;
+
+
+		///
+		convertView.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+
+				cursor.moveToPosition(position);
+				String linkUri = cursor.getString(cursor.getColumnIndex(KEY_NOTE_LINK_URI));
+				Page_new.openClickedItem(mAct,position,linkUri);
+			}
+		});
+		///
+
+		return convertView;
 	}
 
 }

@@ -216,7 +216,7 @@ public class Page_new extends UilListViewBaseFragment
 	/**
 	 * fill data
 	 */
-	public Page_adapter mItemAdapter;
+	public Page_new_adapter mItemAdapter;
 	public void fillData(FragmentActivity mAct,DragSortListView listView)
 	{
 		if(en_dbg_msg)
@@ -252,7 +252,7 @@ public class Page_new extends UilListViewBaseFragment
 		String[] from = new String[] { DB_page.KEY_NOTE_TITLE};
 		int[] to = new int[] { R.id.row_whole};
 
-		mItemAdapter = new Page_adapter(
+		mItemAdapter = new Page_new_adapter(
 				mAct,
 				R.layout.page_view_row,
 				mCursor_note,

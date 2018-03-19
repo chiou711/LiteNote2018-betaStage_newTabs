@@ -233,10 +233,14 @@ public class MainAct extends FragmentActivity implements OnBackStackChangedListe
             // new folder
             mFolder = new Folder(mAct);
 
+            // todo
+            // case 1 original
 	        // enable ActionBar app icon to behave as action to toggle nav drawer
-//	        getActionBar().setDisplayHomeAsUpEnabled(true);
-//	        getActionBar().setHomeButtonEnabled(true);
-//			getActionBar().setBackgroundDrawable(new ColorDrawable(ColorSet.getBarColor(mAct)));
+	        getActionBar().setDisplayHomeAsUpEnabled(true);
+	        getActionBar().setHomeButtonEnabled(true);
+			getActionBar().setBackgroundDrawable(new ColorDrawable(ColorSet.getBarColor(mAct)));
+
+			// case 2 new tabs
 
 	        mContext = getBaseContext();
 
