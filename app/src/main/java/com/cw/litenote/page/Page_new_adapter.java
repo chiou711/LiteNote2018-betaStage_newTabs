@@ -66,7 +66,11 @@ public class Page_new_adapter extends SimpleDragSortCursorAdapter // DragSortCur
 		super(context, layout, c, from, to, flags);
 		mAct = (FragmentActivity) context;
 		cursor = c;
-		count = c.getCount();
+		if(c != null)
+		    count = c.getCount();
+		else
+		    count = 0;
+
         System.out.println("Page_adapter / _Page_adapter / count =" + count);
 
         // add this for fixing java.lang.IllegalStateException: attempt to re-open an already-closed object

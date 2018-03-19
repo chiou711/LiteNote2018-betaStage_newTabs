@@ -5,8 +5,10 @@ import java.util.Date;
 import com.cw.litenote.page.Page;
 import com.cw.litenote.R;
 import com.cw.litenote.page.PageUi;
+import com.cw.litenote.page.Page_new;
 import com.cw.litenote.tabs.TabsHost;
 import com.cw.litenote.db.DB_page;
+import com.cw.litenote.tabs.TabsHost_new;
 import com.cw.litenote.util.image.TouchImageView;
 import com.cw.litenote.util.image.UtilImage_bitmapLoader;
 import com.cw.litenote.util.ColorSet;
@@ -85,7 +87,7 @@ public class Note_common {
 	    currPictureUri = pictureUri;
 	    currAudioUri = audioUri;
 	    
-	    dB = Page.mDb_page;
+	    dB = Page_new.mDb_page;
 	    
 	    oriMarking = dB.getNoteMarking_byId(noteId);
 		
@@ -97,7 +99,7 @@ public class Note_common {
 	public Note_common(Activity act)
     {
     	this.act = act;
-    	dB = Page.mDb_page;
+    	dB = Page_new.mDb_page;
     }
 
 	public void UI_init()
@@ -193,7 +195,7 @@ public class Note_common {
 
 	public void UI_init_text()
 	{
-		style = TabsHost.mDbFolder.getPageStyle(PageUi.getFocus_pagePos(), true);
+		style = TabsHost_new.mDbFolder.getPageStyle(PageUi.getFocus_pagePos(), true);
 
 		LinearLayout block = (LinearLayout) act.findViewById(R.id.edit_title_block);
 		if(block != null)

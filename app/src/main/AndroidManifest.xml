@@ -27,17 +27,9 @@
         android:theme="@style/AppTheme"
         >
 
-        <!--case 1 original -->
-        <!--android:name=".main.MainAct"-->
-        <!--android:theme="@style/CustomTheme"-->
-
-        <!--case 2 new tabs -->
-        <!--android:name=".tabs.TabsHostAct"-->
-        <!--android:theme="@style/MyTheme"-->
-
         <activity
-            android:name=".tabs.TabsHostAct"
-            android:theme="@style/MyTheme"
+            android:name=".main.MainAct"
+            android:theme="@style/CustomTheme"
             android:launchMode="singleTop"
             android:configChanges="orientation|keyboard|keyboardHidden|screenSize|screenLayout|uiMode"
             android:label="@string/app_name">
@@ -59,8 +51,6 @@
                 android:value=".main.MainAct" />
         </activity>
         <activity android:name=".note_add.Note_addAudio"/>
-        <!--<activity android:theme="@style/MyTheme"-->
-                  <!--android:name=".tabs.TabsHostAct"/>-->
         <activity android:name=".note_add.Note_addCameraImage"/>
         <activity android:name=".note_add.Note_addReadyImage"/>
         <activity android:name=".note_add.Note_addCameraVideo"/>

@@ -23,6 +23,7 @@ import com.cw.litenote.operation.import_export.Import_webAct;
 import com.cw.litenote.page.Checked_notes_option;
 import com.cw.litenote.page.PageUi;
 import com.cw.litenote.page.Page_audio;
+import com.cw.litenote.page.Page_new;
 import com.cw.litenote.tabs.TabsHost;
 import com.cw.litenote.page.Page;
 import com.cw.litenote.tabs.TabsHost_new;
@@ -233,14 +234,10 @@ public class MainAct extends FragmentActivity implements OnBackStackChangedListe
             // new folder
             mFolder = new Folder(mAct);
 
-            // todo
-            // case 1 original
 	        // enable ActionBar app icon to behave as action to toggle nav drawer
 	        getActionBar().setDisplayHomeAsUpEnabled(true);
 	        getActionBar().setHomeButtonEnabled(true);
 			getActionBar().setBackgroundDrawable(new ColorDrawable(ColorSet.getBarColor(mAct)));
-
-			// case 2 new tabs
 
 	        mContext = getBaseContext();
 
@@ -376,11 +373,11 @@ public class MainAct extends FragmentActivity implements OnBackStackChangedListe
 //            mAct.getSupportFragmentManager().beginTransaction().remove(TabAnimation.mFragmentList.get(i)).commit();
 //        }
 
-        if( TabsHost_new.mFragmentList != null) {
-            for (int i = 0; i < TabsHost_new.mFragmentList.size(); i++) {
-                mAct.getSupportFragmentManager().beginTransaction().remove(TabsHost_new.mFragmentList.get(i)).commit();
-            }
-        }
+//        if( TabsHost_new.mFragmentList != null) {
+//            for (int i = 0; i < TabsHost_new.mFragmentList.size(); i++) {
+//                mAct.getSupportFragmentManager().beginTransaction().remove(TabsHost_new.mFragmentList.get(i)).commit();
+//            }
+//        }
 
 
     }
@@ -562,11 +559,11 @@ public class MainAct extends FragmentActivity implements OnBackStackChangedListe
 
             do
             {
-                Page.currPlayPosition++;
-                if(Page.currPlayPosition >= Page.getNotesCountInPage())
-                    Page.currPlayPosition = 0; //back to first index
+                Page_new.currPlayPosition++;
+                if(Page_new.currPlayPosition >= Page_new.getNotesCountInPage(mAct))
+                    Page_new.currPlayPosition = 0; //back to first index
 
-                nextLinkTitle = mMainUi.getYouTubeLink(this,Page.currPlayPosition);
+                nextLinkTitle = mMainUi.getYouTubeLink(this,Page_new.currPlayPosition);
             }
             while (!Util.isYouTubeLink(nextLinkTitle));
 
