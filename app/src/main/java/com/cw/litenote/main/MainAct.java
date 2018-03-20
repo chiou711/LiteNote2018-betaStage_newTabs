@@ -26,7 +26,6 @@ import com.cw.litenote.page.Page_audio;
 import com.cw.litenote.page.Page_new;
 import com.cw.litenote.tabs.TabsHost;
 import com.cw.litenote.page.Page;
-import com.cw.litenote.tabs.TabsHost_new;
 import com.cw.litenote.util.ColorSet;
 import com.cw.litenote.util.DeleteFileAlarmReceiver;
 import com.cw.litenote.operation.import_export.Export_toSDCardFragment;
@@ -365,21 +364,6 @@ public class MainAct extends FragmentActivity implements OnBackStackChangedListe
     protected void onPause() {
     	super.onPause();
     	System.out.println("MainAct / _onPause");
-
-    	// todo
-    	// Remove fragments for TabAnimation
-//        for (int i = 0; i < TabAnimation.mFragmentList.size(); i++)
-//        {
-//            mAct.getSupportFragmentManager().beginTransaction().remove(TabAnimation.mFragmentList.get(i)).commit();
-//        }
-
-//        if( TabsHost_new.mFragmentList != null) {
-//            for (int i = 0; i < TabsHost_new.mFragmentList.size(); i++) {
-//                mAct.getSupportFragmentManager().beginTransaction().remove(TabsHost_new.mFragmentList.get(i)).commit();
-//            }
-//        }
-
-
     }
 
 	@Override

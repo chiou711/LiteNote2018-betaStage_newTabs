@@ -153,7 +153,7 @@ import java.util.List;
 
         @Override
         public Fragment getItem(int position) {
-            System.out.println("TabAnimation / ViewPagerAdapter / getItem / position = " + position);
+            System.out.println("TabAnimation / TabsPagerAdapter / getItem / position = " + position);
             return mFragmentList.get(position);
         }
 

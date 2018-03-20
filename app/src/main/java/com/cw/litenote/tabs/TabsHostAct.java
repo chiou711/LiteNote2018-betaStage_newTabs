@@ -165,7 +165,7 @@ public class TabsHostAct extends AppCompatActivity implements TabLayout.OnTabSel
 //        public Page_simple getItem(int position)
         public Page_new getItem(int position)
         {
-            System.out.println("TabsHosAct / ViewPagerAdapter / _getItem / position = " + position);
+            System.out.println("TabsHosAct / TabsPagerAdapter / _getItem / position = " + position);
             return mFragmentList.get(position);
         }
 
@@ -190,7 +190,7 @@ public class TabsHostAct extends AppCompatActivity implements TabLayout.OnTabSel
         @Override
         public void setPrimaryItem(ViewGroup container, int position, Object object) {
             super.setPrimaryItem(container, position, object);
-//			System.out.println("TabsHosAct / ViewPagerAdapter / _setPrimaryItem / position = " + position);
+//			System.out.println("TabsHosAct / TabsPagerAdapter / _setPrimaryItem / position = " + position);
         }
 
     }

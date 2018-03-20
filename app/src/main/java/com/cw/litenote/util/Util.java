@@ -477,7 +477,9 @@ public class Util
     // get current page style
 	static public int getCurrentPageStyle()
 	{
-		return TabsHost_new.mDbFolder.getPageStyle(PageUi.getFocus_pagePos(), true);
+        int focusFolder_tableId = Pref.getPref_focusView_folder_tableId(MainAct.mAct);
+        DB_folder db = new DB_folder(MainAct.mAct, focusFolder_tableId);
+        return db.getPageStyle(PageUi.getFocus_pagePos(), true);
 	}
 
 	// get style count

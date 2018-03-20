@@ -2,16 +2,18 @@ package com.cw.litenote.note_common;
 
 import java.util.Date;
 
+import com.cw.litenote.db.DB_folder;
+import com.cw.litenote.main.MainAct;
 import com.cw.litenote.page.Page;
 import com.cw.litenote.R;
 import com.cw.litenote.page.PageUi;
 import com.cw.litenote.page.Page_new;
 import com.cw.litenote.tabs.TabsHost;
 import com.cw.litenote.db.DB_page;
-import com.cw.litenote.tabs.TabsHost_new;
 import com.cw.litenote.util.image.TouchImageView;
 import com.cw.litenote.util.image.UtilImage_bitmapLoader;
 import com.cw.litenote.util.ColorSet;
+import com.cw.litenote.util.preferences.Pref;
 import com.cw.litenote.util.uil.UilCommon;
 import com.cw.litenote.util.Util;
 
@@ -195,7 +197,9 @@ public class Note_common {
 
 	public void UI_init_text()
 	{
-		style = TabsHost_new.mDbFolder.getPageStyle(PageUi.getFocus_pagePos(), true);
+        int focusFolder_tableId = Pref.getPref_focusView_folder_tableId(act);
+        DB_folder db = new DB_folder(MainAct.mAct, focusFolder_tableId);
+		style = db.getPageStyle(PageUi.getFocus_pagePos(), true);
 
 		LinearLayout block = (LinearLayout) act.findViewById(R.id.edit_title_block);
 		if(block != null)
