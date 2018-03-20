@@ -4,8 +4,8 @@ import android.media.MediaPlayer;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.cw.litenote.page.Page;
 import com.cw.litenote.db.DB_page;
+import com.cw.litenote.page.Page_new;
 import com.cw.litenote.util.Util;
 
 public class AudioManager
@@ -156,7 +156,7 @@ public class AudioManager
 	// Update audio info
 	void updateAudioInfo()
 	{
-		DB_page db_page = Page.mDb_page;
+		DB_page db_page = Page_new.mDb_page;
 		
 		db_page.open();
 	 	// update media info 

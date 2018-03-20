@@ -12,6 +12,7 @@ import com.cw.litenote.operation.audio.AudioPlayer_page;
 import com.cw.litenote.tabs.TabsHost;
 import com.cw.litenote.main.MainAct;
 import com.cw.litenote.note.Note;
+import com.cw.litenote.tabs.TabsHost_new;
 import com.cw.litenote.util.audio.UtilAudio;
 import com.cw.litenote.note.Note_edit;
 import com.cw.litenote.util.ColorSet;
@@ -162,7 +163,8 @@ public class Page_new extends UilListViewBaseFragment
 			public void onItemClick(AdapterView<?> arg0, View view, int position, long id)
 			{
 				System.out.println("Page_new / _setOnItemClickListener / position = " + position);
-//				openClickedItem(mAct,position);
+				String linkUri = mDb_page.getNoteLinkUri(position,true);
+				openClickedItem(mAct,position,linkUri);
 			}
 		});
 
@@ -239,10 +241,7 @@ public class Page_new extends UilListViewBaseFragment
 
         mDndListView.setDividerHeight(3);
         */
-//		if(mDb_page == null)
-//			return;
 
-//        mDb_page = new DB_page(mAct,DB_page.getFocusPage_tableId());
         mDb_page = new DB_page(getActivity(), pageTableId);
 		mDb_page.open();
 		mCursor_note = mDb_page.mCursor_note;
@@ -260,7 +259,6 @@ public class Page_new extends UilListViewBaseFragment
 				to,
 				0
 		);
-//		mDb_page.close();
 
 		mItemAdapter.notifyDataSetChanged();
 		listView.setAdapter(mItemAdapter);
@@ -411,7 +409,7 @@ public class Page_new extends UilListViewBaseFragment
 			int loop = Math.abs(startPosition-endPosition);
 			for(int i=0;i< loop;i++)
 			{
-				swapRows(Page.mDb_page, startPosition,endPosition);
+				swapRows(mDb_page, startPosition,endPosition);
 				if((startPosition-endPosition) >0)
 					endPosition++;
 				else
@@ -681,16 +679,17 @@ public class Page_new extends UilListViewBaseFragment
 
             //todo ori
             // toggle marking
-			int markingNow = toggleNoteMarking(mAct,position);
+			int markingNow = toggleNoteMarking(MainAct.mAct,position);
 
             // Stop if unmarked item is at playing state
             if(AudioManager.mAudioPos == position) {
 				UtilAudio.stopAudioIfNeeded();
-				if(markingNow == 0)
-                    TabsHost.setAudioPlayingTab_WithHighlight(false);
+				//todo TBD
+//				if(markingNow == 0)
+//                    TabsHost_new.setAudioPlayingTab_WithHighlight(false);
 			}
 
-			// update list view
+			// update list view //todo how to refresh page list view ???
             mItemAdapter.notifyDataSetChanged(); //note: add this can avoid conflict of onMark and onItemClick
 
 			// update footer
@@ -706,8 +705,8 @@ public class Page_new extends UilListViewBaseFragment
 	public static int toggleNoteMarking(FragmentActivity mAct,int position)
 	{
 		int marking = 0;
-
-        DB_page mDb_page = new DB_page(mAct, DB_page.getFocusPage_tableId());
+		int pageTableId = TabsHost_new.currPageTableId;
+        DB_page mDb_page = new DB_page(mAct, pageTableId);
 		mDb_page.open();
 		int count = mDb_page.getNotesCount(false);
 		if(position >= count) //end of list
@@ -724,11 +723,13 @@ public class Page_new extends UilListViewBaseFragment
 		Long idNote =  mDb_page.getNoteId(position,false);
 
 		// toggle the marking
-		if(mDb_page.getNoteMarking(position,false) == 0) {
+		if(mDb_page.getNoteMarking(position,false) == 0)
+		{
 			mDb_page.updateNote(idNote, strNote, strPictureUri, strAudioUri, "", strLinkUri, strNoteBody, 1, 0, false);
 			marking = 1;
 		}
-		else {
+		else
+		{
 			mDb_page.updateNote(idNote, strNote, strPictureUri, strAudioUri, "", strLinkUri, strNoteBody, 0, 0, false);
 			marking = 0;
 		}

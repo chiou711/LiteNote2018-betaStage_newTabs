@@ -8,8 +8,8 @@ import com.cw.litenote.page.Page;
 import com.cw.litenote.R;
 import com.cw.litenote.page.PageUi;
 import com.cw.litenote.page.Page_new;
-import com.cw.litenote.tabs.TabsHost;
 import com.cw.litenote.db.DB_page;
+import com.cw.litenote.tabs.TabsPagerAdapter;
 import com.cw.litenote.util.image.TouchImageView;
 import com.cw.litenote.util.image.UtilImage_bitmapLoader;
 import com.cw.litenote.util.ColorSet;
@@ -116,7 +116,7 @@ public class Note_common {
         progressBar = (ProgressBar) act.findViewById(R.id.edit_progress_bar);
         progressBarExpand = (ProgressBar) act.findViewById(R.id.edit_progress_bar_expand);
 
-		style = TabsHost.mDbFolder.getPageStyle(PageUi.getFocus_pagePos(), true);
+		style = TabsPagerAdapter.mDbFolder.getPageStyle(PageUi.getFocus_pagePos(), true);
 
 		enlargedImage = (TouchImageView)act.findViewById(R.id.expanded_image);
 

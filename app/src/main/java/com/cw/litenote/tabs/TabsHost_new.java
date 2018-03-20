@@ -16,6 +16,7 @@
 
 package com.cw.litenote.tabs;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -25,8 +26,10 @@ import android.support.v7.app.AppCompatDialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.cw.litenote.R;
+import com.cw.litenote.main.MainAct;
 import com.cw.litenote.page.Page_new;
 import com.cw.litenote.util.ColorSet;
 import com.cw.litenote.util.preferences.Pref;
@@ -34,8 +37,10 @@ import com.cw.litenote.util.preferences.Pref;
 
 public class TabsHost_new extends AppCompatDialogFragment implements TabLayout.OnTabSelectedListener
 {
+    static TabLayout tabLayout;
     ViewPager viewPager;
     TabsPagerAdapter adapter;
+    public static int currPageTableId;
 
     int selectedPos;
     int reSelectedPos;
@@ -74,7 +79,7 @@ public class TabsHost_new extends AppCompatDialogFragment implements TabLayout.O
         viewPager.setAdapter(adapter);
 
         // set tab layout
-        TabLayout tabLayout = (TabLayout) rootView.findViewById(R.id.tabs);
+        tabLayout = (TabLayout) rootView.findViewById(R.id.tabs);
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
         tabLayout.setupWithViewPager(viewPager);
         tabLayout.setOnTabSelectedListener(this);
@@ -106,6 +111,11 @@ public class TabsHost_new extends AppCompatDialogFragment implements TabLayout.O
         int pageTableId = adapter.mDbFolder.getPageTableId(selectedPos, true);
         Pref.setPref_focusView_page_tableId(getActivity(), pageTableId);
 
+        ///
+        currPageTableId = pageTableId;
+        ///
+
+
         viewPager.setCurrentItem(selectedPos);
     }
     @Override
@@ -133,8 +143,10 @@ public class TabsHost_new extends AppCompatDialogFragment implements TabLayout.O
         {
             int pageTableId = adapter.mDbFolder.getPageTableId(i, true);
 
-            if(pageTableId == Pref.getPref_focusView_page_tableId(getActivity()))
+            if(pageTableId == Pref.getPref_focusView_page_tableId(getActivity())) {
                 selectedPos = i;
+                currPageTableId = pageTableId;
+            }
         }
 
         viewPager.setCurrentItem(selectedPos);
@@ -148,6 +160,33 @@ public class TabsHost_new extends AppCompatDialogFragment implements TabLayout.O
         if( adapter.mFragmentList != null) {
             for (int i = 0; i < adapter.mFragmentList.size(); i++) {
                 getActivity().getSupportFragmentManager().beginTransaction().remove(adapter.mFragmentList.get(i)).commit();
+            }
+        }
+    }
+
+    //todo TBD
+    public void setAudioPlayingTab_WithHighlight(boolean highlightIsOn)
+    {
+        // get first tab id and last tab id
+//        int tabCount = mTabsHost.getTabWidget().getTabCount();
+        int tabCount = tabLayout.getTabCount();
+        for (int i = 0; i < tabCount; i++)
+        {
+//            TextView textView= (TextView) mTabsHost.getTabWidget().getChildAt(i).findViewById(android.R.id.title);
+            TextView textView= (TextView) tabLayout.getChildAt(i).findViewById(android.R.id.title);
+            if(highlightIsOn && (MainAct.mPlaying_pagePos == i))
+                textView.setTextColor(ColorSet.getHighlightColor(MainAct.mAct));
+            else
+            {
+                int style = adapter.mDbFolder.getPageStyle(i, true);
+                if((style%2) == 1)
+                {
+                    textView.setTextColor(Color.argb(255,0,0,0));
+                }
+                else
+                {
+                    textView.setTextColor(Color.argb(255,255,255,255));
+                }
             }
         }
     }

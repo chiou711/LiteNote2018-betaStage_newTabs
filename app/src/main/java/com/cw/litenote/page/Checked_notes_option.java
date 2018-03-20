@@ -19,6 +19,7 @@ import android.widget.Toast;
 import com.cw.litenote.R;
 import com.cw.litenote.db.DB_folder;
 import com.cw.litenote.db.DB_page;
+import com.cw.litenote.main.MainAct;
 import com.cw.litenote.operation.audio.AudioManager;
 import com.cw.litenote.operation.audio.AudioPlayer_page;
 import com.cw.litenote.operation.mail.MailNotes;
@@ -315,8 +316,8 @@ public class Checked_notes_option {
         if(PageUi.isSamePageTable())
             AudioPlayer_page.prepareAudioInfo();
 
-        Page.mItemAdapter.notifyDataSetChanged();
-        Page.showFooter();
+//        Page.mItemAdapter.notifyDataSetChanged();
+        Page_new.showFooter(MainAct.mAct);
     }
 
     /**

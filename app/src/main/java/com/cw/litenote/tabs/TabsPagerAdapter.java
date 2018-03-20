@@ -19,7 +19,7 @@ import java.util.ArrayList;
  */
 public class TabsPagerAdapter extends FragmentPagerAdapter {
     public ArrayList<Page_new> mFragmentList = new ArrayList<>();
-    DB_folder mDbFolder;
+    public static DB_folder mDbFolder;
 
     TabsPagerAdapter(FragmentActivity act, FragmentManager fm)
     {

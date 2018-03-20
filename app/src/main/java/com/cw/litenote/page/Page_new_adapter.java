@@ -501,7 +501,7 @@ public class Page_new_adapter extends SimpleDragSortCursorAdapter // DragSortCur
         // case 1
 //        if( mDb_page.getNoteMarking(position, true) == 1)
         // case 2
-        if( cursor.getColumnIndex(KEY_NOTE_MARKING) == 1)
+        if( cursor.getInt(cursor.getColumnIndexOrThrow(KEY_NOTE_MARKING)) == 1)
 			holder.imageCheck.setBackgroundResource(Page.mStyle%2 == 1 ?
 	    			R.drawable.btn_check_on_holo_light:
 	    			R.drawable.btn_check_on_holo_dark);
@@ -512,16 +512,17 @@ public class Page_new_adapter extends SimpleDragSortCursorAdapter // DragSortCur
 
 
 
+		//todo TBD
 		///
-		convertView.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-
-				cursor.moveToPosition(position);
-				String linkUri = cursor.getString(cursor.getColumnIndex(KEY_NOTE_LINK_URI));
-				Page_new.openClickedItem(mAct,position,linkUri);
-			}
-		});
+//		convertView.setOnClickListener(new View.OnClickListener() {
+//			@Override
+//			public void onClick(View v) {
+//
+//				cursor.moveToPosition(position);
+//				String linkUri = cursor.getString(cursor.getColumnIndex(KEY_NOTE_LINK_URI));
+//				Page_new.openClickedItem(mAct,position,linkUri);
+//			}
+//		});
 		///
 
 		return convertView;
