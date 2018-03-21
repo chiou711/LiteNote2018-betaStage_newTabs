@@ -45,6 +45,7 @@ public class TabsHost_new extends AppCompatDialogFragment implements TabLayout.O
     public static int selectedPos;
     int reSelectedPos;
     int unSelectedPos;
+    public static int lastPageTableId;
 
 
     public TabsHost_new()
@@ -92,16 +93,40 @@ public class TabsHost_new extends AppCompatDialogFragment implements TabLayout.O
         return rootView;
     }
 
+    /**
+     * Add pages
+     */
     private void addPages(TabsPagerAdapter adapter)
     {
+        lastPageTableId = 0;
         int pageCount = adapter.mDbFolder.getPagesCount(true);
         System.out.println("TabsHost_new / _addPages / pageCount = " + pageCount);
         for(int i=0;i<pageCount;i++)
         {
             int pageTableId = adapter.mDbFolder.getPageTableId(i, true);
+
+            if(pageTableId > lastPageTableId)
+                lastPageTableId = pageTableId;
+
             System.out.println("TabsHost_new / _addPages / pageTableId = " + pageTableId);
             adapter.addFragment(new Page_new(pageTableId));
         }
+    }
+
+    /**
+     * Get last page table Id
+     */
+    public static int getLastPageTableId()
+    {
+        return lastPageTableId;
+    }
+
+    /**
+     * Set last page table Id
+     */
+    public static void setLastPageTableId(int id)
+    {
+        lastPageTableId = id;
     }
 
     @Override
