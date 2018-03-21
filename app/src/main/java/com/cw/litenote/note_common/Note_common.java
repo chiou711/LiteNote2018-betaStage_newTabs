@@ -116,7 +116,9 @@ public class Note_common {
         progressBar = (ProgressBar) act.findViewById(R.id.edit_progress_bar);
         progressBarExpand = (ProgressBar) act.findViewById(R.id.edit_progress_bar_expand);
 
-		style = TabsPagerAdapter.mDbFolder.getPageStyle(PageUi.getFocus_pagePos(), true);
+		//todo TBD
+		//TabsPagerAdapter.mDbFolder.getPageStyle(PageUi.getFocus_pagePos(), true);
+		style = 1;
 
 		enlargedImage = (TouchImageView)act.findViewById(R.id.expanded_image);
 

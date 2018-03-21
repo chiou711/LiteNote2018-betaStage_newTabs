@@ -26,6 +26,8 @@ import com.cw.litenote.page.Page_audio;
 import com.cw.litenote.page.Page_new;
 import com.cw.litenote.tabs.TabsHost;
 import com.cw.litenote.page.Page;
+import com.cw.litenote.tabs.TabsHost_new;
+import com.cw.litenote.tabs.TabsPagerAdapter;
 import com.cw.litenote.util.ColorSet;
 import com.cw.litenote.util.DeleteFileAlarmReceiver;
 import com.cw.litenote.operation.import_export.Export_toSDCardFragment;
@@ -950,8 +952,9 @@ public class MainAct extends FragmentActivity implements OnBackStackChangedListe
         			(AudioManager.getPlayerState() != AudioManager.PLAYER_AT_STOP))
         		{
                     AudioManager.stopAudioPlayer();
-					TabsHost.setAudioPlayingTab_WithHighlight(false);
-					Page.mItemAdapter.notifyDataSetChanged();
+//					TabsHost_new.setAudioPlayingTab_WithHighlight(false);
+                    //todo TBD
+//					Page_new.mItemAdapter.notifyDataSetChanged();
 					return true; // just stop playing, wait for user action
         		}
         		else // play first audio
@@ -959,22 +962,27 @@ public class MainAct extends FragmentActivity implements OnBackStackChangedListe
                     AudioManager.setAudioPlayMode(AudioManager.PAGE_PLAY_MODE);
                     AudioManager.mAudioPos = 0;
 
-                    Page.page_audio = new Page_audio(mAct);
-                    Page.page_audio.initAudioBlock();
+                    //todo How to get correct page?
+//                    Page_new page_new = TabsPagerAdapter.mFragmentList.get(TabsHost_new.selectedPos);
+                    Page_new page_new= new Page_new(DB_page.getFocusPage_tableId());
+                    Page_new.page_audio = new Page_audio(mAct,page_new.mDndListView);
+                    Page_new.page_audio.initAudioBlock();
 
-                    AudioPlayer_page audioPlayer_page = new AudioPlayer_page(this,Page.page_audio);
+                    AudioPlayer_page audioPlayer_page = new AudioPlayer_page(this,Page_new.page_audio,page_new.mDndListView);
                     AudioPlayer_page.prepareAudioInfo();
                     audioPlayer_page.runAudioState();
 
-                    UtilAudio.updateAudioPanel(Page.page_audio.audioPanel_play_button, Page.page_audio.audio_panel_title_textView);
+                    UtilAudio.updateAudioPanel(Page_new.page_audio.audioPanel_play_button, Page_new.page_audio.audio_panel_title_textView);
 
-                    Page.mItemAdapter.notifyDataSetChanged();
+                    //todo TBD
+//                    Page_new.mItemAdapter.notifyDataSetChanged();
 
                     // update playing page position
                     mPlaying_pagePos = PageUi.getFocus_pagePos();
 
+                    // todo How to update page table Id
                     // update page table Id
-                    mPlaying_pageTableId = TabsHost.mNow_pageTableId;
+//                    mPlaying_pageTableId = TabsHost_new.Now_pageTableId;
 
                     // update playing folder position
                     mPlaying_folderPos = FolderUi.getFocus_folderPos();

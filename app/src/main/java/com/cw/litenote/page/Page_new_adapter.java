@@ -35,8 +35,6 @@ import com.cw.litenote.util.uil.UilCommon;
 import com.cw.litenote.util.video.UtilVideo;
 import com.mobeta.android.dslv.SimpleDragSortCursorAdapter;
 
-//todo
-// case 1
 import static com.cw.litenote.db.DB_page.KEY_NOTE_AUDIO_URI;
 import static com.cw.litenote.db.DB_page.KEY_NOTE_BODY;
 import static com.cw.litenote.db.DB_page.KEY_NOTE_CREATED;
@@ -46,19 +44,12 @@ import static com.cw.litenote.db.DB_page.KEY_NOTE_PICTURE_URI;
 import static com.cw.litenote.db.DB_page.KEY_NOTE_TITLE;
 import static com.cw.litenote.page.Page_new.mDb_page;
 
-//todo
-// case 2
-//import static com.cw.litenote.page.Page.mDb_page;
-
-
 // Pager adapter
 public class Page_new_adapter extends SimpleDragSortCursorAdapter // DragSortCursorAdapter //ResourceDragSortCursorAdapter//SimpleDragSortCursorAdapter
 {
 	FragmentActivity mAct;
-//    DB_page mDb_page;
 	Cursor cursor;
     int count;
-//    String linkUri;
 
     Page_new_adapter(Context context, int layout, Cursor c,
                      String[] from, int[] to, int flags)
@@ -100,8 +91,6 @@ public class Page_new_adapter extends SimpleDragSortCursorAdapter // DragSortCur
 	
 	@Override
 	public int getCount() {
-//        System.out.println("Page_adapter / _getCount / count = "+ cnt);
-//		DB_page mDb_page = new DB_page(mAct, DB_page.getFocusPage_tableId());//??? Why not working?
 		return count;
 	}
 
@@ -118,14 +107,12 @@ public class Page_new_adapter extends SimpleDragSortCursorAdapter // DragSortCur
 	@Override
 	public View getView(final int position, View convertView, ViewGroup parent) {
 		System.out.println("Page_adapter / _getView / position = " +  position);
-//		View view = convertView;
 		final ViewHolder holder;
 
 		SharedPreferences pref_show_note_attribute = mAct.getSharedPreferences("show_note_attribute", 0);
 
 		if (convertView == null)
 		{
-//			System.out.println("Page_adapter / _getView / convertView = null");
 			convertView = mAct.getLayoutInflater().inflate(R.layout.page_view_row, parent, false);
 
 			// set rectangular background
@@ -199,14 +186,6 @@ public class Page_new_adapter extends SimpleDragSortCursorAdapter // DragSortCur
 		holder.rowId.setTextColor(ColorSet.mText_ColorArray[Page.mStyle]);
 		
 		// show check box, title , picture
-		// case 1
-//		String strTitle = mDb_page.getNoteTitle(position,true);
-//        String pictureUri = mDb_page.getNotePictureUri(position,true);
-//        String audioUri = mDb_page.getNoteAudioUri(position,true);
-//        String linkUri = mDb_page.getNoteLinkUri(position,true);
-
-		//todo
-		// case 2
 		String strTitle = null;
         String pictureUri = null;
         String audioUri = null;
@@ -217,8 +196,6 @@ public class Page_new_adapter extends SimpleDragSortCursorAdapter // DragSortCur
             audioUri = cursor.getString(cursor.getColumnIndex(KEY_NOTE_AUDIO_URI));
             linkUri = cursor.getString(cursor.getColumnIndex(KEY_NOTE_LINK_URI));
         }
-
-		System.out.println("Page_adapter / _getView / strTitle = " +  strTitle);
 
 		// set title
 		if( Util.isEmptyString(strTitle) )
@@ -455,10 +432,6 @@ public class Page_new_adapter extends SimpleDragSortCursorAdapter // DragSortCur
 	  	if(pref_show_note_attribute.getString("KEY_SHOW_BODY", "yes").equalsIgnoreCase("yes"))
 	  	{
 	  		// test only: enabled for showing picture path
-            // todo
-            // case 1
-//	  		String strBody = mDb_page.getNoteBody(position,true);
-            // case 2
             String strBody = cursor.getString(cursor.getColumnIndex(KEY_NOTE_BODY));
 	  		if(!Util.isEmptyString(strBody)){
 				//normal: do nothing
@@ -476,11 +449,7 @@ public class Page_new_adapter extends SimpleDragSortCursorAdapter // DragSortCur
 			holder.rowDivider.setVisibility(View.VISIBLE);
 			holder.textBody.setTextColor(ColorSet.mText_ColorArray[Page.mStyle]);
 			// time stamp
-            // todo
-            // case 1
-//            holder.textTime.setText(Util.getTimeString(mDb_page.getNoteCreatedTime(position,true)));
-            // case 2
-            holder.textTime.setText(Util.getTimeString((long)cursor.getColumnIndex(KEY_NOTE_CREATED)));
+            holder.textTime.setText(Util.getTimeString(cursor.getLong(cursor.getColumnIndex(KEY_NOTE_CREATED))));
 			holder.textTime.setTextColor(ColorSet.mText_ColorArray[Page.mStyle]);
 	  	}
 	  	else
@@ -497,10 +466,6 @@ public class Page_new_adapter extends SimpleDragSortCursorAdapter // DragSortCur
 	  		holder.imageDragger.setVisibility(View.GONE);
 
 	  	// marking
-        // todo
-        // case 1
-//        if( mDb_page.getNoteMarking(position, true) == 1)
-        // case 2
         if( cursor.getInt(cursor.getColumnIndexOrThrow(KEY_NOTE_MARKING)) == 1)
 			holder.imageCheck.setBackgroundResource(Page.mStyle%2 == 1 ?
 	    			R.drawable.btn_check_on_holo_light:

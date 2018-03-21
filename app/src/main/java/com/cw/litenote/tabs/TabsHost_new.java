@@ -42,7 +42,7 @@ public class TabsHost_new extends AppCompatDialogFragment implements TabLayout.O
     TabsPagerAdapter adapter;
     public static int currPageTableId;
 
-    int selectedPos;
+    public static int selectedPos;
     int reSelectedPos;
     int unSelectedPos;
 
@@ -95,6 +95,7 @@ public class TabsHost_new extends AppCompatDialogFragment implements TabLayout.O
     private void addPages(TabsPagerAdapter adapter)
     {
         int pageCount = adapter.mDbFolder.getPagesCount(true);
+        System.out.println("TabsHost_new / _addPages / pageCount = " + pageCount);
         for(int i=0;i<pageCount;i++)
         {
             int pageTableId = adapter.mDbFolder.getPageTableId(i, true);

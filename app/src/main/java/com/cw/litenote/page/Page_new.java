@@ -289,7 +289,7 @@ public class Page_new extends UilListViewBaseFragment
 		if((AudioManager.getPlayerState() != AudioManager.PLAYER_AT_STOP) && (!Page.isOnAudioClick))
 			AudioPlayer_page.scrollHighlightAudioItemToVisible();
 
-//        mItemAdapter.notifyDataSetChanged();
+        mItemAdapter.notifyDataSetChanged();
 	}
 
 
@@ -339,6 +339,7 @@ public class Page_new extends UilListViewBaseFragment
     void openLongClickedItem(int position)
     {
         Intent i = new Intent(getActivity(), Note_edit.class);
+		mDb_page = new DB_page(getActivity(), pageTableId);
         Long rowId = mDb_page.getNoteId(position,true);
         i.putExtra("list_view_position", position);
         i.putExtra(DB_page.KEY_NOTE_ID, rowId);
@@ -449,7 +450,11 @@ public class Page_new extends UilListViewBaseFragment
 				AudioManager.mAudioPos = mHighlightPosition;
 				AudioPlayer_page.prepareAudioInfo();
 			}
-			mItemAdapter.notifyDataSetChanged();
+
+			// update list view
+            fillData(mAct,mDndListView);
+
+            // update footer
 			showFooter(mAct);
         }
     };
@@ -573,7 +578,7 @@ public class Page_new extends UilListViewBaseFragment
 			if( (PageUi.getFocus_pagePos() == MainAct.mPlaying_pagePos)&&
 				(MainAct.mPlaying_folderPos == FolderUi.getFocus_folderPos()) &&
 				(AudioManager.getPlayerState() == AudioManager.PLAYER_AT_PLAY) &&
-				(Page.mDndListView.getChildAt(0) != null)                    )
+				(mDndListView.getChildAt(0) != null)                    )
 			{
 				// do nothing when playing audio
 				if(en_dbg_msg)
@@ -689,8 +694,8 @@ public class Page_new extends UilListViewBaseFragment
 //                    TabsHost_new.setAudioPlayingTab_WithHighlight(false);
 			}
 
-			// update list view //todo how to refresh page list view ???
-            mItemAdapter.notifyDataSetChanged(); //note: add this can avoid conflict of onMark and onItemClick
+			// update list view
+            fillData(mAct,mDndListView);
 
 			// update footer
             showFooter(mAct);
@@ -789,10 +794,10 @@ public class Page_new extends UilListViewBaseFragment
 					AudioManager.mAudioPos = position;
                     AudioManager.setAudioPlayMode(AudioManager.PAGE_PLAY_MODE);
 
-                    page_audio = new Page_audio(mAct);
+                    page_audio = new Page_audio(mAct,mDndListView);
                     page_audio.initAudioBlock();
 
-                    audioPlayer_page = new AudioPlayer_page(mAct,page_audio);
+                    audioPlayer_page = new AudioPlayer_page(mAct,page_audio,mDndListView);
 					AudioPlayer_page.prepareAudioInfo();
 					audioPlayer_page.runAudioState();
 

@@ -16,6 +16,7 @@ import com.cw.litenote.operation.audio.AudioManager;
 import com.cw.litenote.operation.audio.AudioPlayer_page;
 import com.cw.litenote.util.Util;
 import com.cw.litenote.util.audio.UtilAudio;
+import com.mobeta.android.dslv.DragSortListView;
 
 import java.util.Locale;
 
@@ -34,11 +35,12 @@ public class Page_audio {
     public ImageView audioPanel_play_button;
     public SeekBar seekBarProgress;
     public static int mProgress;
+    DragSortListView listView;
 
-    public Page_audio(FragmentActivity act)
+    public Page_audio(FragmentActivity act,DragSortListView _listView)
     {
         this.mAct = act;
-
+        listView = _listView;
         // check permission first time, request phone permission
         if(Build.VERSION.SDK_INT >= M)//API23
         {
@@ -172,7 +174,7 @@ public class Page_audio {
 
                 initAudioBlock();
 
-                AudioPlayer_page audioPlayer_page = new AudioPlayer_page(mAct,Page_audio.this);
+                AudioPlayer_page audioPlayer_page = new AudioPlayer_page(mAct,Page_audio.this,listView);
 //                AudioPlayer_page.prepareAudioInfo();
                 audioPlayer_page.runAudioState();
 
@@ -240,7 +242,7 @@ public class Page_audio {
             AudioManager.mMediaPlayer = null;
         }
 
-        AudioPlayer_page audioPlayer_page = new AudioPlayer_page(mAct,this);
+        AudioPlayer_page audioPlayer_page = new AudioPlayer_page(mAct,this,listView);
         initAudioBlock();
 
         // new audio player instance

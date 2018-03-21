@@ -814,10 +814,10 @@ public class Page_simple extends UilListViewBaseFragment
 					AudioManager.mAudioPos = position;
                     AudioManager.setAudioPlayMode(AudioManager.PAGE_PLAY_MODE);
 
-                    page_audio = new Page_audio(mAct);
+                    page_audio = new Page_audio(mAct,mDndListView);
                     page_audio.initAudioBlock();
 
-                    audioPlayer_page = new AudioPlayer_page(mAct,page_audio);
+                    audioPlayer_page = new AudioPlayer_page(mAct,page_audio,mDndListView);
 					AudioPlayer_page.prepareAudioInfo();
 					audioPlayer_page.runAudioState();
 

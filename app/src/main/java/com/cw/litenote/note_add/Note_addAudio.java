@@ -8,6 +8,7 @@ import com.cw.litenote.page.Page;
 import com.cw.litenote.R;
 import com.cw.litenote.db.DB_page;
 import com.cw.litenote.page.PageUi;
+import com.cw.litenote.page.Page_new;
 import com.cw.litenote.util.Util;
 import com.cw.litenote.util.preferences.Pref;
 
@@ -262,7 +263,8 @@ public class Note_addAudio extends FragmentActivity {
 	        	if(PageUi.isSamePageTable())
 	        	{
 		        	AudioPlayer_page.prepareAudioInfo();
-		        	Page.mItemAdapter.notifyDataSetChanged();
+		        	//todo TBD
+//		        	Page_new.mItemAdapter.notifyDataSetChanged();
 	        	}
 			}
 		} 

@@ -9,6 +9,7 @@ import com.cw.litenote.operation.audio.AudioManager;
 import com.cw.litenote.page.Page;
 import com.cw.litenote.R;
 import com.cw.litenote.page.PageUi;
+import com.cw.litenote.page.Page_new;
 import com.cw.litenote.util.ColorSet;
 import com.cw.litenote.util.Util;
 
@@ -46,7 +47,8 @@ public class UtilAudio {
 			if(MainAct.mSubMenuItemAudio != null)
 				MainAct.mSubMenuItemAudio.setIcon(R.drawable.ic_menu_slideshow);
 
-			Page.mItemAdapter.notifyDataSetChanged(); // disable focus
+            //todo TBD
+//			Page_new.mItemAdapter.notifyDataSetChanged(); // disable focus
 		}     	
     }
     

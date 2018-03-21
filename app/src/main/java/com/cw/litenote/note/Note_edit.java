@@ -51,7 +51,9 @@ public class Note_edit extends Activity
         super.onCreate(savedInstanceState);
         
         // check note count first
-        dB = Page_new.mDb_page;
+//        dB = Page_new.mDb_page;
+		dB = new DB_page(this, DB_page.getFocusPage_tableId());
+
         if(dB.getNotesCount(true) ==  0)
         {
         	finish(); // add for last note being deleted
