@@ -62,7 +62,7 @@ public class Page_new_adapter extends SimpleDragSortCursorAdapter // DragSortCur
 		else
 		    count = 0;
 
-        System.out.println("Page_adapter / _Page_adapter / count =" + count);
+        System.out.println("Page_new_adapter / _Page_new_adapter / count =" + count);
 
         // add this for fixing java.lang.IllegalStateException: attempt to re-open an already-closed object
         mDb_page.open();
@@ -106,7 +106,7 @@ public class Page_new_adapter extends SimpleDragSortCursorAdapter // DragSortCur
 
 	@Override
 	public View getView(final int position, View convertView, ViewGroup parent) {
-		System.out.println("Page_adapter / _getView / position = " +  position);
+		System.out.println("Page_new_adapter / _getView / position = " +  position);
 		final ViewHolder holder;
 
 		SharedPreferences pref_show_note_attribute = mAct.getSharedPreferences("show_note_attribute", 0);
@@ -177,7 +177,7 @@ public class Page_new_adapter extends SimpleDragSortCursorAdapter // DragSortCur
 		}
 		else
 		{
-//			System.out.println("Page_adapter / _getView / convertView != null");
+//			System.out.println("Page_new_adapter / _getView / convertView != null");
 			holder = (ViewHolder) convertView.getTag();
 		}
 
@@ -245,10 +245,12 @@ public class Page_new_adapter extends SimpleDragSortCursorAdapter // DragSortCur
 		// show audio highlight if audio is not at Stop
 		if( PageUi.isSamePageTable() &&
 			(position == AudioManager.mAudioPos)  &&
-			(AudioManager.mMediaPlayer != null) &&
+//			(AudioManager.mMediaPlayer != null) &&
 			(AudioManager.getPlayerState() != AudioManager.PLAYER_AT_STOP) &&
-			(AudioManager.getAudioPlayMode() == AudioManager.PAGE_PLAY_MODE))
+			(AudioManager.getAudioPlayMode() == AudioManager.PAGE_PLAY_MODE)
+				)
 		{
+			System.out.println("Page_new_adapter / _getView / show highlight ");
 			Page.mHighlightPosition = position;
 			holder.audioBlock.setBackgroundResource(R.drawable.bg_highlight_border);
 			holder.audioBlock.setVisibility(View.VISIBLE);
@@ -258,7 +260,7 @@ public class Page_new_adapter extends SimpleDragSortCursorAdapter // DragSortCur
 
 			// set icon
 			holder.imageAudio.setVisibility(View.VISIBLE);
-			holder.imageAudio.setImageResource(R.drawable.ic_audio);
+			holder.imageAudio.setImageResource(R.drawable.ic_audio);//todo Find which one call this?
 
 			// set animation
 			Animation animation = AnimationUtils.loadAnimation(mContext , R.anim.right_in);
@@ -267,6 +269,7 @@ public class Page_new_adapter extends SimpleDragSortCursorAdapter // DragSortCur
 		else
 		{
 
+			System.out.println("Page_new_adapter / _getView / not show highlight ");
 			holder.audioBlock.setBackgroundResource(R.drawable.bg_gray_border);
 			holder.audioBlock.setVisibility(View.VISIBLE);
 
@@ -295,7 +298,7 @@ public class Page_new_adapter extends SimpleDragSortCursorAdapter // DragSortCur
 		{
 			pictureUri = "http://img.youtube.com/vi/"+Util.getYoutubeId(linkUri)+"/0.jpg";
 		}
-//		System.out.println("Page_adapter / _getView / pictureUri = " + pictureUri);
+//		System.out.println("Page_new_adapter / _getView / pictureUri = " + pictureUri);
 
 		// show thumb nail if picture Uri exists
 		if(UtilImage.hasImageExtension(pictureUri, mAct ) ||
@@ -318,7 +321,7 @@ public class Page_new_adapter extends SimpleDragSortCursorAdapter // DragSortCur
 			}
 			catch(Exception e)
 			{
-				Log.e("Page_adapter", "UtilImage_bitmapLoader error");
+				Log.e("Page_new_adapter", "UtilImage_bitmapLoader error");
 				holder.thumbBlock.setVisibility(View.GONE);
 				holder.thumbPicture.setVisibility(View.GONE);
 				holder.thumbAudio.setVisibility(View.GONE);
@@ -344,7 +347,7 @@ public class Page_new_adapter extends SimpleDragSortCursorAdapter // DragSortCur
 			}
 			catch(Exception e)
 			{
-				Log.e("Page_adapter", "AsyncTaskAudioBitmap error");
+				Log.e("Page_new_adapter", "AsyncTaskAudioBitmap error");
 				holder.thumbBlock.setVisibility(View.GONE);
 				holder.thumbPicture.setVisibility(View.GONE);
 				holder.thumbAudio.setVisibility(View.GONE);

@@ -132,12 +132,13 @@ public class Page_new extends UilListViewBaseFragment
 		// a new method AsyncTask().executeOnExecutor(Executor) however, was added for parallel execution.
 
 		// show scroll thumb
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
-			mDndListView.setFastScrollAlwaysVisible(true);
-
-		mDndListView.setScrollbarFadingEnabled(true);
-		mDndListView.setScrollBarStyle(ListView.SCROLLBARS_OUTSIDE_OVERLAY);
-		Util.setScrollThumb(getActivity(),mDndListView);
+        //todo TBD
+//		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
+//			mDndListView.setFastScrollAlwaysVisible(true);
+//
+//		mDndListView.setScrollbarFadingEnabled(true);
+//		mDndListView.setScrollBarStyle(ListView.SCROLLBARS_OUTSIDE_OVERLAY);
+//		Util.setScrollThumb(getActivity(),mDndListView);
 
 		mStyle = Util.getCurrentPageStyle();
 //    	System.out.println("Page_new / _onActivityCreated / mStyle = " + mStyle);
@@ -260,7 +261,7 @@ public class Page_new extends UilListViewBaseFragment
 				0
 		);
 
-		mItemAdapter.notifyDataSetChanged();
+//		mItemAdapter.notifyDataSetChanged();
 		listView.setAdapter(mItemAdapter);
 		mDb_page.close();// set close here, if cursor is used in adapter
 
@@ -283,13 +284,15 @@ public class Page_new extends UilListViewBaseFragment
 		listView.setAudioListener(onAudio);
 		listView.setOnScrollListener(onScroll);
 
+//        mItemAdapter.notifyDataSetChanged();
+
         showFooter(mAct);
 
 		// scroll highlight audio item to be visible
-		if((AudioManager.getPlayerState() != AudioManager.PLAYER_AT_STOP) && (!Page.isOnAudioClick))
-			AudioPlayer_page.scrollHighlightAudioItemToVisible();
+//		if((AudioManager.getPlayerState() != AudioManager.PLAYER_AT_STOP) && (!Page.isOnAudioClick))
+//			AudioPlayer_page.scrollHighlightAudioItemToVisible();
 
-        mItemAdapter.notifyDataSetChanged();
+//        mItemAdapter.notifyDataSetChanged();
 	}
 
 
@@ -575,21 +578,22 @@ public class Page_new extends UilListViewBaseFragment
 	        View v = mDndListView.getChildAt(0);
 	        mFirstVisibleIndexTop = (v == null) ? 0 : v.getTop();
 
-			if( (PageUi.getFocus_pagePos() == MainAct.mPlaying_pagePos)&&
-				(MainAct.mPlaying_folderPos == FolderUi.getFocus_folderPos()) &&
-				(AudioManager.getPlayerState() == AudioManager.PLAYER_AT_PLAY) &&
-				(mDndListView.getChildAt(0) != null)                    )
-			{
-				// do nothing when playing audio
-				if(en_dbg_msg)
-					System.out.println("_onScrollStateChanged / do nothing");
-			}
-			else
-            {
-				// keep index and top position
-				Pref.setPref_focusView_list_view_first_visible_index(getActivity(), mFirstVisibleIndex);
-				Pref.setPref_focusView_list_view_first_visible_index_top(getActivity(), mFirstVisibleIndexTop);
-			}
+	        //todo TBD
+//			if( (PageUi.getFocus_pagePos() == MainAct.mPlaying_pagePos)&&
+//				(MainAct.mPlaying_folderPos == FolderUi.getFocus_folderPos()) &&
+//				(AudioManager.getPlayerState() == AudioManager.PLAYER_AT_PLAY) &&
+//				(mDndListView.getChildAt(0) != null)                    )
+//			{
+//				// do nothing when playing audio
+//				if(en_dbg_msg)
+//					System.out.println("_onScrollStateChanged / do nothing");
+//			}
+//			else
+//            {
+//				// keep index and top position
+//				Pref.setPref_focusView_list_view_first_visible_index(getActivity(), mFirstVisibleIndex);
+//				Pref.setPref_focusView_list_view_first_visible_index_top(getActivity(), mFirstVisibleIndexTop);
+//			}
 		}
 
 		@Override
@@ -814,7 +818,14 @@ public class Page_new extends UilListViewBaseFragment
 					DB_drawer dB_drawer = new DB_drawer(mAct);
 					MainAct.mPlaying_folderTableId = dB_drawer.getFolderTableId(MainAct.mPlaying_folderPos,true);
 
-		            mItemAdapter.notifyDataSetChanged();
+                    // redraw list view item
+                    int first = mDndListView.getFirstVisiblePosition();
+                    int last = mDndListView.getLastVisiblePosition();
+                    for(int i=first; i<=last; i++) {
+                        View view = mDndListView.getChildAt(i-first);
+                        mDndListView.getAdapter().getView(i, view, mDndListView);
+                    }
+//                    mItemAdapter.notifyDataSetChanged();
 				}
 			}
         }

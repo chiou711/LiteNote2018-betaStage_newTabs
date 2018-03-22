@@ -31,7 +31,7 @@ public class TabsPagerAdapter extends FragmentPagerAdapter {
     @Override
     public Page_new getItem(int position)
     {
-        System.out.println("TabsPagerAdapter / _getItem / position = " + position);
+//        System.out.println("TabsPagerAdapter / _getItem / position = " + position);
         return mFragmentList.get(position);
     }
 
@@ -47,14 +47,14 @@ public class TabsPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public CharSequence getPageTitle(int position){
-        System.out.println("TabsPagerAdapter / _getPageTitle / position = " + position);
+//        System.out.println("TabsPagerAdapter / _getPageTitle / position = " + position);
         return mDbFolder.getPageTitle(position,true);
     }
 
     @Override
     public void setPrimaryItem(ViewGroup container, int position, Object object) {
         super.setPrimaryItem(container, position, object);
-        System.out.println("TabsPagerAdapter / _setPrimaryItem / position = " + position);
+//        System.out.println("TabsPagerAdapter / _setPrimaryItem / position = " + position);
     }
 
 }
