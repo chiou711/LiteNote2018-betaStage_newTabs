@@ -25,13 +25,14 @@ public class NoisyAudioStreamReceiver extends BroadcastReceiver {
 
                 AudioManager.setPlayerState(AudioManager.PLAYER_AT_PAUSE);
 
+                //todo TBD
                 //update audio panel button in Page view
-                if(AudioManager.getAudioPlayMode() == AudioManager.PAGE_PLAY_MODE) {
-                    UtilAudio.updateAudioPanel(Page.page_audio.audioPanel_play_button, Page.page_audio.audio_panel_title_textView);
-
-                    if (AudioManager.getPlayerState() != AudioManager.PLAYER_AT_STOP)
-                        AudioPlayer_page.scrollHighlightAudioItemToVisible();
-                }
+//                if(AudioManager.getAudioPlayMode() == AudioManager.PAGE_PLAY_MODE) {
+//                    UtilAudio.updateAudioPanel(Page.page_audio.audioPanel_play_button, Page.page_audio.audio_panel_title_textView);
+//
+//                    if (AudioManager.getPlayerState() != AudioManager.PLAYER_AT_STOP)
+//                        AudioPlayer_page.scrollHighlightAudioItemToVisible();
+//                }
 
 				//update audio play button in Note view
 				if( (Note_audio.mPager_audio_play_button != null) &&

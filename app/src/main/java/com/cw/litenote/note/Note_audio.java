@@ -19,7 +19,7 @@ import com.cw.litenote.R;
 import com.cw.litenote.main.MainAct;
 import com.cw.litenote.operation.audio.AudioManager;
 import com.cw.litenote.operation.audio.AudioPlayer_note;
-import com.cw.litenote.tabs.TabsHost;
+import com.cw.litenote.tabs.TabsHost_new;
 import com.cw.litenote.util.ColorSet;
 import com.cw.litenote.util.Util;
 import com.cw.litenote.util.audio.UtilAudio;
@@ -202,7 +202,8 @@ public class Note_audio
                     UtilAudio.setPhoneListener(act);
 
                 isPausedAtSeekerAnchor = false;
-                TabsHost.setAudioPlayingTab_WithHighlight(false);// in case playing audio in pager
+                //todo TBD
+//                TabsHost_new.setAudioPlayingTab_WithHighlight(false);// in case playing audio in pager
                 playAudioInPager(act,audioStr,_pager);
             }
         });

@@ -6,10 +6,8 @@ import java.util.Locale;
 import com.cw.litenote.folder.FolderUi;
 import com.cw.litenote.main.MainAct;
 import com.cw.litenote.operation.audio.AudioManager;
-import com.cw.litenote.page.Page;
 import com.cw.litenote.R;
 import com.cw.litenote.page.PageUi;
-import com.cw.litenote.page.Page_new;
 import com.cw.litenote.util.ColorSet;
 import com.cw.litenote.util.Util;
 
@@ -48,7 +46,7 @@ public class UtilAudio {
 				MainAct.mSubMenuItemAudio.setIcon(R.drawable.ic_menu_slideshow);
 
             //todo TBD
-//			Page_new.mItemAdapter.notifyDataSetChanged(); // disable focus
+//			Page.mItemAdapter.notifyDataSetChanged(); // disable focus
 		}     	
     }
     

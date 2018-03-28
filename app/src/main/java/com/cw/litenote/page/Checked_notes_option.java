@@ -317,7 +317,7 @@ public class Checked_notes_option {
             AudioPlayer_page.prepareAudioInfo();
 
 //        Page.mItemAdapter.notifyDataSetChanged();
-        Page_new.showFooter(MainAct.mAct);
+        Page.showFooter(MainAct.mAct);
     }
 
     /**
@@ -351,8 +351,9 @@ public class Checked_notes_option {
         if(PageUi.isSamePageTable())
             AudioPlayer_page.prepareAudioInfo();
 
-        Page.mItemAdapter.notifyDataSetChanged();
-        Page.showFooter();
+        //todo TBD
+//        Page.mItemAdapter.notifyDataSetChanged();
+//        Page.showFooter();
     }
 
 
@@ -418,16 +419,18 @@ public class Checked_notes_option {
                     }
                     mDb_page.close();
 
-                    Page.mItemAdapter.notifyDataSetChanged();
-                    Page.showFooter();
+                    //todo TBD
+//                    Page.mItemAdapter.notifyDataSetChanged();
+//                    Page.showFooter();
                 }
                 else if(action == COPY_TO)
                 {
                     DB_page.setFocusPage_tableId(srcPageTableId);
                     if(destPageTableId == srcPageTableId)
                     {
-                        Page.mItemAdapter.notifyDataSetChanged();
-                        Page.showFooter();
+                        //todo TBD
+//                        Page.mItemAdapter.notifyDataSetChanged();
+//                        Page.showFooter();
                     }
                 }
 
@@ -494,8 +497,9 @@ public class Checked_notes_option {
                             if(AudioManager.mAudioPos == Page.mHighlightPosition)
                                 UtilAudio.stopAudioIfNeeded();
 
-                            Page.mItemAdapter.notifyDataSetChanged();
-                            Page.showFooter();
+                            //todo TBD
+//                            Page.mItemAdapter.notifyDataSetChanged();
+//                            Page.showFooter();
                         }
                         });
 

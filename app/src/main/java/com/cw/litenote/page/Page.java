@@ -9,9 +9,9 @@ import com.cw.litenote.db.DB_page;
 import com.cw.litenote.folder.FolderUi;
 import com.cw.litenote.operation.audio.AudioManager;
 import com.cw.litenote.operation.audio.AudioPlayer_page;
-import com.cw.litenote.tabs.TabsHost;
 import com.cw.litenote.main.MainAct;
 import com.cw.litenote.note.Note;
+import com.cw.litenote.tabs.TabsHost_new;
 import com.cw.litenote.util.audio.UtilAudio;
 import com.cw.litenote.note.Note_edit;
 import com.cw.litenote.util.ColorSet;
@@ -22,6 +22,7 @@ import com.cw.litenote.util.preferences.Pref;
 import com.mobeta.android.dslv.DragSortController;
 import com.mobeta.android.dslv.DragSortListView;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -31,62 +32,92 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
-import android.support.v4.content.Loader;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.AbsListView;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
 public class Page extends UilListViewBaseFragment
-						  implements LoaderManager.LoaderCallbacks<List<String>> 
+//						  implements LoaderManager.LoaderCallbacks<List<String>>
 {
-	private static Cursor mCursor_note;
+	private Cursor mCursor_note;
 	public static DB_page mDb_page;
-	public static SharedPreferences mPref_show_note_attribute;
+	public SharedPreferences mPref_show_note_attribute;
 	private List<Boolean> mSelectedList = new ArrayList<>();
-	
+
 	// This is the Adapter being used to display the list's data.
-	NoteListAdapter mAdapter;
-	public static DragSortListView mDndListView;
+//	NoteListAdapter mAdapter;
+	public DragSortListView mDndListView;
 	private DragSortController mController;
     public static int mStyle = 0;
-	public static FragmentActivity mAct;
+	public FragmentActivity mAct;
 	String mClassName;
     public static int mHighlightPosition;
 	public static SeekBar seekBarProgress;
-	static ProgressBar mSpinner;
+	ProgressBar mSpinner;
     public static int currPlayPosition;
+    static boolean en_dbg_msg = true;//true //false
+	public int pageTableId;
 
-    public Page(){}
+    public Page(){
+    }
 
-	// page
+	@SuppressLint("ValidFragment")
+	public Page(int id){
+    	pageTableId = id;
+	}
+
 	@Override
-	public void onActivityCreated(Bundle savedInstanceState)
-	{
-		super.onActivityCreated(savedInstanceState);
-		System.out.println("Page / _onActivityCreated");
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+
+//		DB_page.setFocusPage_tableId(pageTableId);
+
+		if(en_dbg_msg)
+			System.out.println("Page / _onCreate / pageTableId = " + pageTableId);
+	}
+
+	View rootView;
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		if(en_dbg_msg)
+			System.out.println("Page / _onCreateView / pageTableId = " + pageTableId);
+
+
+        if(savedInstanceState == null)
+            System.out.println("Page / _onCreateView / savedInstanceState = null");
+        else
+            System.out.println("Page / _onCreateView / savedInstanceState != null");
+
+//        mDb_page = new DB_page(getActivity(), pageTableId);
+
+        rootView = inflater.inflate(R.layout.page_view_portrait_new, container, false);
+
 		mAct = getActivity();
 		mClassName = getClass().getSimpleName();
-
-		listView = (DragSortListView)getActivity().findViewById(R.id.list1);
+        listView = (DragSortListView)rootView.findViewById(android.R.id.list);
 		mDndListView = listView;
+
+//        mDndListView.setBackgroundColor(Color.RED);
 
 		if(Build.VERSION.SDK_INT >= 21)
 			mDndListView.setSelector(R.drawable.ripple);
 
-	    mFooterMessage = (TextView) mAct.findViewById(R.id.footerText);
-		mSpinner = (ProgressBar) getActivity().findViewById(R.id.list1_progress);
-		new SpinnerTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-		//new ProgressBarTask().execute();
+		mFooterMessage = (TextView) rootView.findViewById(R.id.footerText);
+        mFooterMessage.setBackgroundColor(Color.BLUE);
+        mFooterMessage.setVisibility(View.VISIBLE);
+//		mSpinner = (ProgressBar) rootView.findViewById(R.id.list1_progress);
+//		new SpinnerTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+//		new ProgressBarTask().execute();
+
 		//refer to
 		// http://stackoverflow.com/questions/9119627/android-sdk-asynctask-doinbackground-not-running-subclass
 		//Behavior of AsyncTask().execute(); has changed through Android versions.
@@ -96,70 +127,191 @@ public class Page extends UilListViewBaseFragment
 		// a new method AsyncTask().executeOnExecutor(Executor) however, was added for parallel execution.
 
 		// show scroll thumb
+        //todo TBD
 //		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
 //			mDndListView.setFastScrollAlwaysVisible(true);
+//
+//		mDndListView.setScrollbarFadingEnabled(true);
+//		mDndListView.setScrollBarStyle(ListView.SCROLLBARS_OUTSIDE_OVERLAY);
+//		Util.setScrollThumb(getActivity(),mDndListView);
 
-		mDndListView.setScrollbarFadingEnabled(true);
-		mDndListView.setScrollBarStyle(ListView.SCROLLBARS_OUTSIDE_OVERLAY);
-		Util.setScrollThumb(getActivity(),mDndListView);
-
-    	mStyle = Util.getCurrentPageStyle();
+		mStyle = Util.getCurrentPageStyle();
 //    	System.out.println("Page / _onActivityCreated / mStyle = " + mStyle);
 
-    	UilCommon.init();
+		UilCommon.init();
 
-    	//listener: view note
-    	mDndListView.setOnItemClickListener(new OnItemClickListener()
-    	{   @Override
-			public void onItemClick(AdapterView<?> arg0, View view, int position, long id)
-			{
-                openClickedItem(position);
-			}
+		//listener: view note
+        mDndListView.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                System.out.println("Page / _onItemSelected / position = " + position);
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
         });
 
-    	// listener: edit note
-    	mDndListView.setOnItemLongClickListener(new OnItemLongClickListener()
-    	{
-            public boolean onItemLongClick(AdapterView<?> parent, View v, int position, long id)
-            {
-            	openLongClickedItem(position);
-        	    return true;
-            }
-	    });
+		mDndListView.setOnItemClickListener(new OnItemClickListener()
+		{   @Override
+			public void onItemClick(AdapterView<?> arg0, View view, int position, long id)
+			{
+				System.out.println("Page / _setOnItemClickListener / position = " + position);
+				String linkUri = mDb_page.getNoteLinkUri(position,true);
+				openClickedItem(mAct,position,linkUri);
+			}
+		});
 
-        mController = buildController(mDndListView);
-        mDndListView.setFloatViewManager(mController);
-        mDndListView.setOnTouchListener(mController);
-        //called on it but does not override performClick
-  		mDndListView.setDragEnabled(true);
+		// listener: edit note
+		mDndListView.setOnItemLongClickListener(new OnItemLongClickListener()
+		{
+			public boolean onItemLongClick(AdapterView<?> parent, View v, int position, long id)
+			{
+				System.out.println("Page / _setOnItemLongClickListener");
+				openLongClickedItem(position);
+				return true;
+			}
+		});
+
+		mController = buildController(mDndListView);
+		mDndListView.setFloatViewManager(mController);
+		mDndListView.setOnTouchListener(mController);
+		//called on it but does not override performClick
+		mDndListView.setDragEnabled(true);
 
 		// We have a menu item to show in action bar.
-		setHasOptionsMenu(true);
+//		setHasOptionsMenu(true);
 
 		// Create an empty adapter we will use to display the loaded data.
-		mAdapter = new NoteListAdapter(getActivity());
+//		mAdapter = new NoteListAdapter(getActivity());
 
-		setListAdapter(mAdapter);
+//		setListAdapter(mAdapter);
 
 		// Start out with a progress indicator.
-		setListShown(true); //set progress indicator
+//		setListShown(true); //set progress indicator
 
 		// Prepare the loader. Either re-connect with an existing one or start a new one.
-		getLoaderManager().initLoader(0, null, this);
+//        getLoaderManager().initLoader(0, null, this);
+//        getLoaderManager().initLoader(pageTableId, null, Page.this);
+
+        fillData(mAct,mDndListView);
+        mItemAdapter.notifyDataSetChanged();
+
+//        AudioPlayer_page.scrollHighlightAudioItemToVisible(mDndListView);
+
+
+		return rootView;
 	}
 
+	// page
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState)
+	{
+		super.onActivityCreated(savedInstanceState);
+//		if(en_dbg_msg)
+//			System.out.println("Page / _onActivityCreated");
+	}
+
+	int mFirstVisibleIndex;
+	int mFirstVisibleIndexTop;
+	/**
+	 * fill data
+	 */
+	public PageAdapter mItemAdapter;
+	public void fillData(FragmentActivity mAct,DragSortListView listView)
+	{
+		if(en_dbg_msg)
+			System.out.println("Page / _fillData / pageTableId = " + pageTableId);
+
+		// save index and top position
+//    	int index = mDndListView.getFirstVisiblePosition();
+//      View v = mDndListView.getChildAt(0);
+//      int top = (v == null) ? 0 : v.getTop();
+
+    	/*
+        // set background color of list view
+        mDndListView.setBackgroundColor(Util.mBG_ColorArray[mStyle]);
+
+    	//show divider color
+        if(mStyle%2 == 0)
+	    	mDndListView.setDivider(new ColorDrawable(0xFFffffff));//for dark
+        else
+          mDndListView.setDivider(new ColorDrawable(0xff000000));//for light
+
+        mDndListView.setDividerHeight(3);
+        */
+
+        mDb_page = new DB_page(getActivity(), pageTableId);
+		mDb_page.open();
+		mCursor_note = mDb_page.mCursor_note;
+		int count = mDb_page.getNotesCount(false);
+
+		// set adapter
+		String[] from = new String[] { DB_page.KEY_NOTE_TITLE};
+		int[] to = new int[] { R.id.row_whole};
+
+		mItemAdapter = new PageAdapter(
+				mAct,
+				R.layout.page_view_row,
+				mCursor_note,
+				from,
+				to,
+				0
+		);
+
+		listView.setAdapter(mItemAdapter);
+		mDb_page.close();// set close here, if cursor is used in adapter
+
+		// selected list
+		for(int i=0; i< count ; i++ )
+		{
+			mSelectedList.add(true);
+			mSelectedList.set(i,true);
+		}
+
+		if(en_dbg_msg)
+			System.out.println("Page / _fillData / mFirstVisibleIndex = " + mFirstVisibleIndex +
+					" , mFirstVisibleIndexTop = " + mFirstVisibleIndexTop);
+
+		// restore index and top position
+//		listView.setSelectionFromTop(mFirstVisibleIndex, mFirstVisibleIndexTop);
+//
+//		listView.setDropListener(onDrop);
+//		listView.setDragListener(onDrag);
+//		listView.setMarkListener(onMark);
+//		listView.setAudioListener(onAudio);
+//		listView.setOnScrollListener(onScroll);
+
+        showFooter(mAct);
+
+		// scroll highlight audio item to be visible
+//		if((AudioManager.getPlayerState() != AudioManager.PLAYER_AT_STOP) && (!Page.isOnAudioClick))
+//			AudioPlayer_page.scrollHighlightAudioItemToVisible();
+
+//        mItemAdapter.notifyDataSetChanged();
+	}
+
+
+
 	// Open clicked item of list view
-	static void openClickedItem(int position)
+	static void openClickedItem(FragmentActivity mAct,int position, String linkStr)
     {
-		System.out.println("Page / _openClickedItem");
+		if(en_dbg_msg) {
+			System.out.println("Page / _openClickedItem / position = " + position);
+			System.out.println("連結 Page / _openClickedItem / linkStr = " + linkStr);
+		}
 
 		currPlayPosition = position;
-        mDb_page.open();
-        int count = mDb_page.getNotesCount(false);
-        String linkStr = mDb_page.getNoteLinkUri(position,false);
-        mDb_page.close();
+//        DB_page mDb_page = new DB_page(mAct, DB_page.getFocusPage_tableId());
+//        mDb_page.open();
+//        int count = mDb_page.getNotesCount(false);
+//        String linkStr = mDb_page.getNoteLinkUri(position,false);
+//        mDb_page.close();
 
-        if(position < count) {
+//        if(position < count)
+        {
 
             SharedPreferences pref_open_youtube;
             pref_open_youtube = mAct.getSharedPreferences("show_note_attribute", 0);
@@ -188,6 +340,7 @@ public class Page extends UilListViewBaseFragment
     void openLongClickedItem(int position)
     {
         Intent i = new Intent(getActivity(), Note_edit.class);
+		mDb_page = new DB_page(getActivity(), pageTableId);
         Long rowId = mDb_page.getNoteId(position,true);
         i.putExtra("list_view_position", position);
         i.putExtra(DB_page.KEY_NOTE_ID, rowId);
@@ -210,7 +363,7 @@ public class Page extends UilListViewBaseFragment
 
 	    @Override
 	    protected Void doInBackground(Void... arg0) {
-			return null;   
+			return null;
 	    }
 
 	    @Override
@@ -224,7 +377,7 @@ public class Page extends UilListViewBaseFragment
 			}
 	    }
 	}
-	
+
     // list view listener: on drag
     private DragSortListView.DragListener onDrag = new DragSortListView.DragListener()
     {
@@ -237,38 +390,38 @@ public class Page extends UilListViewBaseFragment
 //                    v.setPadding(0, 4, 0,4);
                 }
     };
-	
+
     // list view listener: on drop
-    private DragSortListView.DropListener onDrop = new DragSortListView.DropListener() 
+    private DragSortListView.DropListener onDrop = new DragSortListView.DropListener()
     {
         @Override
         public void drop(int startPosition, int endPosition) {
 
         	int oriStartPos = startPosition;
         	int oriEndPos = endPosition;
-        	
+
 			if(startPosition >= mDb_page.getNotesCount(true)) // avoid footer error
 				return;
 
 			mSelectedList.set(startPosition, true);
 			mSelectedList.set(endPosition, true);
-			
-			
+
+
 			//reorder data base storage
 			int loop = Math.abs(startPosition-endPosition);
 			for(int i=0;i< loop;i++)
 			{
-				swapRows(Page.mDb_page, startPosition,endPosition);
+				swapRows(mDb_page, startPosition,endPosition);
 				if((startPosition-endPosition) >0)
 					endPosition++;
 				else
 					endPosition--;
 			}
-			
+
 			if( PageUi.isSamePageTable() &&
 	     		(AudioManager.mMediaPlayer != null)				   )
 			{
-				if( (mHighlightPosition == oriEndPos)  && (oriStartPos > oriEndPos))      
+				if( (mHighlightPosition == oriEndPos)  && (oriStartPos > oriEndPos))
 				{
 					mHighlightPosition = oriEndPos+1;
 				}
@@ -276,20 +429,20 @@ public class Page extends UilListViewBaseFragment
 				{
 					mHighlightPosition = oriEndPos-1;
 				}
-				else if( (mHighlightPosition == oriStartPos)  && (oriStartPos > oriEndPos))      
+				else if( (mHighlightPosition == oriStartPos)  && (oriStartPos > oriEndPos))
 				{
 					mHighlightPosition = oriEndPos;
 				}
 				else if( (mHighlightPosition == oriStartPos) && (oriStartPos < oriEndPos))
 				{
 					mHighlightPosition = oriEndPos;
-				}				
-				else if(  (mHighlightPosition < oriEndPos) && 
-						  (mHighlightPosition > oriStartPos)   )    
+				}
+				else if(  (mHighlightPosition < oriEndPos) &&
+						  (mHighlightPosition > oriStartPos)   )
 				{
 					mHighlightPosition--;
 				}
-				else if( (mHighlightPosition > oriEndPos) && 
+				else if( (mHighlightPosition > oriEndPos) &&
 						 (mHighlightPosition < oriStartPos)  )
 				{
 					mHighlightPosition++;
@@ -298,11 +451,15 @@ public class Page extends UilListViewBaseFragment
 				AudioManager.mAudioPos = mHighlightPosition;
 				AudioPlayer_page.prepareAudioInfo();
 			}
-			mItemAdapter.notifyDataSetChanged();
-			showFooter();
+
+			// update list view
+            fillData(mAct,mDndListView);
+
+            // update footer
+			showFooter(mAct);
         }
     };
-	
+
     /**
      * Called in onCreateView. Override this to provide a custom
      * DragSortController.
@@ -312,19 +469,19 @@ public class Page extends UilListViewBaseFragment
         // defaults are
         DragSortController controller = new DragSortController(dslv);
         controller.setSortEnabled(true);
-        
+
         //drag
 	  	mPref_show_note_attribute = getActivity().getSharedPreferences("show_note_attribute", 0);
 	  	if(mPref_show_note_attribute.getString("KEY_ENABLE_DRAGGABLE", "no").equalsIgnoreCase("yes"))
 	  		controller.setDragInitMode(DragSortController.ON_DOWN); // click
 	  	else
-	        controller.setDragInitMode(DragSortController.MISS); 
+	        controller.setDragInitMode(DragSortController.MISS);
 
 	  	controller.setDragHandleId(R.id.img_dragger);// handler
 //        controller.setDragInitMode(DragSortController.ON_LONG_PRESS); //long click to drag
 	  	controller.setBackgroundColor(Color.argb(128,128,64,0));// background color when dragging
 //        controller.setBackgroundColor(Util.mBG_ColorArray[mStyle]);// background color when dragging
-        
+
 	  	// mark
         controller.setMarkEnabled(true);
         controller.setClickMarkId(R.id.img_check);
@@ -336,174 +493,139 @@ public class Page extends UilListViewBaseFragment
         controller.setAudioMode(DragSortController.ON_DOWN);
 
         return controller;
-    }        
+    }
 
     @Override
     public void onResume() {
-    	super.onResume();
-		mDb_page = new DB_page(getActivity(), Pref.getPref_focusView_page_tableId(getActivity()));
-    	System.out.println(mClassName + " / _onResume");
+		if(en_dbg_msg)
+			System.out.println("Page / _onResume / pageTableId = " + pageTableId);
+//        mDb_page = new DB_page(getActivity(), Pref.getPref_focusView_page_tableId(getActivity()));
+
+        super.onResume();
 
         // recover scroll Y
         mFirstVisibleIndex = Pref.getPref_focusView_list_view_first_visible_index(getActivity());
         mFirstVisibleIndexTop = Pref.getPref_focusView_list_view_first_visible_index_top(getActivity());
+
+
+        mDndListView.setSelectionFromTop(mFirstVisibleIndex, mFirstVisibleIndexTop);
+
+
+        //todo How to make After Key Protect like first audio play?
+        ///
+        mDndListView.setDropListener(onDrop);
+        mDndListView.setDragListener(onDrag);
+        mDndListView.setMarkListener(onMark);
+        mDndListView.setAudioListener(onAudio);
+        mDndListView.setOnScrollListener(onScroll);
+
 
 		// for incoming phone call case or key protection off to on
 		if( (page_audio != null) &&
 			(AudioManager.getPlayerState() != AudioManager.PLAYER_AT_STOP) &&
 			(AudioManager.getAudioPlayMode() == AudioManager.PAGE_PLAY_MODE)   )
 		{
-			page_audio.initAudioBlock();
+			System.out.println("Page / _onResume / page_audio != null ");
+			page_audio.initAudioBlock(MainAct.mAct);
             UtilAudio.updateAudioPanel(page_audio.audioPanel_play_button, page_audio.audio_panel_title_textView);
+//            mDndListView.setSelectionFromTop(mFirstVisibleIndex, mFirstVisibleIndexTop);
+//
+//
+//            //todo How to make After Key Protect like first audio play?
+//            ///
+//            mDndListView.setDropListener(onDrop);
+//            mDndListView.setDragListener(onDrag);
+//            mDndListView.setMarkListener(onMark);
+//            mDndListView.setAudioListener(onAudio);
+//            mDndListView.setOnScrollListener(onScroll);
+//
+//            AudioPlayer_page.scrollHighlightAudioItemToVisible(mDndListView);
+            ///
+
         }
     }
 
     @Override
     public void onPause() {
     	super.onPause();
-    	System.out.println("Page / _onPause");
+		if(en_dbg_msg)
+			System.out.println("Page / _onPause");
 	 }
-    
+
     @Override
     public void onSaveInstanceState(Bundle outState) {
     	super.onSaveInstanceState(outState);
-    	System.out.println(mClassName + " / onSaveInstanceState");
+		if(en_dbg_msg)
+			System.out.println(mClassName + " / onSaveInstanceState");
     }
-    
-	@Override
-	public Loader<List<String>> onCreateLoader(int id, Bundle args) 
-	{
-		// This is called when a new Loader needs to be created. 
-		return new NoteListLoader(getActivity());
-	}
 
-	@Override
-	public void onLoadFinished(Loader<List<String>> loader,
-							   List<String> data) 
-	{
-		System.out.println("Page / _onLoadFinished");
-		// Set the new data in the adapter.
-		mAdapter.setData(data);
+//	@Override
+//	public Loader<List<String>> onCreateLoader(int id, Bundle args)
+//	{
+//		// This is called when a new Loader needs to be created.
+//		return new NoteListLoader(getActivity());
+//	}
 
-		// The list should now be shown.
-		if (isResumed()) 
-			setListShown(true);
-		else 
-			setListShownNoAnimation(true);
-		
-		fillData();
-		
-		getLoaderManager().destroyLoader(0); // add for fixing callback twice
-	}
-	
-	@Override
-	public void onLoaderReset(Loader<List<String>> loader) {
-		// Clear the data in the adapter.
-		mAdapter.setData(null);
-	}
+//	@Override
+//	public void onLoadFinished(Loader<List<String>> loader,
+//							   List<String> data)
+//	{
+//		if(en_dbg_msg)
+//			System.out.println("Page / _onLoadFinished / pageTableId = " + pageTableId);
+//
+//        // Set the new data in the adapter.
+//		mAdapter.setData(data);
+//
+//		// The list should now be shown.
+//		if (isResumed()) {
+////            setListShown(true); //Can't be used with a custom content view???
+//        }
+////		else
+////			setListShownNoAnimation(true);
+//
+//		fillData();
+////        getLoaderManager().destroyLoader(0); // add for fixing callback twice
+//        getLoaderManager().destroyLoader(pageTableId); // add for fixing callback twice
+//
+//	}
 
-    int mFirstVisibleIndex;
-	int mFirstVisibleIndexTop;
-	/**
-	 * fill data
-	 */
-	public static Page_adapter mItemAdapter;
-    public void fillData()
-    {
-    	System.out.println("Page / _fillData");
-    	
-    	// save index and top position
-//    	int index = mDndListView.getFirstVisiblePosition();
-//      View v = mDndListView.getChildAt(0);
-//      int top = (v == null) ? 0 : v.getTop();
+//	@Override
+//	public void onLoaderReset(Loader<List<String>> loader) {
+//		// Clear the data in the adapter.
+//		mAdapter.setData(null);
+//	}
 
-    	/*
-        // set background color of list view
-        mDndListView.setBackgroundColor(Util.mBG_ColorArray[mStyle]);
-
-    	//show divider color
-        if(mStyle%2 == 0)
-	    	mDndListView.setDivider(new ColorDrawable(0xFFffffff));//for dark
-        else
-          mDndListView.setDivider(new ColorDrawable(0xff000000));//for light
-
-        mDndListView.setDividerHeight(3);
-        */
-		if(mDb_page == null)
-			return;
-
-    	mDb_page.open();
-		mCursor_note = mDb_page.mCursor_note;
-        int count = mDb_page.getNotesCount(false);
-        mDb_page.close();
-        
-        // set adapter
-        String[] from = new String[] { DB_page.KEY_NOTE_TITLE};
-        int[] to = new int[] { R.id.row_whole};
-        mItemAdapter = new Page_adapter(
-				getActivity(),
-				R.layout.page_view_row,
-				mCursor_note,
-				from,
-				to,
-				0
-				);
-        
-        mDndListView.setAdapter(mItemAdapter);
-        
-		// selected list
-		for(int i=0; i< count ; i++ )
-		{
-			mSelectedList.add(true);
-			mSelectedList.set(i,true);
-		}
-
-        System.out.println("Page / _fillData / mFirstVisibleIndex = " + mFirstVisibleIndex +
-                                           " , mFirstVisibleIndexTop = " + mFirstVisibleIndexTop);
-        // restore index and top position
-        mDndListView.setSelectionFromTop(mFirstVisibleIndex, mFirstVisibleIndexTop);
-        
-        mDndListView.setDropListener(onDrop);
-        mDndListView.setDragListener(onDrag);
-        mDndListView.setMarkListener(onMark);
-        mDndListView.setAudioListener(onAudio);
-		mDndListView.setOnScrollListener(onScroll);
-
-        showFooter();
-
-		// scroll highlight audio item to be visible
-		if((AudioManager.getPlayerState() != AudioManager.PLAYER_AT_STOP) && (!Page.isOnAudioClick))
-			AudioPlayer_page.scrollHighlightAudioItemToVisible();
-    }
 
     OnScrollListener onScroll = new OnScrollListener() {
-		
+
 		@Override
 		public void onScrollStateChanged(AbsListView view, int scrollState) {
 	        mFirstVisibleIndex = mDndListView.getFirstVisiblePosition();
 	        View v = mDndListView.getChildAt(0);
 	        mFirstVisibleIndexTop = (v == null) ? 0 : v.getTop();
 
-			if( (PageUi.getFocus_pagePos() == MainAct.mPlaying_pagePos)&&
-				(MainAct.mPlaying_folderPos == FolderUi.getFocus_folderPos()) &&
-				(AudioManager.getPlayerState() == AudioManager.PLAYER_AT_PLAY) &&
-				(Page.mDndListView.getChildAt(0) != null)                    )
-			{
-				// do nothing when playing audio
-				System.out.println("_onScrollStateChanged / do nothing");
-			}
-			else
-            {
-				// keep index and top position
-				Pref.setPref_focusView_list_view_first_visible_index(getActivity(), mFirstVisibleIndex);
-				Pref.setPref_focusView_list_view_first_visible_index_top(getActivity(), mFirstVisibleIndexTop);
-			}
+	        //todo TBD
+//			if( (PageUi.getFocus_pagePos() == MainAct.mPlaying_pagePos)&&
+//				(MainAct.mPlaying_folderPos == FolderUi.getFocus_folderPos()) &&
+//				(AudioManager.getPlayerState() == AudioManager.PLAYER_AT_PLAY) &&
+//				(mDndListView.getChildAt(0) != null)                    )
+//			{
+//				// do nothing when playing audio
+//				if(en_dbg_msg)
+//					System.out.println("_onScrollStateChanged / do nothing");
+//			}
+//			else
+//            {
+//				// keep index and top position
+//				Pref.setPref_focusView_list_view_first_visible_index(getActivity(), mFirstVisibleIndex);
+//				Pref.setPref_focusView_list_view_first_visible_index_top(getActivity(), mFirstVisibleIndexTop);
+//			}
 		}
-		
+
 		@Override
 		public void onScroll(AbsListView view, int firstVisibleItem,
 				int visibleItemCount, int totalItemCount) {
-			
+
 //			System.out.println("_onScroll / firstVisibleItem " + firstVisibleItem);
 //			System.out.println("_onScroll / visibleItemCount " + visibleItemCount);
 //			System.out.println("_onScroll / totalItemCount " + totalItemCount);
@@ -511,8 +633,9 @@ public class Page extends UilListViewBaseFragment
 		}
 	};
 
-	
-	
+
+    static int markingNow;
+
     // swap rows
 	protected static void swapRows(DB_page dB_page, int startPosition, int endPosition)
 	{
@@ -555,17 +678,17 @@ public class Page extends UilListViewBaseFragment
         dB_page.updateNote(mNoteNumber2,
 				 mNoteTitle1,
 				 mNotePictureUri1,
-				 mNoteAudioUri1, 
+				 mNoteAudioUri1,
 				 "",
 				 mNoteLinkUri1,
 				 mNoteBodyString1,
 				 mMarkingIndex1,
-				 mCreateTime1,false);		        
-		
+				 mCreateTime1,false);
+
 		dB_page.updateNote(mNoteNumber1,
 		 		 mNoteTitle2,
 		 		 mNotePictureUri2,
-		 		 mNoteAudioUri2, 
+		 		 mNoteAudioUri2,
 				 "",
 				 mNoteLinkUri2,
 		 		 mNoteBodyString2,
@@ -577,38 +700,44 @@ public class Page extends UilListViewBaseFragment
 
     // list view listener: on mark
     private DragSortListView.MarkListener onMark =
-    new DragSortListView.MarkListener() 
+    new DragSortListView.MarkListener()
 	{   @Override
-        public void mark(int position) 
+        public void mark(int position)
 		{
-			System.out.println("Page / _onMark");
+			if(en_dbg_msg)
+				System.out.println("Page / _onMark");
 
             // toggle marking
-			int markingNow = toggleNoteMarking(position);
+			markingNow = toggleNoteMarking(MainAct.mAct,position);
 
             // Stop if unmarked item is at playing state
             if(AudioManager.mAudioPos == position) {
 				UtilAudio.stopAudioIfNeeded();
-				if(markingNow == 0)
-					TabsHost.setAudioPlayingTab_WithHighlight(false);
+				//todo TBD
+//				if(markingNow == 0)
+//                    TabsHost_new.setAudioPlayingTab_WithHighlight(false);
 			}
 
 			// update list view
-            mItemAdapter.notifyDataSetChanged(); //note: add this can avoid conflict of onMark and onItemClick
+            fillData(mAct,mDndListView);
+			mItemAdapter.notifyDataSetChanged();
 
 			// update footer
-            showFooter();
+            showFooter(mAct);
+
 
 			// update audio info
             if(PageUi.isSamePageTable())
             	AudioPlayer_page.prepareAudioInfo();
         }
-    };    
+    };
 
 	// toggle mark of note
-	public static int toggleNoteMarking(int position)
+	public static int toggleNoteMarking(FragmentActivity mAct,int position)
 	{
 		int marking = 0;
+		int pageTableId = TabsHost_new.currPageTableId;
+        DB_page mDb_page = new DB_page(mAct, pageTableId);
 		mDb_page.open();
 		int count = mDb_page.getNotesCount(false);
 		if(position >= count) //end of list
@@ -625,29 +754,34 @@ public class Page extends UilListViewBaseFragment
 		Long idNote =  mDb_page.getNoteId(position,false);
 
 		// toggle the marking
-		if(mDb_page.getNoteMarking(position,false) == 0) {
+		if(mDb_page.getNoteMarking(position,false) == 0)
+		{
 			mDb_page.updateNote(idNote, strNote, strPictureUri, strAudioUri, "", strLinkUri, strNoteBody, 1, 0, false);
 			marking = 1;
 		}
-		else {
+		else
+		{
 			mDb_page.updateNote(idNote, strNote, strPictureUri, strAudioUri, "", strLinkUri, strNoteBody, 0, 0, false);
 			marking = 0;
 		}
-
 		mDb_page.close();
+
+        System.out.println("Page / _toggleNoteMarking / position = " + position + ", marking = " + mDb_page.getNoteMarking(position,true));
 		return  marking;
 	}
 
 
 	public static boolean isOnAudioClick;
 	AudioPlayer_page audioPlayer_page;
-	public static Page_audio page_audio;
+	public Page_audio page_audio;
     // list view listener: on audio
-    private DragSortListView.AudioListener onAudio = new DragSortListView.AudioListener() 
+    private DragSortListView.AudioListener onAudio = new DragSortListView.AudioListener()
 	{   @Override
-        public void audio(int position) 
+        public void audio(int position)
 		{
-			System.out.println("Page / _onAudio");
+			if(en_dbg_msg)
+				System.out.println("Page / _onAudio");
+
 			AudioManager.setAudioPlayMode(AudioManager.PAGE_PLAY_MODE);
 
 			int notesCount = mDb_page.getNotesCount(true);
@@ -661,7 +795,8 @@ public class Page extends UilListViewBaseFragment
     		if( !Util.isEmptyString(uriString) && (marking == 1))
     			isAudioUri = true;
 
-    		System.out.println("Page / _onAudio / isAudioUri = " + isAudioUri);
+			if(en_dbg_msg)
+				System.out.println("Page / _onAudio / isAudioUri = " + isAudioUri);
 
             if(position < notesCount) // avoid footer error
 			{
@@ -680,15 +815,14 @@ public class Page extends UilListViewBaseFragment
 						AudioManager.mMediaPlayer = null;
 					}
 
-					isOnAudioClick = true;
 					AudioManager.setPlayerState(AudioManager.PLAYER_AT_PLAY);
 
 					// create new Intent to play audio
 					AudioManager.mAudioPos = position;
                     AudioManager.setAudioPlayMode(AudioManager.PAGE_PLAY_MODE);
 
-                    page_audio = new Page_audio(mAct,mDndListView);
-                    page_audio.initAudioBlock();
+                    page_audio = new Page_audio(mAct,mDndListView);//todo How to add this after Key Protect
+                    page_audio.initAudioBlock(MainAct.mAct);
 
                     audioPlayer_page = new AudioPlayer_page(mAct,page_audio,mDndListView);
 					AudioPlayer_page.prepareAudioInfo();
@@ -699,39 +833,49 @@ public class Page extends UilListViewBaseFragment
                     // update playing page position
                     MainAct.mPlaying_pagePos = PageUi.getFocus_pagePos();
 					// update playing page table Id
-					MainAct.mPlaying_pageTableId = TabsHost.mNow_pageTableId;
+					MainAct.mPlaying_pageTableId = TabsHost_new.currPageTableId;//mNow_pageTableId;
 
 					// update playing folder position
 				    MainAct.mPlaying_folderPos = FolderUi.getFocus_folderPos();
 				    // update playing folder table Id
 					DB_drawer dB_drawer = new DB_drawer(mAct);
 					MainAct.mPlaying_folderTableId = dB_drawer.getFolderTableId(MainAct.mPlaying_folderPos,true);
-					
-		            mItemAdapter.notifyDataSetChanged();
 				}
 			}
+            // redraw list view item
+//                    int first = mDndListView.getFirstVisiblePosition();
+//                    int last = mDndListView.getLastVisiblePosition();
+//                    for(int i=first; i<=last; i++) {
+//                        View view = mDndListView.getChildAt(i-first);
+//                        mDndListView.getAdapter().getView(i, view, mDndListView);
+//                    }
+
+            mItemAdapter.notifyDataSetChanged();
         }
-	};            
+	};
 
     static TextView mFooterMessage;
 
 	// set footer
-    public static void showFooter()
+    public static void showFooter(FragmentActivity mAct)
     {
-    	System.out.println("Page / _showFooter ");
+		if(en_dbg_msg)
+			System.out.println("Page / _showFooter ");
 
 		// show footer
+//		mFooterMessage.setVisibility(View.VISIBLE);
         mFooterMessage.setTextColor(ColorSet.color_white);
         if(mFooterMessage != null) //add this for avoiding null exception when after e-Mail action
         {
-            mFooterMessage.setText(getFooterMessage());
+            mFooterMessage.setText(getFooterMessage(mAct));
             mFooterMessage.setBackgroundColor(ColorSet.getBarColor(mAct));
         }
     }
 
 	// get footer message of list view
-    static String getFooterMessage()
+    static String getFooterMessage(FragmentActivity mAct)
     {
+        DB_page mDb_page = new DB_page(mAct, DB_page.getFocusPage_tableId());
         return mAct.getResources().getText(R.string.footer_checked).toString() +
                "/" +
                mAct.getResources().getText(R.string.footer_total).toString() +
@@ -745,7 +889,7 @@ public class Page extends UilListViewBaseFragment
 	{
         int startCursor = dB_page.getNotesCount(true)-1;
         int endCursor = 0;
-		
+
 		//reorder data base storage for ADD_NEW_TO_TOP option
 		int loop = Math.abs(startCursor-endCursor);
 		for(int i=0;i< loop;i++)
@@ -758,8 +902,9 @@ public class Page extends UilListViewBaseFragment
 		}
 	}
 
-    static public int getNotesCountInPage()
+    static public int getNotesCountInPage(FragmentActivity mAct)
     {
+        DB_page mDb_page = new DB_page(mAct, DB_page.getFocusPage_tableId());
         mDb_page.open();
         int count = mDb_page.getNotesCount(false);
         mDb_page.close();
@@ -770,7 +915,7 @@ public class Page extends UilListViewBaseFragment
 	/*
 	 * inner class for note list loader
 	 */
-	public static class NoteListLoader extends AsyncTaskLoader<List<String>> 
+	public static class NoteListLoader extends AsyncTaskLoader<List<String>>
 	{
 		List<String> mApps;
 
@@ -793,17 +938,17 @@ public class Page extends UilListViewBaseFragment
 	/*
 	 * 	inner class for note list adapter
 	 */
-	public static class NoteListAdapter extends ArrayAdapter<String> 
-	{
-		NoteListAdapter(Context context) {
-			super(context, android.R.layout.simple_list_item_1);
-		}
-		public void setData(List<String> data) {
-			clear();
-			if (data != null) {		
-					addAll(data);
-			}
-		}
-	}
+//	public static class NoteListAdapter extends ArrayAdapter<String>
+//	{
+//		NoteListAdapter(Context context) {
+//			super(context, android.R.layout.simple_list_item_1);
+//		}
+//		public void setData(List<String> data) {
+//			clear();
+//			if (data != null) {
+//					addAll(data);
+//			}
+//		}
+//	}
 
 }

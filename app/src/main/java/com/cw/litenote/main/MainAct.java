@@ -16,18 +16,13 @@ import com.cw.litenote.folder.Folder;
 import com.cw.litenote.folder.FolderUi;
 import com.cw.litenote.note_add.Add_note_option;
 import com.cw.litenote.operation.audio.AudioManager;
-import com.cw.litenote.operation.audio.AudioPlayer_page;
 import com.cw.litenote.operation.delete.DeleteFolders;
 import com.cw.litenote.operation.delete.DeletePages;
 import com.cw.litenote.operation.import_export.Import_webAct;
 import com.cw.litenote.page.Checked_notes_option;
+import com.cw.litenote.page.Page;
 import com.cw.litenote.page.PageUi;
 import com.cw.litenote.page.Page_audio;
-import com.cw.litenote.page.Page_new;
-import com.cw.litenote.tabs.TabsHost;
-import com.cw.litenote.page.Page;
-import com.cw.litenote.tabs.TabsHost_new;
-import com.cw.litenote.tabs.TabsPagerAdapter;
 import com.cw.litenote.util.ColorSet;
 import com.cw.litenote.util.DeleteFileAlarmReceiver;
 import com.cw.litenote.operation.import_export.Export_toSDCardFragment;
@@ -48,7 +43,6 @@ import com.cw.litenote.util.Util;
 import com.cw.litenote.util.preferences.Pref;
 import com.mobeta.android.dslv.DragSortListView;
 
-import android.Manifest;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
@@ -56,7 +50,6 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Handler;
 import android.os.StrictMode;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.content.Context;
 import android.content.Intent;
@@ -67,7 +60,6 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentManager.OnBackStackChangedListener;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.util.Log;
@@ -75,8 +67,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import tabanimation.TabAnimation;
 
 import static android.os.Build.VERSION_CODES.O;
 
@@ -320,7 +310,7 @@ public class MainAct extends FragmentActivity implements OnBackStackChangedListe
         {
             String intentLink = mMainUi.addNote_IntentLink(intent, mAct);
             if (!Util.isEmptyString(intentLink) && intentLink.startsWith("http")) {
-                Page.mItemAdapter.notifyDataSetChanged();
+//                Page.mItemAdapter.notifyDataSetChanged();
             }
 
             if(Build.VERSION.SDK_INT >= O)//API26
@@ -543,13 +533,14 @@ public class MainAct extends FragmentActivity implements OnBackStackChangedListe
 
             builder = new AlertDialog.Builder(this);
 
+            //todo TDB
             do
             {
-                Page_new.currPlayPosition++;
-                if(Page_new.currPlayPosition >= Page_new.getNotesCountInPage(mAct))
-                    Page_new.currPlayPosition = 0; //back to first index
-
-                nextLinkTitle = mMainUi.getYouTubeLink(this,Page_new.currPlayPosition);
+//                Page.currPlayPosition++;
+//                if(Page.currPlayPosition >= Page.getNotesCountInPage(mAct))
+//                    Page.currPlayPosition = 0; //back to first index
+//
+//                nextLinkTitle = mMainUi.getYouTubeLink(this,Page.currPlayPosition);
             }
             while (!Util.isYouTubeLink(nextLinkTitle));
 
@@ -954,7 +945,7 @@ public class MainAct extends FragmentActivity implements OnBackStackChangedListe
                     AudioManager.stopAudioPlayer();
 //					TabsHost_new.setAudioPlayingTab_WithHighlight(false);
                     //todo TBD
-//					Page_new.mItemAdapter.notifyDataSetChanged();
+//					Page.mItemAdapter.notifyDataSetChanged();
 					return true; // just stop playing, wait for user action
         		}
         		else // play first audio
@@ -963,19 +954,19 @@ public class MainAct extends FragmentActivity implements OnBackStackChangedListe
                     AudioManager.mAudioPos = 0;
 
                     //todo How to get correct page?
-//                    Page_new page_new = TabsPagerAdapter.mFragmentList.get(TabsHost_new.selectedPos);
-                    Page_new page_new= new Page_new(DB_page.getFocusPage_tableId());
-                    Page_new.page_audio = new Page_audio(mAct,page_new.mDndListView);
-                    Page_new.page_audio.initAudioBlock();
-
-                    AudioPlayer_page audioPlayer_page = new AudioPlayer_page(this,Page_new.page_audio,page_new.mDndListView);
-                    AudioPlayer_page.prepareAudioInfo();
-                    audioPlayer_page.runAudioState();
-
-                    UtilAudio.updateAudioPanel(Page_new.page_audio.audioPanel_play_button, Page_new.page_audio.audio_panel_title_textView);
+//                    Page page_new = TabsPagerAdapter.mFragmentList.get(TabsHost_new.selectedPos);
+                    Page page_new= new Page(DB_page.getFocusPage_tableId());
+//                    Page.page_audio = new Page_audio(mAct,page_new.mDndListView);
+//                    Page.page_audio.initAudioBlock();
+//
+//                    AudioPlayer_page audioPlayer_page = new AudioPlayer_page(this,Page.page_audio,page_new.mDndListView);
+//                    AudioPlayer_page.prepareAudioInfo();
+//                    audioPlayer_page.runAudioState();
+//
+//                    UtilAudio.updateAudioPanel(Page.page_audio.audioPanel_play_button, Page.page_audio.audio_panel_title_textView);
 
                     //todo TBD
-//                    Page_new.mItemAdapter.notifyDataSetChanged();
+//                    Page.mItemAdapter.notifyDataSetChanged();
 
                     // update playing page position
                     mPlaying_pagePos = PageUi.getFocus_pagePos();

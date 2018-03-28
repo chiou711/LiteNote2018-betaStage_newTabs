@@ -7,9 +7,7 @@ import com.cw.litenote.main.MainAct;
 import com.cw.litenote.page.Page;
 import com.cw.litenote.R;
 import com.cw.litenote.page.PageUi;
-import com.cw.litenote.page.Page_new;
 import com.cw.litenote.db.DB_page;
-import com.cw.litenote.tabs.TabsPagerAdapter;
 import com.cw.litenote.util.image.TouchImageView;
 import com.cw.litenote.util.image.UtilImage_bitmapLoader;
 import com.cw.litenote.util.ColorSet;
@@ -73,7 +71,7 @@ public class Note_common {
     ProgressBar progressBarExpand;
 	TouchImageView enlargedImage;
 
-	public Note_common(Activity act,Long noteId,String strTitle, String pictureUri, String audioUri, String drawingUri, String linkUri, String strBody, Long createdTime)
+	public Note_common(Activity act,DB_page _db, Long noteId,String strTitle, String pictureUri, String audioUri, String drawingUri, String linkUri, String strBody, Long createdTime)
     {
     	this.act = act;
     	this.noteId = noteId;
@@ -89,7 +87,7 @@ public class Note_common {
 	    currPictureUri = pictureUri;
 	    currAudioUri = audioUri;
 	    
-	    dB = Page_new.mDb_page;
+	    dB = _db;//Page.mDb_page;
 	    
 	    oriMarking = dB.getNoteMarking_byId(noteId);
 		
@@ -101,7 +99,7 @@ public class Note_common {
 	public Note_common(Activity act)
     {
     	this.act = act;
-    	dB = Page_new.mDb_page;
+    	dB = new DB_page(act, DB_page.getFocusPage_tableId());//Page.mDb_page;
     }
 
 	public void UI_init()

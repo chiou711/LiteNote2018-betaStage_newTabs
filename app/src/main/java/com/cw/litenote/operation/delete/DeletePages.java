@@ -29,8 +29,6 @@ import com.cw.litenote.util.ColorSet;
 import com.cw.litenote.util.Util;
 import com.cw.litenote.util.preferences.Pref;
 
-import static com.cw.litenote.tabs.TabsHost.mDbFolder;
-
 public class DeletePages extends Fragment{
     TextView title;
 	CheckedTextView mCheckTvSelAll;
@@ -152,6 +150,7 @@ public class DeletePages extends Fragment{
 
 	void doDeletePages()
     {
+        DB_folder mDbFolder = new DB_folder(MainAct.mAct,DB_folder.getFocusFolder_tableId());
         mDbFolder.open();
         for(int i = 0; i< list_selPage.count; i++)
         {

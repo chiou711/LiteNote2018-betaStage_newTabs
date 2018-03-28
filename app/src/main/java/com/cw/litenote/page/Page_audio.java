@@ -12,6 +12,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.cw.litenote.R;
+import com.cw.litenote.main.MainAct;
 import com.cw.litenote.operation.audio.AudioManager;
 import com.cw.litenote.operation.audio.AudioPlayer_page;
 import com.cw.litenote.util.Util;
@@ -62,11 +63,11 @@ public class Page_audio {
     /**
      * init audio block
      */
-    public void initAudioBlock()
+    public void initAudioBlock(FragmentActivity act)
     {
         System.out.println("Page_audio / _initAudioBlock");
 
-        audio_panel = mAct.findViewById(R.id.audio_panel);
+        audio_panel = act.findViewById(R.id.audio_panel);
 
         if(audio_panel == null)
             return;
@@ -87,21 +88,21 @@ public class Page_audio {
         }
 
         // update play button status
-        audioPanel_play_button = (ImageView) mAct.findViewById(R.id.audioPanel_play);
+        audioPanel_play_button = (ImageView) act.findViewById(R.id.audioPanel_play);
 
-        ImageView audioPanel_previous_btn = (ImageView) mAct.findViewById(R.id.audioPanel_previous);
+        ImageView audioPanel_previous_btn = (ImageView) act.findViewById(R.id.audioPanel_previous);
         audioPanel_previous_btn.setImageResource(R.drawable.ic_media_previous);
 
-        ImageView audioPanel_next_btn = (ImageView) mAct.findViewById(R.id.audioPanel_next);
+        ImageView audioPanel_next_btn = (ImageView) act.findViewById(R.id.audioPanel_next);
         audioPanel_next_btn.setImageResource(R.drawable.ic_media_next);
 
         // text view for audio info
-        audioPanel_curr_pos = (TextView) mAct.findViewById(R.id.audioPanel_current_pos);
-        TextView audioPanel_file_length = (TextView) mAct.findViewById(R.id.audioPanel_file_length);
-        TextView audioPanel_audio_number = (TextView) mAct.findViewById(R.id.audioPanel_audio_number);
+        audioPanel_curr_pos = (TextView) act.findViewById(R.id.audioPanel_current_pos);
+        TextView audioPanel_file_length = (TextView) act.findViewById(R.id.audioPanel_file_length);
+        TextView audioPanel_audio_number = (TextView) act.findViewById(R.id.audioPanel_audio_number);
 
         // init audio seek bar
-        seekBarProgress = (SeekBar)mAct.findViewById(R.id.audioPanel_seek_bar);
+        seekBarProgress = (SeekBar)act.findViewById(R.id.audioPanel_seek_bar);
         seekBarProgress.setMax(99); // It means 100% .0-99
         seekBarProgress.setProgress(mProgress);
 
@@ -172,7 +173,7 @@ public class Page_audio {
             public void onClick(View v)
             {
 
-                initAudioBlock();
+                initAudioBlock(MainAct.mAct);
 
                 AudioPlayer_page audioPlayer_page = new AudioPlayer_page(mAct,Page_audio.this,listView);
 //                AudioPlayer_page.prepareAudioInfo();
@@ -182,7 +183,8 @@ public class Page_audio {
                 UtilAudio.updateAudioPanel((ImageView)v, audio_panel_title_textView); // here v is audio play button
 
                 if(AudioManager.getPlayerState() != AudioManager.PLAYER_AT_STOP)
-                    AudioPlayer_page.scrollHighlightAudioItemToVisible();
+//                    AudioPlayer_page.scrollHighlightAudioItemToVisible();
+                    AudioPlayer_page.scrollHighlightAudioItemToVisible(listView);
             }
         });
 
@@ -243,7 +245,7 @@ public class Page_audio {
         }
 
         AudioPlayer_page audioPlayer_page = new AudioPlayer_page(mAct,this,listView);
-        initAudioBlock();
+//        initAudioBlock(act);
 
         // new audio player instance
         audioPlayer_page.runAudioState();
@@ -252,7 +254,8 @@ public class Page_audio {
         UtilAudio.updateAudioPanel(audioPanel_play_button, audio_panel_title_textView);
 
         if(AudioManager.getPlayerState() != AudioManager.PLAYER_AT_STOP)
-            AudioPlayer_page.scrollHighlightAudioItemToVisible();
+//            AudioPlayer_page.scrollHighlightAudioItemToVisible();
+            AudioPlayer_page.scrollHighlightAudioItemToVisible(listView);
     }
 
 }

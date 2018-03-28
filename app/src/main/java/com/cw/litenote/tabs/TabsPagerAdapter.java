@@ -6,7 +6,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.view.ViewGroup;
 
 import com.cw.litenote.db.DB_folder;
-import com.cw.litenote.page.Page_new;
+import com.cw.litenote.page.Page;
 import com.cw.litenote.util.preferences.Pref;
 
 import java.util.ArrayList;
@@ -18,7 +18,7 @@ import java.util.ArrayList;
  *
  */
 public class TabsPagerAdapter extends FragmentPagerAdapter {
-    public ArrayList<Page_new> mFragmentList = new ArrayList<>();
+    public ArrayList<Page> mFragmentList = new ArrayList<>();
     DB_folder mDbFolder;
 
     TabsPagerAdapter(FragmentActivity act, FragmentManager fm)
@@ -29,14 +29,14 @@ public class TabsPagerAdapter extends FragmentPagerAdapter {
     }
 
     @Override
-    public Page_new getItem(int position)
+    public Page getItem(int position)
     {
 //        System.out.println("TabsPagerAdapter / _getItem / position = " + position);
         return mFragmentList.get(position);
     }
 
     // add fragment
-    public void addFragment(Page_new fragment) {
+    public void addFragment(Page fragment) {
         mFragmentList.add(fragment);
     }
 

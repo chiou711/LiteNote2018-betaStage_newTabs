@@ -6,10 +6,10 @@ import java.io.File;
 import com.cw.litenote.folder.FolderUi;
 import com.cw.litenote.operation.audio.AudioManager;
 import com.cw.litenote.page.PageUi;
+import com.cw.litenote.tabs.TabsHost_new;
 import com.cw.litenote.util.BaseBackPressedListener;
 import com.cw.litenote.main.MainAct;
 import com.cw.litenote.R;
-import com.cw.litenote.tabs.TabsHost;
 import com.cw.litenote.db.DB_drawer;
 import com.cw.litenote.util.ColorSet;
 import com.cw.litenote.util.Util;
@@ -489,7 +489,8 @@ public class Config extends Fragment
 				AudioManager.stopAudioPlayer();
 
 			//set last tab Id to 0, otherwise TabId will not start from 0 when deleting all
-			TabsHost.setLastPos_pageId(0);
+			//todo TBD
+//			TabsHost_new.setLastPos_pageId(0);
 			//reset tab Index to 0 
 			//fix: select tab over next import amount => clean all => import => export => error
 			PageUi.setFocus_pagePos(0);

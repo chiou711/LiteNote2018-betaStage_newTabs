@@ -31,8 +31,7 @@ import com.cw.litenote.db.DB_folder;
 import com.cw.litenote.main.MainAct;
 import com.cw.litenote.page.PageUi;
 import com.cw.litenote.define.Define;
-import com.cw.litenote.tabs.TabsHost;
-import com.cw.litenote.tabs.TabsHostAct;
+import com.cw.litenote.tabs.TabsHost_new;
 import com.cw.litenote.tabs.TabsHost_new;
 import com.cw.litenote.util.TouchableEditText;
 import com.cw.litenote.util.Util;
@@ -41,9 +40,6 @@ import com.mobeta.android.dslv.DragSortListView;
 import com.mobeta.android.dslv.SimpleDragSortCursorAdapter;
 
 import java.lang.reflect.Field;
-
-import tabanimation.TabAnimation;
-
 
 public class FolderUi
 {
@@ -321,9 +317,10 @@ public class FolderUi
             }
         }
 
+        //todo TBD
         // clear folder
-        if (TabsHost.mTabsHost != null)
-            TabsHost.mTabsHost.clearAllTabs();
+//        if (TabsHost_new.mTabsHost != null)
+//            TabsHost_new.mTabsHost.clearAllTabs();
 
         // remove focus view Key
         Pref.removePref_focusView_key(act, folderTableId);
@@ -525,7 +522,8 @@ public class FolderUi
 				DB_folder.setFocusFolder_tableId(folderTableId);
 
 				// set tab Id
-				TabsHost.setLastPos_pageId(0);
+                //todo TBD
+//				TabsHost_new.setLastPos_pageId(0);
 
 				// check DB: before importing
                 dB_drawer.listFolders();
@@ -557,8 +555,9 @@ public class FolderUi
         int pagesCount = getFolder_pagesCount(act,position);
         System.out.println("FolderUi / _selectFolder / pagesCount = " + pagesCount);
 
-        if(pagesCount ==0)
-            TabsHost.setLastPos_pageId(0);
+        //todo TBD
+//        if(pagesCount ==0)
+//            TabsHost_new.setLastPos_pageId(0);
 
 		// use Runnable to make sure only one folder background is seen
         mHandler = new Handler();

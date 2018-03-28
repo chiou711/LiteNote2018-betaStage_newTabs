@@ -143,8 +143,10 @@ public class MainUi {
                                     .show();
                             CustomWebView.pauseWebView(web);
                             CustomWebView.blankWebView(web);
-                            if(Page.mItemAdapter != null)
-                                Page.mItemAdapter.notifyDataSetChanged();
+
+                            //todo TBD
+//                            if(Page.mItemAdapter != null)
+//                                Page.mItemAdapter.notifyDataSetChanged();
                             title = titleReceived;
                         }
                     }

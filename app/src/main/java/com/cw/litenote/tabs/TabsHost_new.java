@@ -30,14 +30,15 @@ import android.widget.TextView;
 
 import com.cw.litenote.R;
 import com.cw.litenote.main.MainAct;
-import com.cw.litenote.page.Page_new;
+import com.cw.litenote.page.Page;
 import com.cw.litenote.util.ColorSet;
 import com.cw.litenote.util.preferences.Pref;
 
 
 public class TabsHost_new extends AppCompatDialogFragment implements TabLayout.OnTabSelectedListener
 {
-    static TabLayout tabLayout;
+    public static int mStyle;
+    TabLayout tabLayout;
     ViewPager viewPager;
     TabsPagerAdapter adapter;
     public static int currPageTableId;
@@ -109,7 +110,7 @@ public class TabsHost_new extends AppCompatDialogFragment implements TabLayout.O
                 lastPageTableId = pageTableId;
 
             System.out.println("TabsHost_new / _addPages / pageTableId = " + pageTableId);
-            adapter.addFragment(new Page_new(pageTableId));
+            adapter.addFragment(new Page(pageTableId));
         }
     }
 

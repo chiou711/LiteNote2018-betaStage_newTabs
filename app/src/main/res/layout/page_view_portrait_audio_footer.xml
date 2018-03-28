@@ -3,7 +3,6 @@
     android:id="@+id/audio_panel"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:visibility="gone"
     android:orientation="vertical">
 
     <!-- footer audio title -->
@@ -13,7 +12,7 @@
               android:layout_gravity="center"
               android:textAppearance="?android:attr/textAppearanceLarge"
               android:textSize="18sp"
-              android:maxLines="1"
+              android:singleLine="true"
               android:ellipsize="marquee"
               android:marqueeRepeatLimit="marquee_forever"
               android:focusable="true"

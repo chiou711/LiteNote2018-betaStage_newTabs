@@ -3,11 +3,12 @@ package com.cw.litenote.note;
 import com.cw.litenote.R;
 import com.cw.litenote.db.DB_folder;
 import com.cw.litenote.db.DB_page;
+import com.cw.litenote.main.MainAct;
 import com.cw.litenote.operation.audio.AudioManager;
 import com.cw.litenote.operation.audio.AudioPlayer_note;
 import com.cw.litenote.page.Page;
 import com.cw.litenote.page.PageUi;
-import com.cw.litenote.tabs.TabsHost;
+import com.cw.litenote.tabs.TabsHost_new;
 import com.cw.litenote.util.CustomWebView;
 import com.cw.litenote.util.DeleteFileAlarmReceiver;
 import com.cw.litenote.util.audio.UtilAudio;
@@ -159,12 +160,12 @@ public class Note extends FragmentActivity
 		mPager.setCurrentItem(NoteUi.getFocus_notePos());
 
 		// tab style
-		if(TabsHost.mDbFolder != null)
-			TabsHost.mDbFolder.close();
+//		if(TabsHost_new.mDbFolder != null)
+//			TabsHost_new.mDbFolder.close();
 
-		TabsHost.mDbFolder = new DB_folder(act,Pref.getPref_focusView_folder_tableId(act));
+		DB_folder dbFolder = new DB_folder(act,Pref.getPref_focusView_folder_tableId(act));
 
-		mStyle = TabsHost.mDbFolder.getPageStyle(PageUi.getFocus_pagePos(), true);
+		mStyle = dbFolder.getPageStyle(PageUi.getFocus_pagePos(), true);
 
 		if(mDb_page != null) {
 			mNoteId = mDb_page.getNoteId(NoteUi.getFocus_notePos(), true);
@@ -563,7 +564,7 @@ public class Note extends FragmentActivity
             	return true;
 
 			case R.id.VIEW_NOTE_CHECK:
-				int markingNow = Page.toggleNoteMarking(NoteUi.getFocus_notePos());
+				int markingNow = Page.toggleNoteMarking(MainAct.mAct,NoteUi.getFocus_notePos());
 
 				// update marking
 				if(markingNow == 1)

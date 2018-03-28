@@ -10,6 +10,7 @@
     <!--<color name="button_color">#ffA09070</color>-->
     <!--<color name="highlight_color">#ff0080ff</color>-->
 
+    <color name="background_tab_pressed">#6633B5E5</color>
     <color name="pause_color">#ff404040</color>
 
 

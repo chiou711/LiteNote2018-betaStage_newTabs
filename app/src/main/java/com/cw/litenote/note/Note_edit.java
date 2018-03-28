@@ -7,7 +7,6 @@ import com.cw.litenote.page.Page;
 import com.cw.litenote.R;
 import com.cw.litenote.db.DB_page;
 import com.cw.litenote.page.PageUi;
-import com.cw.litenote.page.Page_new;
 import com.cw.litenote.util.audio.UtilAudio;
 import com.cw.litenote.util.image.TouchImageView;
 import com.cw.litenote.util.image.UtilImage;
@@ -51,7 +50,7 @@ public class Note_edit extends Activity
         super.onCreate(savedInstanceState);
         
         // check note count first
-//        dB = Page_new.mDb_page;
+//        dB = Page.mDb_page;
 		dB = new DB_page(this, DB_page.getFocusPage_tableId());
 
         if(dB.getNotesCount(true) ==  0)
@@ -83,7 +82,7 @@ public class Note_edit extends Activity
         
 
         //initialization
-        note_common = new Note_common(this, noteId, title, picUriStr, audioUri, "", linkUri, body, createdTime);
+        note_common = new Note_common(this, dB, noteId, title, picUriStr, audioUri, "", linkUri, body, createdTime);
         note_common.UI_init();
         cameraPictureUri = "";
         bUseCameraImage = false;
