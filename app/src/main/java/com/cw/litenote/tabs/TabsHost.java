@@ -42,8 +42,8 @@ public class TabsHost extends AppCompatDialogFragment implements TabLayout.OnTab
 {
     public static int mStyle;
     TabLayout tabLayout;
-    ViewPager viewPager;
-    TabsPagerAdapter adapter;
+    static ViewPager viewPager;
+    public static TabsPagerAdapter adapter;
     public static int currPageTableId;
 
     public static int selectedPos;
@@ -143,12 +143,14 @@ public class TabsHost extends AppCompatDialogFragment implements TabLayout.OnTab
         int pageTableId = adapter.mDbFolder.getPageTableId(selectedPos, true);
         Pref.setPref_focusView_page_tableId(getActivity(), pageTableId);
 
-        ///
+        // current page table Id
         currPageTableId = pageTableId;
-        ///
-
 
         viewPager.setCurrentItem(selectedPos);
+
+        // refresh list view of selected page
+        if(adapter.mFragmentList.get(selectedPos).mItemAdapter != null)
+            adapter.mFragmentList.get(selectedPos).mItemAdapter.notifyDataSetChanged();
     }
     @Override
     public void onTabUnselected(TabLayout.Tab tab) {

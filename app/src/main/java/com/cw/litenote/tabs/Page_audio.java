@@ -175,15 +175,16 @@ public class Page_audio {
 
                 initAudioBlock(MainAct.mAct);
 
-                AudioPlayer_page audioPlayer_page = new AudioPlayer_page(mAct,Page_audio.this,listView);
-//                AudioPlayer_page.prepareAudioInfo();
-                audioPlayer_page.runAudioState();
+                TabsHost.audioPlayer_page.runAudioState();
 
                 // update status
                 UtilAudio.updateAudioPanel((ImageView)v, audio_panel_title_textView); // here v is audio play button
 
                 if(AudioManager.getPlayerState() != AudioManager.PLAYER_AT_STOP)
-                    audioPlayer_page.scrollHighlightAudioItemToVisible(listView);
+                    TabsHost.audioPlayer_page.scrollHighlightAudioItemToVisible(TabsHost.adapter.mFragmentList.get(TabsHost.selectedPos).mDndListView);
+
+                TabsHost.adapter.mFragmentList.get(TabsHost.selectedPos).mItemAdapter.notifyDataSetChanged();
+
             }
         });
 
@@ -243,17 +244,16 @@ public class Page_audio {
             AudioManager.mMediaPlayer = null;
         }
 
-        AudioPlayer_page audioPlayer_page = new AudioPlayer_page(mAct,this,listView);
-//        initAudioBlock(act);
-
         // new audio player instance
-        audioPlayer_page.runAudioState();
+        TabsHost.audioPlayer_page.runAudioState();
 
         // update status
         UtilAudio.updateAudioPanel(audioPanel_play_button, audio_panel_title_textView);
 
         if(AudioManager.getPlayerState() != AudioManager.PLAYER_AT_STOP)
-            audioPlayer_page.scrollHighlightAudioItemToVisible(listView);
+            TabsHost.audioPlayer_page.scrollHighlightAudioItemToVisible(TabsHost.adapter.mFragmentList.get(TabsHost.selectedPos).mDndListView);
+
+        TabsHost.adapter.mFragmentList.get(TabsHost.selectedPos).mItemAdapter.notifyDataSetChanged();
     }
 
 }
