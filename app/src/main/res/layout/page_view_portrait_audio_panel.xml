@@ -3,6 +3,7 @@
     android:id="@+id/audio_panel"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:visibility="gone"
     android:orientation="vertical">
 
     <!-- footer audio title -->
@@ -49,6 +50,7 @@
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:textSize="12sp"
+                android:textColor="#ffffff"
                 android:layout_margin="5dp"
                 android:maxLines="1" />
             <ImageView
@@ -70,6 +72,7 @@
                 android:layout_height="match_parent"
                 android:gravity="center"
                 android:textSize="12sp"
+                android:textColor="#ffffff"
                 android:layout_marginLeft="5dp"
                 android:maxLines="1"
                 />
@@ -85,6 +88,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:textSize="12sp"
+                android:textColor="#ffffff"
                 android:gravity="center"
                 android:maxLines="1"
                 />

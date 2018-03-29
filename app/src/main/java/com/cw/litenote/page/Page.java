@@ -11,7 +11,7 @@ import com.cw.litenote.operation.audio.AudioManager;
 import com.cw.litenote.operation.audio.AudioPlayer_page;
 import com.cw.litenote.main.MainAct;
 import com.cw.litenote.note.Note;
-import com.cw.litenote.tabs.TabsHost_new;
+import com.cw.litenote.tabs.TabsHost;
 import com.cw.litenote.util.audio.UtilAudio;
 import com.cw.litenote.note.Note_edit;
 import com.cw.litenote.util.ColorSet;
@@ -48,7 +48,7 @@ import android.widget.TextView;
 public class Page extends UilListViewBaseFragment
 //						  implements LoaderManager.LoaderCallbacks<List<String>>
 {
-	private Cursor mCursor_note;
+	Cursor mCursor_note;
 	public static DB_page mDb_page;
 	public SharedPreferences mPref_show_note_attribute;
 	private List<Boolean> mSelectedList = new ArrayList<>();
@@ -99,7 +99,7 @@ public class Page extends UilListViewBaseFragment
 
 //        mDb_page = new DB_page(getActivity(), pageTableId);
 
-        rootView = inflater.inflate(R.layout.page_view_portrait_new, container, false);
+        rootView = inflater.inflate(R.layout.page_view_portrait, container, false);
 
 		mAct = getActivity();
 		mClassName = getClass().getSimpleName();
@@ -715,7 +715,7 @@ public class Page extends UilListViewBaseFragment
 				UtilAudio.stopAudioIfNeeded();
 				//todo TBD
 //				if(markingNow == 0)
-//                    TabsHost_new.setAudioPlayingTab_WithHighlight(false);
+//                    TabsHost.setAudioPlayingTab_WithHighlight(false);
 			}
 
 			// update list view
@@ -736,7 +736,7 @@ public class Page extends UilListViewBaseFragment
 	public static int toggleNoteMarking(FragmentActivity mAct,int position)
 	{
 		int marking = 0;
-		int pageTableId = TabsHost_new.currPageTableId;
+		int pageTableId = TabsHost.currPageTableId;
         DB_page mDb_page = new DB_page(mAct, pageTableId);
 		mDb_page.open();
 		int count = mDb_page.getNotesCount(false);
@@ -784,9 +784,12 @@ public class Page extends UilListViewBaseFragment
 
 			AudioManager.setAudioPlayMode(AudioManager.PAGE_PLAY_MODE);
 
+			mDb_page = new DB_page(mAct, TabsHost.currPageTableId);
+
 			int notesCount = mDb_page.getNotesCount(true);
             if(position >= notesCount) //end of list
             	return ;
+
 
 			int marking = mDb_page.getNoteMarking(position,true);
     		String uriString = mDb_page.getNoteAudioUri(position,true);
@@ -833,7 +836,7 @@ public class Page extends UilListViewBaseFragment
                     // update playing page position
                     MainAct.mPlaying_pagePos = PageUi.getFocus_pagePos();
 					// update playing page table Id
-					MainAct.mPlaying_pageTableId = TabsHost_new.currPageTableId;//mNow_pageTableId;
+					MainAct.mPlaying_pageTableId = TabsHost.currPageTableId;//mNow_pageTableId;
 
 					// update playing folder position
 				    MainAct.mPlaying_folderPos = FolderUi.getFocus_folderPos();

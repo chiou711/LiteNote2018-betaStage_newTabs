@@ -19,7 +19,6 @@ import com.cw.litenote.R;
 import com.cw.litenote.main.MainAct;
 import com.cw.litenote.operation.audio.AudioManager;
 import com.cw.litenote.operation.audio.AudioPlayer_note;
-import com.cw.litenote.tabs.TabsHost_new;
 import com.cw.litenote.util.ColorSet;
 import com.cw.litenote.util.Util;
 import com.cw.litenote.util.audio.UtilAudio;
@@ -51,7 +50,7 @@ public class Note_audio
     // initialize audio block
     void init_audio_block()
     {
-        mPager = (ViewPager) act.findViewById(R.id.pager);
+        mPager = (ViewPager) act.findViewById(R.id.tabs_pager);
 
         // audio block
         TextView tag = (TextView) act.findViewById(R.id.text_view_audio);
@@ -203,7 +202,7 @@ public class Note_audio
 
                 isPausedAtSeekerAnchor = false;
                 //todo TBD
-//                TabsHost_new.setAudioPlayingTab_WithHighlight(false);// in case playing audio in pager
+//                TabsHost.setAudioPlayingTab_WithHighlight(false);// in case playing audio in pager
                 playAudioInPager(act,audioStr,_pager);
             }
         });

@@ -5,10 +5,8 @@ import com.cw.litenote.db.DB_folder;
 import com.cw.litenote.db.DB_page;
 import com.cw.litenote.main.MainAct;
 import com.cw.litenote.operation.audio.AudioManager;
-import com.cw.litenote.operation.audio.AudioPlayer_note;
 import com.cw.litenote.page.Page;
 import com.cw.litenote.page.PageUi;
-import com.cw.litenote.tabs.TabsHost_new;
 import com.cw.litenote.util.CustomWebView;
 import com.cw.litenote.util.DeleteFileAlarmReceiver;
 import com.cw.litenote.util.audio.UtilAudio;
@@ -154,14 +152,14 @@ public class Note extends FragmentActivity
 		mDb_page = new DB_page(act, Pref.getPref_focusView_page_tableId(act));
 
 		// Instantiate a ViewPager and a PagerAdapter.
-		mPager = (ViewPager) findViewById(R.id.pager);
+		mPager = (ViewPager) findViewById(R.id.tabs_pager);
 		mPagerAdapter = new Note_adapter(mPager,this);
 		mPager.setAdapter(mPagerAdapter);
 		mPager.setCurrentItem(NoteUi.getFocus_notePos());
 
 		// tab style
-//		if(TabsHost_new.mDbFolder != null)
-//			TabsHost_new.mDbFolder.close();
+//		if(TabsHost.mDbFolder != null)
+//			TabsHost.mDbFolder.close();
 
 		DB_folder dbFolder = new DB_folder(act,Pref.getPref_focusView_folder_tableId(act));
 

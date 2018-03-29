@@ -35,7 +35,7 @@ import com.cw.litenote.util.ColorSet;
 import com.cw.litenote.util.preferences.Pref;
 
 
-public class TabsHost_new extends AppCompatDialogFragment implements TabLayout.OnTabSelectedListener
+public class TabsHost extends AppCompatDialogFragment implements TabLayout.OnTabSelectedListener
 {
     public static int mStyle;
     TabLayout tabLayout;
@@ -49,27 +49,27 @@ public class TabsHost_new extends AppCompatDialogFragment implements TabLayout.O
     public static int lastPageTableId;
 
 
-    public TabsHost_new()
+    public TabsHost()
     {
-        System.out.println("TabsHost_new / construct");
+        System.out.println("TabsHost / construct");
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        System.out.println("TabsHost_new / _onCreate");
+        System.out.println("TabsHost / _onCreate");
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.tabs_host_new, container, false);
+        View rootView = inflater.inflate(R.layout.tabs_host, container, false);
         // tool bar
 //        Toolbar toolbar = (Toolbar) rootView.findViewById(R.id.tabanim_toolbar);
 //        rootView.setSupportActionBar(toolbar);
 
         // view pager
-        viewPager = (ViewPager) rootView.findViewById(R.id.pager);
+        viewPager = (ViewPager) rootView.findViewById(R.id.tabs_pager);
 
         // adapter
         adapter = new TabsPagerAdapter(getActivity(),getActivity().getSupportFragmentManager());
@@ -101,7 +101,7 @@ public class TabsHost_new extends AppCompatDialogFragment implements TabLayout.O
     {
         lastPageTableId = 0;
         int pageCount = adapter.mDbFolder.getPagesCount(true);
-        System.out.println("TabsHost_new / _addPages / pageCount = " + pageCount);
+        System.out.println("TabsHost / _addPages / pageCount = " + pageCount);
         for(int i=0;i<pageCount;i++)
         {
             int pageTableId = adapter.mDbFolder.getPageTableId(i, true);
@@ -109,7 +109,7 @@ public class TabsHost_new extends AppCompatDialogFragment implements TabLayout.O
             if(pageTableId > lastPageTableId)
                 lastPageTableId = pageTableId;
 
-            System.out.println("TabsHost_new / _addPages / pageTableId = " + pageTableId);
+            System.out.println("TabsHost / _addPages / pageTableId = " + pageTableId);
             adapter.addFragment(new Page(pageTableId));
         }
     }
@@ -132,7 +132,7 @@ public class TabsHost_new extends AppCompatDialogFragment implements TabLayout.O
 
     @Override
     public void onTabSelected(TabLayout.Tab tab) {
-        System.out.println("-> TabsHost_new / _onTabSelected: " + tab.getPosition());
+        System.out.println("-> TabsHost / _onTabSelected: " + tab.getPosition());
 
         selectedPos = tab.getPosition();
         int pageTableId = adapter.mDbFolder.getPageTableId(selectedPos, true);
@@ -147,13 +147,13 @@ public class TabsHost_new extends AppCompatDialogFragment implements TabLayout.O
     }
     @Override
     public void onTabUnselected(TabLayout.Tab tab) {
-        System.out.println("TabsHost_new / _onTabUnselected: " + tab.getPosition());
+        System.out.println("TabsHost / _onTabUnselected: " + tab.getPosition());
         unSelectedPos = tab.getPosition();
     }
 
     @Override
     public void onTabReselected(TabLayout.Tab tab) {
-        System.out.println("TabsHost_new / _onTabReselected: " + tab.getPosition());
+        System.out.println("TabsHost / _onTabReselected: " + tab.getPosition());
         reSelectedPos = tab.getPosition();
     }
 
@@ -177,7 +177,7 @@ public class TabsHost_new extends AppCompatDialogFragment implements TabLayout.O
         }
 
         viewPager.setCurrentItem(selectedPos);
-        System.out.println("TabsHost_new / _onResume / selectedPos = " + selectedPos);
+        System.out.println("TabsHost / _onResume / selectedPos = " + selectedPos);
     }
 
     @Override

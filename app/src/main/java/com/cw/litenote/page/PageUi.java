@@ -24,7 +24,7 @@ import com.cw.litenote.db.DB_page;
 import com.cw.litenote.folder.FolderUi;
 import com.cw.litenote.main.MainAct;
 import com.cw.litenote.define.Define;
-import com.cw.litenote.tabs.TabsHost_new;
+import com.cw.litenote.tabs.TabsHost;
 import com.cw.litenote.util.TouchableEditText;
 import com.cw.litenote.util.Util;
 import com.cw.litenote.util.image.UtilImage;
@@ -104,11 +104,11 @@ public class PageUi
 			@Override
 			public void onCheckedChanged(RadioGroup RG, int id) {
 				DB_folder db = new DB_folder(MainAct.mAct,DB_folder.getFocusFolder_tableId());
-				TabsHost_new.mStyle = RG.indexOfChild(RG.findViewById(id));
+				TabsHost.mStyle = RG.indexOfChild(RG.findViewById(id));
 				db.updatePage(db.getPageId(getFocus_pagePos(), true),
 							  db.getPageTitle(getFocus_pagePos(), true),
 							  db.getPageTableId(getFocus_pagePos(), true),
-							  TabsHost_new.mStyle,
+							  TabsHost.mStyle,
                               true);
 	 			dlg.dismiss();
 				FolderUi.startTabsHostRun();
@@ -154,28 +154,28 @@ public class PageUi
 
 //		        int[] leftMargin = {0,0};
 //		        if(getFocus_pagePos() == 0)
-//		        	TabsHost_new.mTabsHost.getTabWidget().getChildAt(0).getLocationInWindow(leftMargin);
+//		        	TabsHost.mTabsHost.getTabWidget().getChildAt(0).getLocationInWindow(leftMargin);
 //		        else
-//		        	TabsHost_new.mTabsHost.getTabWidget().getChildAt(getFocus_pagePos() -1).getLocationInWindow(leftMargin);
+//		        	TabsHost.mTabsHost.getTabWidget().getChildAt(getFocus_pagePos() -1).getLocationInWindow(leftMargin);
 //
 //				int curTabWidth,nextTabWidth;
-//				curTabWidth = TabsHost_new.mTabsHost.getTabWidget().getChildAt(getFocus_pagePos()).getWidth();
+//				curTabWidth = TabsHost.mTabsHost.getTabWidget().getChildAt(getFocus_pagePos()).getWidth();
 //				if(getFocus_pagePos() == 0)
 //					nextTabWidth = curTabWidth;
 //				else
-//					nextTabWidth = TabsHost_new.mTabsHost.getTabWidget().getChildAt(getFocus_pagePos() -1).getWidth();
+//					nextTabWidth = TabsHost.mTabsHost.getTabWidget().getChildAt(getFocus_pagePos() -1).getWidth();
 //
 //				// when leftmost tab margin over window border
 //	       		if(leftMargin[0] < 0) {
 //	       		    int scrollX = -(nextTabWidth + dividerWidth + screenWidth );
-//                    TabsHost_new.mHorScrollView.scrollTo(scrollX, 0);
+//                    TabsHost.mHorScrollView.scrollTo(scrollX, 0);
 //                    //update final page currently viewed: scroll x
 //                    Pref.setPref_focusView_scrollX_byFolderTableId(act, scrollX );
 //                }
 //
 //                if(getTabPositionState() != LEFTMOST)
 //	    	    {
-//					Pref.setPref_focusView_page_tableId(act, TabsHost_new.mDbFolder.getPageTableId(getFocus_pagePos(), true));
+//					Pref.setPref_focusView_page_tableId(act, TabsHost.mDbFolder.getPageTableId(getFocus_pagePos(), true));
 //	    	    	swapPage(getFocus_pagePos(),
 //                            getFocus_pagePos() -1);
 //
@@ -222,23 +222,23 @@ public class PageUi
 
 				int[] rightMargin = {0,0};
 //				if(getFocus_pagePos() == (count-1))
-//					TabsHost_new.mTabsHost.getTabWidget().getChildAt(count-1).getLocationInWindow(rightMargin);
+//					TabsHost.mTabsHost.getTabWidget().getChildAt(count-1).getLocationInWindow(rightMargin);
 //				else
-//					TabsHost_new.mTabsHost.getTabWidget().getChildAt(getFocus_pagePos() +1).getLocationInWindow(rightMargin);
+//					TabsHost.mTabsHost.getTabWidget().getChildAt(getFocus_pagePos() +1).getLocationInWindow(rightMargin);
 //
 //				int curTabWidth, nextTabWidth;
-//				curTabWidth = TabsHost_new.mTabsHost.getTabWidget().getChildAt(getFocus_pagePos()).getWidth();
+//				curTabWidth = TabsHost.mTabsHost.getTabWidget().getChildAt(getFocus_pagePos()).getWidth();
 //
 //				if(getFocus_pagePos() == (count-1))
 //					nextTabWidth = curTabWidth;
 //				else
-//					nextTabWidth = TabsHost_new.mTabsHost.getTabWidget().getChildAt(getFocus_pagePos() +1).getWidth();
+//					nextTabWidth = TabsHost.mTabsHost.getTabWidget().getChildAt(getFocus_pagePos() +1).getWidth();
 //
 //	    		// when rightmost tab margin plus its tab width over screen border
 //	    		if( screenWidth < (rightMargin[0] + nextTabWidth) )
 //	    		{
 //                    int scrollX = nextTabWidth + dividerWidth + screenWidth;
-//                    TabsHost_new.mHorScrollView.scrollTo(scrollX, 0);
+//                    TabsHost.mHorScrollView.scrollTo(scrollX, 0);
 //
 //                    //update final page currently viewed: scroll x
 //                    Pref.setPref_focusView_scrollX_byFolderTableId(act, scrollX );
@@ -515,21 +515,21 @@ public class PageUi
 		
 		// insert table for new tab
 		dbFolder.insertPageTable(dbFolder,DB_folder.getFocusFolder_tableId(),newTblId, true);
-//		TabsHost_new.mPagesCount++;
+//		TabsHost.mPagesCount++;
 
 //		// commit: final page viewed
 //		Pref.setPref_focusView_page_tableId(act, newTblId);
 //
 //	    // set scroll X
-//		final int scrollX = (TabsHost_new.mPagesCount) * 60 * 5; //over the last scroll X
+//		final int scrollX = (TabsHost.mPagesCount) * 60 * 5; //over the last scroll X
 //
 //        FolderUi.startTabsHostRun();
 //
-//		if(TabsHost_new.mHorScrollView != null) {
-//			TabsHost_new.mHorScrollView.post(new Runnable() {
+//		if(TabsHost.mHorScrollView != null) {
+//			TabsHost.mHorScrollView.post(new Runnable() {
 //				@Override
 //				public void run() {
-//					TabsHost_new.mHorScrollView.scrollTo(scrollX, 0);
+//					TabsHost.mHorScrollView.scrollTo(scrollX, 0);
 //					Pref.setPref_focusView_scrollX_byFolderTableId(act, scrollX);
 //				}
 //			});
@@ -551,7 +551,7 @@ public class PageUi
 		
 		// insert table for new tab
 //		dbFolder.insertPageTable(dbFolder,DB_folder.getFocusFolder_tableId(),newTabId, true);
-//		TabsHost_new.mPagesCount++;
+//		TabsHost.mPagesCount++;
 		
 		//change to leftmost tab Id
 		int tabTotalCount = dbFolder.getPagesCount(true);
@@ -568,10 +568,10 @@ public class PageUi
 		// commit: scroll X
         FolderUi.startTabsHostRun();
 
-//		TabsHost_new.mHorScrollView.post(new Runnable() {
+//		TabsHost.mHorScrollView.post(new Runnable() {
 //	        @Override
 //	        public void run() {
-//	        	TabsHost_new.mHorScrollView.scrollTo(scrollX, 0);
+//	        	TabsHost.mHorScrollView.scrollTo(scrollX, 0);
 //	        	Pref.setPref_focusView_scrollX_byFolderTableId(act, scrollX );
 //	        }
 //	    });
@@ -601,7 +601,7 @@ public class PageUi
 			if(Integer.valueOf(tableId) == dbFolder.getPageTableId(i, false))
 				setFocus_pagePos(i);
 			
-//	    	if(	dbFolder.getPageId(i, false)== TabsHost_new.mFirstPos_PageId)
+//	    	if(	dbFolder.getPageId(i, false)== TabsHost.mFirstPos_PageId)
 //	    		Pref.setPref_focusView_page_tableId(act, dbFolder.getPageTableId(i, false) );
 		}
 		dbFolder.close();
@@ -609,7 +609,7 @@ public class PageUi
 
     public static boolean isSamePageTable()
     {
-	    return ( (MainAct.mPlaying_pageTableId == TabsHost_new.currPageTableId)&&//mNow_pageTableId) &&
+	    return ( (MainAct.mPlaying_pageTableId == TabsHost.currPageTableId)&&//mNow_pageTableId) &&
 			     (MainAct.mPlaying_pagePos == getFocus_pagePos()) &&
 	     	     (MainAct.mPlaying_folderPos == FolderUi.getFocus_folderPos())  );
     }

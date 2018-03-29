@@ -943,7 +943,7 @@ public class MainAct extends FragmentActivity implements OnBackStackChangedListe
         			(AudioManager.getPlayerState() != AudioManager.PLAYER_AT_STOP))
         		{
                     AudioManager.stopAudioPlayer();
-//					TabsHost_new.setAudioPlayingTab_WithHighlight(false);
+//					TabsHost.setAudioPlayingTab_WithHighlight(false);
                     //todo TBD
 //					Page.mItemAdapter.notifyDataSetChanged();
 					return true; // just stop playing, wait for user action
@@ -954,7 +954,7 @@ public class MainAct extends FragmentActivity implements OnBackStackChangedListe
                     AudioManager.mAudioPos = 0;
 
                     //todo How to get correct page?
-//                    Page page_new = TabsPagerAdapter.mFragmentList.get(TabsHost_new.selectedPos);
+//                    Page page_new = TabsPagerAdapter.mFragmentList.get(TabsHost.selectedPos);
                     Page page_new= new Page(DB_page.getFocusPage_tableId());
 //                    Page.page_audio = new Page_audio(mAct,page_new.mDndListView);
 //                    Page.page_audio.initAudioBlock();
@@ -973,7 +973,7 @@ public class MainAct extends FragmentActivity implements OnBackStackChangedListe
 
                     // todo How to update page table Id
                     // update page table Id
-//                    mPlaying_pageTableId = TabsHost_new.Now_pageTableId;
+//                    mPlaying_pageTableId = TabsHost.Now_pageTableId;
 
                     // update playing folder position
                     mPlaying_folderPos = FolderUi.getFocus_folderPos();

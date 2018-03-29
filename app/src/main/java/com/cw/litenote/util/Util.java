@@ -33,7 +33,6 @@ import com.cw.litenote.page.PageUi;
 import com.cw.litenote.db.DB_folder;
 import com.cw.litenote.db.DB_page;
 import com.cw.litenote.note.Note;
-import com.cw.litenote.tabs.TabsHost_new;
 import com.cw.litenote.util.audio.UtilAudio;
 import com.cw.litenote.util.image.UtilImage;
 import com.cw.litenote.util.preferences.Pref;

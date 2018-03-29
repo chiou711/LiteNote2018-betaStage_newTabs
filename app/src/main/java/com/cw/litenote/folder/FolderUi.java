@@ -5,7 +5,6 @@ import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Handler;
@@ -24,15 +23,13 @@ import android.widget.TextView;
 import com.cw.litenote.R;
 import com.cw.litenote.db.DB_page;
 import com.cw.litenote.operation.audio.AudioManager;
-import com.cw.litenote.operation.gallery.GalleryGridAct;
 import com.cw.litenote.operation.import_export.Import_fileView;
 import com.cw.litenote.db.DB_drawer;
 import com.cw.litenote.db.DB_folder;
 import com.cw.litenote.main.MainAct;
 import com.cw.litenote.page.PageUi;
 import com.cw.litenote.define.Define;
-import com.cw.litenote.tabs.TabsHost_new;
-import com.cw.litenote.tabs.TabsHost_new;
+import com.cw.litenote.tabs.TabsHost;
 import com.cw.litenote.util.TouchableEditText;
 import com.cw.litenote.util.Util;
 import com.cw.litenote.util.preferences.Pref;
@@ -319,8 +316,8 @@ public class FolderUi
 
         //todo TBD
         // clear folder
-//        if (TabsHost_new.mTabsHost != null)
-//            TabsHost_new.mTabsHost.clearAllTabs();
+//        if (TabsHost.mTabsHost != null)
+//            TabsHost.mTabsHost.clearAllTabs();
 
         // remove focus view Key
         Pref.removePref_focusView_key(act, folderTableId);
@@ -523,7 +520,7 @@ public class FolderUi
 
 				// set tab Id
                 //todo TBD
-//				TabsHost_new.setLastPos_pageId(0);
+//				TabsHost.setLastPos_pageId(0);
 
 				// check DB: before importing
                 dB_drawer.listFolders();
@@ -557,7 +554,7 @@ public class FolderUi
 
         //todo TBD
 //        if(pagesCount ==0)
-//            TabsHost_new.setLastPos_pageId(0);
+//            TabsHost.setLastPos_pageId(0);
 
 		// use Runnable to make sure only one folder background is seen
         mHandler = new Handler();
@@ -580,7 +577,7 @@ public class FolderUi
         {
         	System.out.println("FolderUi / mTabsHostRun");
 
-            Fragment fragment = new TabsHost_new();
+            Fragment fragment = new TabsHost();
 
         	FragmentTransaction fragmentTransaction = MainAct.fragmentManager.beginTransaction();
             fragmentTransaction.replace(R.id.content_frame, fragment).commit();

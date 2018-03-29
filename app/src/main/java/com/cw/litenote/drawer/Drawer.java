@@ -11,7 +11,6 @@ import com.cw.litenote.R;
 import com.cw.litenote.db.DB_drawer;
 import com.cw.litenote.folder.FolderUi;
 import com.cw.litenote.main.MainAct;
-import com.cw.litenote.tabs.TabsHost_new;
 import com.mobeta.android.dslv.DragSortListView;
 
 /**
@@ -74,7 +73,7 @@ public class Drawer {
 
                                 //todo TBD
                                 // add for deleting folder condition
-//                                if (TabsHost_new.mTabsHost == null)
+//                                if (TabsHost.mTabsHost == null)
 //                                    FolderUi.selectFolder(act,FolderUi.getFocus_folderPos());
                             }
                             else

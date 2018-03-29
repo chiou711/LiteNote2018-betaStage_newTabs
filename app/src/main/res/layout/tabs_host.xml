@@ -1,8 +1,6 @@
 <android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/tabanim_maincontent"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:theme="@style/MyTheme">
@@ -24,27 +22,16 @@
     <android.support.design.widget.TabLayout
         android:id="@+id/tabs"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-         />
+        android:layout_height="wrap_content"/>
 
 </android.support.design.widget.AppBarLayout>
 
-<!--<RelativeLayout-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--&gt;-->
-
-    <!--<FrameLayout-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_gravity="top"  >-->
     <android.support.v4.view.ViewPager
-        android:id="@+id/pager"
+        android:id="@+id/tabs_pager"
         android:layout_width="match_parent"
-        android:layout_height="400dp"
+        android:layout_height="wrap_content"
         android:visibility="visible"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
-    <!--</FrameLayout>-->
 
     <!-- footer audio control -->
     <FrameLayout
@@ -52,8 +39,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom">
     <include
-        layout="@layout/page_view_portrait_audio_footer"
-        android:visibility="visible"/>
+        layout="@layout/page_view_portrait_audio_panel"
+        />
     </FrameLayout>
-<!--</RelativeLayout>-->
 </android.support.design.widget.CoordinatorLayout>
