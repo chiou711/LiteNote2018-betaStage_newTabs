@@ -693,7 +693,7 @@ public class AudioPlayer_page
                 MainAct.mSubMenuItemAudio.setIcon(R.drawable.ic_menu_slideshow);
 
 			//todo TBD
-//            TabsHost_new.setAudioPlayingTab_WithHighlight(false);
+//            TabsHost.setAudioPlayingTab_WithHighlight(false);
 //            Page.mItemAdapter.notifyDataSetChanged();
 
             // stop media player
