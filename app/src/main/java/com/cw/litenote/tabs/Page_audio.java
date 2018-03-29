@@ -1,4 +1,4 @@
-package com.cw.litenote.page;
+package com.cw.litenote.tabs;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
@@ -183,8 +183,7 @@ public class Page_audio {
                 UtilAudio.updateAudioPanel((ImageView)v, audio_panel_title_textView); // here v is audio play button
 
                 if(AudioManager.getPlayerState() != AudioManager.PLAYER_AT_STOP)
-//                    AudioPlayer_page.scrollHighlightAudioItemToVisible();
-                    AudioPlayer_page.scrollHighlightAudioItemToVisible(listView);
+                    audioPlayer_page.scrollHighlightAudioItemToVisible(listView);
             }
         });
 
@@ -254,8 +253,7 @@ public class Page_audio {
         UtilAudio.updateAudioPanel(audioPanel_play_button, audio_panel_title_textView);
 
         if(AudioManager.getPlayerState() != AudioManager.PLAYER_AT_STOP)
-//            AudioPlayer_page.scrollHighlightAudioItemToVisible();
-            AudioPlayer_page.scrollHighlightAudioItemToVisible(listView);
+            audioPlayer_page.scrollHighlightAudioItemToVisible(listView);
     }
 
 }

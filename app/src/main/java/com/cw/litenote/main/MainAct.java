@@ -22,7 +22,7 @@ import com.cw.litenote.operation.import_export.Import_webAct;
 import com.cw.litenote.page.Checked_notes_option;
 import com.cw.litenote.page.Page;
 import com.cw.litenote.page.PageUi;
-import com.cw.litenote.page.Page_audio;
+import com.cw.litenote.tabs.Page_audio;
 import com.cw.litenote.util.ColorSet;
 import com.cw.litenote.util.DeleteFileAlarmReceiver;
 import com.cw.litenote.operation.import_export.Export_toSDCardFragment;

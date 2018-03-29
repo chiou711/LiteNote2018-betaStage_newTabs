@@ -30,8 +30,11 @@ import android.widget.TextView;
 
 import com.cw.litenote.R;
 import com.cw.litenote.main.MainAct;
+import com.cw.litenote.operation.audio.AudioManager;
+import com.cw.litenote.operation.audio.AudioPlayer_page;
 import com.cw.litenote.page.Page;
 import com.cw.litenote.util.ColorSet;
+import com.cw.litenote.util.audio.UtilAudio;
 import com.cw.litenote.util.preferences.Pref;
 
 
@@ -48,6 +51,8 @@ public class TabsHost extends AppCompatDialogFragment implements TabLayout.OnTab
     int unSelectedPos;
     public static int lastPageTableId;
 
+    public static Page_audio page_audio;
+    public static AudioPlayer_page audioPlayer_page;
 
     public TabsHost()
     {
@@ -160,7 +165,6 @@ public class TabsHost extends AppCompatDialogFragment implements TabLayout.OnTab
     @Override
     public void onResume() {
         super.onResume();
-
         // default
         selectedPos = 0;
 
@@ -176,13 +180,31 @@ public class TabsHost extends AppCompatDialogFragment implements TabLayout.OnTab
             }
         }
 
-        viewPager.setCurrentItem(selectedPos);
         System.out.println("TabsHost / _onResume / selectedPos = " + selectedPos);
+        viewPager.setCurrentItem(selectedPos);
+
+
+        // for incoming phone call case or key protection off to on
+        if( (page_audio != null) &&
+            (AudioManager.getPlayerState() != AudioManager.PLAYER_AT_STOP) &&
+            (AudioManager.getAudioPlayMode() == AudioManager.PAGE_PLAY_MODE)   )
+        {
+            System.out.println("TabsHost / _onResume / page_audio != null ");
+
+            page_audio.initAudioBlock(getActivity());
+
+            audioPlayer_page.mRunContinueMode.run();
+
+            UtilAudio.updateAudioPanel(page_audio.audioPanel_play_button,
+                                       page_audio.audio_panel_title_textView);
+        }
+
     }
 
     @Override
     public void onPause() {
         super.onPause();
+        System.out.println("TabsHost / _onResume / _onPause");
         //  Remove fragments
         if( adapter.mFragmentList != null) {
             for (int i = 0; i < adapter.mFragmentList.size(); i++) {

@@ -11,6 +11,7 @@ import com.cw.litenote.operation.audio.AudioManager;
 import com.cw.litenote.operation.audio.AudioPlayer_page;
 import com.cw.litenote.main.MainAct;
 import com.cw.litenote.note.Note;
+import com.cw.litenote.tabs.Page_audio;
 import com.cw.litenote.tabs.TabsHost;
 import com.cw.litenote.util.audio.UtilAudio;
 import com.cw.litenote.note.Note_edit;
@@ -44,6 +45,7 @@ import android.widget.AbsListView;
 import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
+
 
 public class Page extends UilListViewBaseFragment
 //						  implements LoaderManager.LoaderCallbacks<List<String>>
@@ -499,7 +501,6 @@ public class Page extends UilListViewBaseFragment
     public void onResume() {
 		if(en_dbg_msg)
 			System.out.println("Page / _onResume / pageTableId = " + pageTableId);
-//        mDb_page = new DB_page(getActivity(), Pref.getPref_focusView_page_tableId(getActivity()));
 
         super.onResume();
 
@@ -507,42 +508,13 @@ public class Page extends UilListViewBaseFragment
         mFirstVisibleIndex = Pref.getPref_focusView_list_view_first_visible_index(getActivity());
         mFirstVisibleIndexTop = Pref.getPref_focusView_list_view_first_visible_index_top(getActivity());
 
-
         mDndListView.setSelectionFromTop(mFirstVisibleIndex, mFirstVisibleIndexTop);
 
-
-        //todo How to make After Key Protect like first audio play?
-        ///
         mDndListView.setDropListener(onDrop);
         mDndListView.setDragListener(onDrag);
         mDndListView.setMarkListener(onMark);
         mDndListView.setAudioListener(onAudio);
         mDndListView.setOnScrollListener(onScroll);
-
-
-		// for incoming phone call case or key protection off to on
-		if( (page_audio != null) &&
-			(AudioManager.getPlayerState() != AudioManager.PLAYER_AT_STOP) &&
-			(AudioManager.getAudioPlayMode() == AudioManager.PAGE_PLAY_MODE)   )
-		{
-			System.out.println("Page / _onResume / page_audio != null ");
-			page_audio.initAudioBlock(MainAct.mAct);
-            UtilAudio.updateAudioPanel(page_audio.audioPanel_play_button, page_audio.audio_panel_title_textView);
-//            mDndListView.setSelectionFromTop(mFirstVisibleIndex, mFirstVisibleIndexTop);
-//
-//
-//            //todo How to make After Key Protect like first audio play?
-//            ///
-//            mDndListView.setDropListener(onDrop);
-//            mDndListView.setDragListener(onDrag);
-//            mDndListView.setMarkListener(onMark);
-//            mDndListView.setAudioListener(onAudio);
-//            mDndListView.setOnScrollListener(onScroll);
-//
-//            AudioPlayer_page.scrollHighlightAudioItemToVisible(mDndListView);
-            ///
-
-        }
     }
 
     @Override
@@ -771,9 +743,6 @@ public class Page extends UilListViewBaseFragment
 	}
 
 
-	public static boolean isOnAudioClick;
-	AudioPlayer_page audioPlayer_page;
-	public Page_audio page_audio;
     // list view listener: on audio
     private DragSortListView.AudioListener onAudio = new DragSortListView.AudioListener()
 	{   @Override
@@ -811,8 +780,8 @@ public class Page extends UilListViewBaseFragment
 						if(AudioManager.mMediaPlayer.isPlaying())
 							AudioManager.mMediaPlayer.pause();
 
-		   			   	if(audioPlayer_page != null) {
-							AudioPlayer_page.mAudioHandler.removeCallbacks(audioPlayer_page.mRunContinueMode);
+		   			   	if(TabsHost.audioPlayer_page != null) {
+							AudioPlayer_page.mAudioHandler.removeCallbacks(TabsHost.audioPlayer_page.mRunContinueMode);
                         }
 						AudioManager.mMediaPlayer.release();
 						AudioManager.mMediaPlayer = null;
@@ -824,22 +793,25 @@ public class Page extends UilListViewBaseFragment
 					AudioManager.mAudioPos = position;
                     AudioManager.setAudioPlayMode(AudioManager.PAGE_PLAY_MODE);
 
-                    page_audio = new Page_audio(mAct,mDndListView);//todo How to add this after Key Protect
-                    page_audio.initAudioBlock(MainAct.mAct);
+                    TabsHost.page_audio = new Page_audio(mAct,mDndListView);
+                    TabsHost.page_audio.initAudioBlock(MainAct.mAct);
 
-                    audioPlayer_page = new AudioPlayer_page(mAct,page_audio,mDndListView);
+                    TabsHost.audioPlayer_page = new AudioPlayer_page(mAct,TabsHost.page_audio,mDndListView);
 					AudioPlayer_page.prepareAudioInfo();
-					audioPlayer_page.runAudioState();
+					TabsHost.audioPlayer_page.runAudioState();
 
-                    UtilAudio.updateAudioPanel(page_audio.audioPanel_play_button, page_audio.audio_panel_title_textView);
+                    UtilAudio.updateAudioPanel(TabsHost.page_audio.audioPanel_play_button,
+                                               TabsHost.page_audio.audio_panel_title_textView);
 
                     // update playing page position
                     MainAct.mPlaying_pagePos = PageUi.getFocus_pagePos();
+
 					// update playing page table Id
 					MainAct.mPlaying_pageTableId = TabsHost.currPageTableId;//mNow_pageTableId;
 
 					// update playing folder position
 				    MainAct.mPlaying_folderPos = FolderUi.getFocus_folderPos();
+
 				    // update playing folder table Id
 					DB_drawer dB_drawer = new DB_drawer(mAct);
 					MainAct.mPlaying_folderTableId = dB_drawer.getFolderTableId(MainAct.mPlaying_folderPos,true);
