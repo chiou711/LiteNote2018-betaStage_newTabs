@@ -199,7 +199,8 @@ public class Page extends UilListViewBaseFragment
 //        getLoaderManager().initLoader(pageTableId, null, Page.this);
 
         fillData(mAct,mDndListView);
-        mItemAdapter.notifyDataSetChanged();
+		mItemAdapter.notifyDataSetChanged();
+
 
 //        AudioPlayer_page.scrollHighlightAudioItemToVisible(mDndListView);
 
@@ -226,11 +227,6 @@ public class Page extends UilListViewBaseFragment
 	{
 		if(en_dbg_msg)
 			System.out.println("Page / _fillData / pageTableId = " + pageTableId);
-
-		// save index and top position
-//    	int index = mDndListView.getFirstVisiblePosition();
-//      View v = mDndListView.getChildAt(0);
-//      int top = (v == null) ? 0 : v.getTop();
 
     	/*
         // set background color of list view
@@ -273,26 +269,7 @@ public class Page extends UilListViewBaseFragment
 			mSelectedList.set(i,true);
 		}
 
-		if(en_dbg_msg)
-			System.out.println("Page / _fillData / mFirstVisibleIndex = " + mFirstVisibleIndex +
-					" , mFirstVisibleIndexTop = " + mFirstVisibleIndexTop);
-
-		// restore index and top position
-//		listView.setSelectionFromTop(mFirstVisibleIndex, mFirstVisibleIndexTop);
-//
-//		listView.setDropListener(onDrop);
-//		listView.setDragListener(onDrag);
-//		listView.setMarkListener(onMark);
-//		listView.setAudioListener(onAudio);
-//		listView.setOnScrollListener(onScroll);
-
         showFooter(mAct);
-
-		// scroll highlight audio item to be visible
-//		if((AudioManager.getPlayerState() != AudioManager.PLAYER_AT_STOP) && (!Page.isOnAudioClick))
-//			AudioPlayer_page.scrollHighlightAudioItemToVisible();
-
-//        mItemAdapter.notifyDataSetChanged();
 	}
 
 
@@ -456,6 +433,8 @@ public class Page extends UilListViewBaseFragment
 
 			// update list view
             fillData(mAct,mDndListView);
+			mItemAdapter.notifyDataSetChanged();
+			resume_scroll_listView();
 
             // update footer
 			showFooter(mAct);
@@ -504,24 +483,24 @@ public class Page extends UilListViewBaseFragment
 
         super.onResume();
 
-        // recover scroll Y
-        mFirstVisibleIndex = Pref.getPref_focusView_list_view_first_visible_index(getActivity());
-        mFirstVisibleIndexTop = Pref.getPref_focusView_list_view_first_visible_index_top(getActivity());
-
-        mDndListView.setSelectionFromTop(mFirstVisibleIndex, mFirstVisibleIndexTop);
-
         mDndListView.setDropListener(onDrop);
         mDndListView.setDragListener(onDrag);
         mDndListView.setMarkListener(onMark);
         mDndListView.setAudioListener(onAudio);
         mDndListView.setOnScrollListener(onScroll);
+
+        if(pageTableId == TabsHost.currPageTableId)
+            resume_scroll_listView();
     }
 
     @Override
     public void onPause() {
     	super.onPause();
 		if(en_dbg_msg)
-			System.out.println("Page / _onPause");
+			System.out.println("Page / _onPause / pageTableId = " + pageTableId);
+
+		if(pageTableId == TabsHost.currPageTableId)
+            store_scroll_listView();
 	 }
 
     @Override
@@ -572,36 +551,11 @@ public class Page extends UilListViewBaseFragment
 
 		@Override
 		public void onScrollStateChanged(AbsListView view, int scrollState) {
-	        mFirstVisibleIndex = mDndListView.getFirstVisiblePosition();
-	        View v = mDndListView.getChildAt(0);
-	        mFirstVisibleIndexTop = (v == null) ? 0 : v.getTop();
-
-	        //todo TBD
-//			if( (PageUi.getFocus_pagePos() == MainAct.mPlaying_pagePos)&&
-//				(MainAct.mPlaying_folderPos == FolderUi.getFocus_folderPos()) &&
-//				(AudioManager.getPlayerState() == AudioManager.PLAYER_AT_PLAY) &&
-//				(mDndListView.getChildAt(0) != null)                    )
-//			{
-//				// do nothing when playing audio
-//				if(en_dbg_msg)
-//					System.out.println("_onScrollStateChanged / do nothing");
-//			}
-//			else
-//            {
-//				// keep index and top position
-//				Pref.setPref_focusView_list_view_first_visible_index(getActivity(), mFirstVisibleIndex);
-//				Pref.setPref_focusView_list_view_first_visible_index_top(getActivity(), mFirstVisibleIndexTop);
-//			}
 		}
 
 		@Override
 		public void onScroll(AbsListView view, int firstVisibleItem,
 				int visibleItemCount, int totalItemCount) {
-
-//			System.out.println("_onScroll / firstVisibleItem " + firstVisibleItem);
-//			System.out.println("_onScroll / visibleItemCount " + visibleItemCount);
-//			System.out.println("_onScroll / totalItemCount " + totalItemCount);
-
 		}
 	};
 
@@ -693,6 +647,7 @@ public class Page extends UilListViewBaseFragment
 			// update list view
             fillData(mAct,mDndListView);
 			mItemAdapter.notifyDataSetChanged();
+			resume_scroll_listView();
 
 			// update footer
             showFooter(mAct);
@@ -925,5 +880,37 @@ public class Page extends UilListViewBaseFragment
 //			}
 //		}
 //	}
+
+
+    // store scroll of list view
+	void store_scroll_listView()
+    {
+        mFirstVisibleIndex = mDndListView.getFirstVisiblePosition();
+        View v = mDndListView.getChildAt(0);
+        mFirstVisibleIndexTop = (v == null) ? 0 : v.getTop();
+
+        if(en_dbg_msg)
+            System.out.println("Page / _store_scroll_listView / mFirstVisibleIndex = " + mFirstVisibleIndex +
+                    " , mFirstVisibleIndexTop = " + mFirstVisibleIndexTop);
+
+        // keep index and top position
+        Pref.setPref_focusView_list_view_first_visible_index(getActivity(), mFirstVisibleIndex);
+        Pref.setPref_focusView_list_view_first_visible_index_top(getActivity(), mFirstVisibleIndexTop);
+    }
+
+    // resume scroll of list view
+    void resume_scroll_listView()
+    {
+        // recover scroll Y
+        mFirstVisibleIndex = Pref.getPref_focusView_list_view_first_visible_index(getActivity());
+        mFirstVisibleIndexTop = Pref.getPref_focusView_list_view_first_visible_index_top(getActivity());
+
+        if(en_dbg_msg)
+            System.out.println("Page / _resume_scroll_listView / mFirstVisibleIndex = " + mFirstVisibleIndex +
+                    " , mFirstVisibleIndexTop = " + mFirstVisibleIndexTop);
+
+        // restore index and top position
+        mDndListView.setSelectionFromTop(mFirstVisibleIndex, mFirstVisibleIndexTop);
+    }
 
 }

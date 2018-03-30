@@ -422,10 +422,6 @@ public class AudioPlayer_page
         listView = _listView;
 		System.out.println("AudioPlayer_page / _scrollHighlightAudioItemToVisible");
 
-        if(listView == null)
-            System.out.println("AudioPlayer_page / _scrollHighlightAudioItemToVisible / listView == null ");
-        else
-            System.out.println("AudioPlayer_page / _scrollHighlightAudioItemToVisible / listView != null ");
 		// version limitation: _scrollListBy
 		// NoteFragment.mDndListView.scrollListBy(firstVisibleIndex_top);
 		if(Build.VERSION.SDK_INT < 19)
@@ -438,38 +434,27 @@ public class AudioPlayer_page
 //			(listView.getChildAt(0) != null)
 //                )
 		{
-//            int itemHeight = listView.getChildAt(0).getHeight();
             int pos;
-            int itemHeight = 0;
-            int dividerHeight = 0;
-            int firstVisible_noteId = 0;
-            View v = null;
+            int itemHeight;
+            int dividerHeight;
+            int firstVisible_note_pos;
+            View v;
 
-//            if(listView != null)
-            {
+			pos = listView.getFirstVisiblePosition();
+			System.out.println("---------------- pos = " + pos);
 
-//				v = listView.getChildAt(0);
-//				itemHeight = listView.getChildAt(0).getHeight();
+			View childView = listView.getAdapter().getView(pos,null,listView);
+			childView.measure(UNBOUNDED, UNBOUNDED);
+			itemHeight = childView.getMeasuredHeight();
+			System.out.println("---------------- itemHeight = " + itemHeight);
 
-//				itemHeight = listView.getChildAt(pos).getHeight();
+			dividerHeight = listView.getDividerHeight();
+			System.out.println("---------------- dividerHeight = " + dividerHeight);
 
-                pos = listView.getFirstVisiblePosition();
-                System.out.println("---------------- pos = " + pos);
+			firstVisible_note_pos = listView.getFirstVisiblePosition();
+			System.out.println("---------------- firstVisible_note_pos = " + firstVisible_note_pos);
 
-                View childView = listView.getAdapter().getView(pos,null,listView);
-                childView.measure(UNBOUNDED, UNBOUNDED);
-                itemHeight = childView.getMeasuredHeight();
-                System.out.println("---------------- itemHeight = " + itemHeight);
-
-			    dividerHeight = listView.getDividerHeight();
-                System.out.println("---------------- dividerHeight = " + dividerHeight);
-
-                firstVisible_noteId = listView.getFirstVisiblePosition();
-                System.out.println("---------------- firstVisible_noteId = " + firstVisible_noteId);
-
-  				v = listView.getChildAt(pos);
-//				v = listView.getChildAt(0);
-            }
+			v = listView.getChildAt(0);
 
 			int firstVisibleNote_top = (v == null) ? 0 : v.getTop();
 			System.out.println("---------------- firstVisibleNote_top = " + firstVisibleNote_top);
@@ -479,46 +464,39 @@ public class AudioPlayer_page
 			if(firstVisibleNote_top < 0)
 			{
 				listView.scrollListBy(firstVisibleNote_top);
-				System.out.println("-----scroll backwards by firstVisibleNote_top " + firstVisibleNote_top);
-				firstVisibleNote_top = 0; // update top after scrolling
+				System.out.println("----- scroll backwards by firstVisibleNote_top " + firstVisibleNote_top);
 			}
 
 			boolean noScroll = false;
 			// base on AudioManager.mAudioPos to scroll
-			if(firstVisible_noteId != AudioManager.mAudioPos)
+			if(firstVisible_note_pos != AudioManager.mAudioPos)
 			{
-				while ((firstVisible_noteId != AudioManager.mAudioPos) && (!noScroll))
+				while ((firstVisible_note_pos != AudioManager.mAudioPos) && (!noScroll))
 				{
 					int offset = itemHeight + dividerHeight;
 					// scroll forwards
-					if (firstVisible_noteId > AudioManager.mAudioPos)
+					if (firstVisible_note_pos > AudioManager.mAudioPos)
 					{
 						listView.scrollListBy(-offset);
-						System.out.println("-----scroll forwards " + (-offset));
+						System.out.println("-----scroll forwards (to top)" + (-offset));
 					}
 					// scroll backwards
-					else if (firstVisible_noteId < AudioManager.mAudioPos)
+					else if (firstVisible_note_pos < AudioManager.mAudioPos)
 					{
 						listView.scrollListBy(offset);
-						System.out.println("-----scroll backwards " + offset);
+						System.out.println("-----scroll backwards (to bottom)" + offset);
 					}
 
-					System.out.println("---------------- firstVisible_noteId = " + firstVisible_noteId);
+					System.out.println("---------------- firstVisible_note_pos = " + firstVisible_note_pos);
 					System.out.println("---------------- Page.mDndListView.getFirstVisiblePosition() = " + listView.getFirstVisiblePosition());
-					if(firstVisible_noteId == listView.getFirstVisiblePosition())
+					if(firstVisible_note_pos == listView.getFirstVisiblePosition())
 						noScroll = true;
 					else {
 						// update first visible index
-						firstVisible_noteId = listView.getFirstVisiblePosition();
+						firstVisible_note_pos = listView.getFirstVisiblePosition();
 					}
 				}
 			}
-			// backup scroll Y
-			Pref.setPref_focusView_list_view_first_visible_index(MainAct.mAct,firstVisible_noteId);
-			Pref.setPref_focusView_list_view_first_visible_index_top(MainAct.mAct,firstVisibleNote_top);
-
-			//todo How ot highlight playing item?
-//			Page.mItemAdapter.notifyDataSetChanged();
 		}
 	}
 

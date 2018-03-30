@@ -137,7 +137,7 @@ public class TabsHost extends AppCompatDialogFragment implements TabLayout.OnTab
 
     @Override
     public void onTabSelected(TabLayout.Tab tab) {
-        System.out.println("-> TabsHost / _onTabSelected: " + tab.getPosition());
+        System.out.println("TabsHost / _onTabSelected: " + tab.getPosition());
 
         selectedPos = tab.getPosition();
         int pageTableId = adapter.mDbFolder.getPageTableId(selectedPos, true);
