@@ -753,6 +753,10 @@ public class Page extends UilListViewBaseFragment
 					AudioPlayer_page.prepareAudioInfo();
 					TabsHost.audioPlayer_page.runAudioState();
 
+					// update audio play position
+					TabsHost.audioPlayingPos = TabsHost.selectedPos;
+					TabsHost.adapter.notifyDataSetChanged();
+
                     UtilAudio.updateAudioPanel(TabsHost.page_audio.audioPanel_play_button,
                                                TabsHost.page_audio.audio_panel_title_textView);
 

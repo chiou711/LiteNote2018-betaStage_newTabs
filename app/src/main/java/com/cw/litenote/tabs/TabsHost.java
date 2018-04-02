@@ -158,16 +158,24 @@ public class TabsHost extends AppCompatDialogFragment implements TabLayout.OnTab
 
         viewPager.setCurrentItem(selectedPos);
 
-//        if ( (AudioManager.getPlayerState() != AudioManager.PLAYER_AT_STOP) &&
-//                (tab.getPosition() == audioPlayingPos) )
-//            tab.setIcon(R.drawable.ic_audio);
-//        else
-//            tab.setIcon(null);
+        if ( (AudioManager.getPlayerState() != AudioManager.PLAYER_AT_STOP) &&
+                (tab.getPosition() == audioPlayingPos) ){
+            tab.setIcon(R.drawable.ic_audio);
+        }
+        else
+            tab.setIcon(null);
 
         // refresh list view of selected page
-        if(adapter.mFragmentList.get(selectedPos).mItemAdapter != null)
-            adapter.mFragmentList.get(selectedPos).mItemAdapter.notifyDataSetChanged();
+        Page page = adapter.mFragmentList.get(selectedPos);
+        if((page != null) && (page.mItemAdapter != null) )
+        {
+            page.mItemAdapter.notifyDataSetChanged();
 
+            DragSortListView listView = page.mDndListView;
+            if( (listView != null) &&
+                (AudioManager.getPlayerState() != AudioManager.PLAYER_AT_STOP)  )
+                audioPlayer_page.scrollHighlightAudioItemToVisible(listView);
+        }
 
 
     }
@@ -177,11 +185,11 @@ public class TabsHost extends AppCompatDialogFragment implements TabLayout.OnTab
         System.out.println("TabsHost / _onTabUnselected: " + tab.getPosition());
         unSelectedPos = tab.getPosition();
 
-//        if ( (AudioManager.getPlayerState() != AudioManager.PLAYER_AT_STOP) &&
-//             (tab.getPosition() == audioPlayingPos) )
-//            tab.setIcon(R.drawable.ic_audio);
-//        else
-//            tab.setIcon(null);
+        if ( (AudioManager.getPlayerState() != AudioManager.PLAYER_AT_STOP) &&
+             (tab.getPosition() == audioPlayingPos) )
+            tab.setIcon(R.drawable.ic_audio);
+        else
+            tab.setIcon(null);
     }
 
     @Override

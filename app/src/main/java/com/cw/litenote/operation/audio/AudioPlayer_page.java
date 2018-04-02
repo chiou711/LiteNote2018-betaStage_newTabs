@@ -434,7 +434,7 @@ public class AudioPlayer_page
 //                )
 		{
             int pos;
-            int itemHeight;
+            int itemHeight = 50;//init
             int dividerHeight;
             int firstVisible_note_pos;
             View v;
@@ -442,10 +442,13 @@ public class AudioPlayer_page
 			pos = listView.getFirstVisiblePosition();
 			System.out.println("---------------- pos = " + pos);
 
-			View childView = listView.getAdapter().getView(pos,null,listView);
-			childView.measure(UNBOUNDED, UNBOUNDED);
-			itemHeight = childView.getMeasuredHeight();
-			System.out.println("---------------- itemHeight = " + itemHeight);
+            View childView;
+			if(listView.getAdapter() != null) {
+                childView = listView.getAdapter().getView(pos, null, listView);
+                childView.measure(UNBOUNDED, UNBOUNDED);
+                itemHeight = childView.getMeasuredHeight();
+                System.out.println("---------------- itemHeight = " + itemHeight);
+            }
 
 			dividerHeight = listView.getDividerHeight();
 			System.out.println("---------------- dividerHeight = " + dividerHeight);

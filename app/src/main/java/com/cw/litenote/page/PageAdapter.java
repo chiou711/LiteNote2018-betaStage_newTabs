@@ -194,6 +194,7 @@ public class PageAdapter extends SimpleDragSortCursorAdapter // DragSortCursorAd
 		String strBody = null;
         String pictureUri = null;
         String audioUri = null;
+        Long timeCreated = null;
         linkUri = null;
         int marking = 0;
 		if(cursor.moveToPosition(position)) {
@@ -203,6 +204,7 @@ public class PageAdapter extends SimpleDragSortCursorAdapter // DragSortCursorAd
             audioUri = cursor.getString(cursor.getColumnIndexOrThrow(KEY_NOTE_AUDIO_URI));
             linkUri = cursor.getString(cursor.getColumnIndexOrThrow(KEY_NOTE_LINK_URI));
             marking = cursor.getInt(cursor.getColumnIndexOrThrow(KEY_NOTE_MARKING));
+			timeCreated = cursor.getLong(cursor.getColumnIndex(KEY_NOTE_CREATED));
         }
 
 		// set title
@@ -458,7 +460,7 @@ public class PageAdapter extends SimpleDragSortCursorAdapter // DragSortCursorAd
 			holder.rowDivider.setVisibility(View.VISIBLE);
 			holder.textBody.setTextColor(ColorSet.mText_ColorArray[Page.mStyle]);
 			// time stamp
-            holder.textTime.setText(Util.getTimeString(cursor.getLong(cursor.getColumnIndex(KEY_NOTE_CREATED))));
+            holder.textTime.setText(Util.getTimeString(timeCreated));
 			holder.textTime.setTextColor(ColorSet.mText_ColorArray[Page.mStyle]);
 	  	}
 	  	else

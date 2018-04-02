@@ -289,6 +289,9 @@ public class Util
     // get time string
     public static String getTimeString(Long time)
     {
+    	if(time == null)
+    		return "";
+
 		// set time
 		final Calendar cal = Calendar.getInstance();
 		cal.setTimeInMillis(time);
