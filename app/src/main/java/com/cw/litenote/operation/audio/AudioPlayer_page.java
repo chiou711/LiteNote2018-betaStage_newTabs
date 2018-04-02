@@ -20,8 +20,8 @@ import com.cw.litenote.R;
 import com.cw.litenote.main.MainAct;
 import com.cw.litenote.page.Page;
 import com.cw.litenote.tabs.Page_audio;
+import com.cw.litenote.tabs.TabsHost;
 import com.cw.litenote.util.Util;
-import com.cw.litenote.util.preferences.Pref;
 import com.mobeta.android.dslv.DragSortListView;
 
 import java.util.Locale;
@@ -38,16 +38,14 @@ public class AudioPlayer_page
     private Async_audioUrlVerify mAudioUrlVerifyTask;
 	private Page_audio page_audio;
     public static Handler mAudioHandler;
-	DragSortListView listView;
 
-	public AudioPlayer_page(FragmentActivity act, Page_audio page_audio, DragSortListView _listView){
+	public AudioPlayer_page(FragmentActivity act, Page_audio page_audio){
 		this.act = act;
 		this.page_audio = page_audio;
 
+		System.out.println("AudioPlayer_page / constructor ");
 		// start a new handler
         mAudioHandler = new Handler();
-
-        listView = _listView;
 	}
 
     /**
@@ -363,8 +361,10 @@ public class AudioPlayer_page
                                         String.format(Locale.US, "%02d", fileMin) + ":" +
                                         String.format(Locale.US, "%02d", fileSec));
                             }
-                            scrollHighlightAudioItemToVisible(listView);
-						}
+
+                            scrollHighlightAudioItemToVisible(TabsHost.adapter.mFragmentList.get(TabsHost.selectedPos).mDndListView);
+                            TabsHost.adapter.mFragmentList.get(TabsHost.selectedPos).mItemAdapter.notifyDataSetChanged();
+                        }
 
 						if (AudioManager.mMediaPlayer != null)
 						{
@@ -417,9 +417,8 @@ public class AudioPlayer_page
 	* unless it is at the end page of list view, there is no need to scroll.
 	*/
 	//todo How scroll and show highlight?
-	public void scrollHighlightAudioItemToVisible(DragSortListView _listView)
+	public void scrollHighlightAudioItemToVisible(DragSortListView listView)
 	{
-        listView = _listView;
 		System.out.println("AudioPlayer_page / _scrollHighlightAudioItemToVisible");
 
 		// version limitation: _scrollListBy
@@ -496,6 +495,10 @@ public class AudioPlayer_page
 						firstVisible_note_pos = listView.getFirstVisiblePosition();
 					}
 				}
+
+				// do v scroll
+                TabsHost.store_listView_vScroll(listView);
+                TabsHost.resume_listView_vScroll(listView);
 			}
 		}
 	}

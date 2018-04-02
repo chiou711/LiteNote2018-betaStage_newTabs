@@ -19,7 +19,6 @@ import com.cw.litenote.util.ColorSet;
 import com.cw.litenote.util.uil.UilCommon;
 import com.cw.litenote.util.uil.UilListViewBaseFragment;
 import com.cw.litenote.util.Util;
-import com.cw.litenote.util.preferences.Pref;
 import com.mobeta.android.dslv.DragSortController;
 import com.mobeta.android.dslv.DragSortListView;
 
@@ -434,7 +433,7 @@ public class Page extends UilListViewBaseFragment
 			// update list view
             fillData(mAct,mDndListView);
 			mItemAdapter.notifyDataSetChanged();
-			resume_scroll_listView();
+			TabsHost.resume_listView_vScroll(mDndListView);
 
             // update footer
 			showFooter(mAct);
@@ -489,8 +488,10 @@ public class Page extends UilListViewBaseFragment
         mDndListView.setAudioListener(onAudio);
         mDndListView.setOnScrollListener(onScroll);
 
-        if(pageTableId == TabsHost.currPageTableId)
-            resume_scroll_listView();
+        if( (AudioManager.getPlayerState() != AudioManager.PLAYER_AT_STOP) &&
+            (pageTableId == TabsHost.currPageTableId) ){
+            TabsHost.resume_listView_vScroll(mDndListView);//todo Only for Key Guard
+        }
     }
 
     @Override
@@ -498,9 +499,6 @@ public class Page extends UilListViewBaseFragment
     	super.onPause();
 		if(en_dbg_msg)
 			System.out.println("Page / _onPause / pageTableId = " + pageTableId);
-
-		if(pageTableId == TabsHost.currPageTableId)
-            store_scroll_listView();
 	 }
 
     @Override
@@ -647,7 +645,7 @@ public class Page extends UilListViewBaseFragment
 			// update list view
             fillData(mAct,mDndListView);
 			mItemAdapter.notifyDataSetChanged();
-			resume_scroll_listView();
+			TabsHost.resume_listView_vScroll(mDndListView);
 
 			// update footer
             showFooter(mAct);
@@ -751,7 +749,7 @@ public class Page extends UilListViewBaseFragment
                     TabsHost.page_audio = new Page_audio(mAct,mDndListView);
                     TabsHost.page_audio.initAudioBlock(MainAct.mAct);
 
-                    TabsHost.audioPlayer_page = new AudioPlayer_page(mAct,TabsHost.page_audio,mDndListView);
+                    TabsHost.audioPlayer_page = new AudioPlayer_page(mAct,TabsHost.page_audio);
 					AudioPlayer_page.prepareAudioInfo();
 					TabsHost.audioPlayer_page.runAudioState();
 
@@ -781,6 +779,7 @@ public class Page extends UilListViewBaseFragment
 //                    }
 
             mItemAdapter.notifyDataSetChanged();
+
         }
 	};
 
@@ -881,36 +880,5 @@ public class Page extends UilListViewBaseFragment
 //		}
 //	}
 
-
-    // store scroll of list view
-	void store_scroll_listView()
-    {
-        mFirstVisibleIndex = mDndListView.getFirstVisiblePosition();
-        View v = mDndListView.getChildAt(0);
-        mFirstVisibleIndexTop = (v == null) ? 0 : v.getTop();
-
-        if(en_dbg_msg)
-            System.out.println("Page / _store_scroll_listView / mFirstVisibleIndex = " + mFirstVisibleIndex +
-                    " , mFirstVisibleIndexTop = " + mFirstVisibleIndexTop);
-
-        // keep index and top position
-        Pref.setPref_focusView_list_view_first_visible_index(getActivity(), mFirstVisibleIndex);
-        Pref.setPref_focusView_list_view_first_visible_index_top(getActivity(), mFirstVisibleIndexTop);
-    }
-
-    // resume scroll of list view
-    void resume_scroll_listView()
-    {
-        // recover scroll Y
-        mFirstVisibleIndex = Pref.getPref_focusView_list_view_first_visible_index(getActivity());
-        mFirstVisibleIndexTop = Pref.getPref_focusView_list_view_first_visible_index_top(getActivity());
-
-        if(en_dbg_msg)
-            System.out.println("Page / _resume_scroll_listView / mFirstVisibleIndex = " + mFirstVisibleIndex +
-                    " , mFirstVisibleIndexTop = " + mFirstVisibleIndexTop);
-
-        // restore index and top position
-        mDndListView.setSelectionFromTop(mFirstVisibleIndex, mFirstVisibleIndexTop);
-    }
 
 }

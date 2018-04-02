@@ -36,6 +36,7 @@ import com.cw.litenote.page.Page;
 import com.cw.litenote.util.ColorSet;
 import com.cw.litenote.util.audio.UtilAudio;
 import com.cw.litenote.util.preferences.Pref;
+import com.mobeta.android.dslv.DragSortListView;
 
 
 public class TabsHost extends AppCompatDialogFragment implements TabLayout.OnTabSelectedListener
@@ -50,6 +51,7 @@ public class TabsHost extends AppCompatDialogFragment implements TabLayout.OnTab
     int reSelectedPos;
     int unSelectedPos;
     public static int lastPageTableId;
+    public static int audioPlayingPos;
 
     public static Page_audio page_audio;
     public static AudioPlayer_page audioPlayer_page;
@@ -87,14 +89,22 @@ public class TabsHost extends AppCompatDialogFragment implements TabLayout.OnTab
 
         // set tab layout
         tabLayout = (TabLayout) rootView.findViewById(R.id.tabs);
-        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
         tabLayout.setupWithViewPager(viewPager);
         tabLayout.setOnTabSelectedListener(this);
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
-        tabLayout.setTabMode(TabLayout.MODE_FIXED);
-        tabLayout.setSelectedTabIndicatorHeight(10);
+//        tabLayout.setTabMode(TabLayout.MODE_FIXED);
         tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
         tabLayout.setBackgroundColor(ColorSet.getBarColor(getActivity()));
+
+        // tab indicator
+        tabLayout.setSelectedTabIndicatorHeight(15);
+        tabLayout.setSelectedTabIndicatorColor(Color.parseColor("#FFFF7F00"));
+//        tabLayout.setSelectedTabIndicatorHeight((int) (5 * getResources().getDisplayMetrics().density));
+
+//        tabLayout.setTabTextColors(
+//                ContextCompat.getColor(getActivity(),R.color.bg_light),
+//                ContextCompat.getColor(getActivity(),R.color.highlight_color)
+//        );
 
         return rootView;
     }
@@ -148,14 +158,30 @@ public class TabsHost extends AppCompatDialogFragment implements TabLayout.OnTab
 
         viewPager.setCurrentItem(selectedPos);
 
+//        if ( (AudioManager.getPlayerState() != AudioManager.PLAYER_AT_STOP) &&
+//                (tab.getPosition() == audioPlayingPos) )
+//            tab.setIcon(R.drawable.ic_audio);
+//        else
+//            tab.setIcon(null);
+
         // refresh list view of selected page
         if(adapter.mFragmentList.get(selectedPos).mItemAdapter != null)
             adapter.mFragmentList.get(selectedPos).mItemAdapter.notifyDataSetChanged();
+
+
+
     }
+
     @Override
     public void onTabUnselected(TabLayout.Tab tab) {
         System.out.println("TabsHost / _onTabUnselected: " + tab.getPosition());
         unSelectedPos = tab.getPosition();
+
+//        if ( (AudioManager.getPlayerState() != AudioManager.PLAYER_AT_STOP) &&
+//             (tab.getPosition() == audioPlayingPos) )
+//            tab.setIcon(R.drawable.ic_audio);
+//        else
+//            tab.setIcon(null);
     }
 
     @Override
@@ -206,13 +232,46 @@ public class TabsHost extends AppCompatDialogFragment implements TabLayout.OnTab
     @Override
     public void onPause() {
         super.onPause();
-        System.out.println("TabsHost / _onResume / _onPause");
+        System.out.println("TabsHost / _onPause");
+
+        store_listView_vScroll(adapter.mFragmentList.get(selectedPos).mDndListView);
+
         //  Remove fragments
         if( adapter.mFragmentList != null) {
             for (int i = 0; i < adapter.mFragmentList.size(); i++) {
                 getActivity().getSupportFragmentManager().beginTransaction().remove(adapter.mFragmentList.get(i)).commit();
             }
         }
+    }
+
+    // store scroll of list view
+    public static void store_listView_vScroll(DragSortListView listView)
+    {
+//        DragSortListView listView = adapter.mFragmentList.get(selectedPos).mDndListView;
+        int mFirstVisibleIndex = listView.getFirstVisiblePosition();
+        View v = listView.getChildAt(0);
+        int mFirstVisibleIndexTop = (v == null) ? 0 : v.getTop();
+
+        System.out.println("TabsHost / _store_listView_vScroll / mFirstVisibleIndex = " + mFirstVisibleIndex +
+                " , mFirstVisibleIndexTop = " + mFirstVisibleIndexTop);
+
+        // keep index and top position
+        Pref.setPref_focusView_list_view_first_visible_index(MainAct.mAct, mFirstVisibleIndex);
+        Pref.setPref_focusView_list_view_first_visible_index_top(MainAct.mAct, mFirstVisibleIndexTop);
+    }
+
+    // resume scroll of list view
+    public static void resume_listView_vScroll(DragSortListView listView)
+    {
+        // recover scroll Y
+        int mFirstVisibleIndex = Pref.getPref_focusView_list_view_first_visible_index(MainAct.mAct);
+        int mFirstVisibleIndexTop = Pref.getPref_focusView_list_view_first_visible_index_top(MainAct.mAct);
+
+        System.out.println("TabsHost / _resume_scroll_listView / mFirstVisibleIndex = " + mFirstVisibleIndex +
+                " , mFirstVisibleIndexTop = " + mFirstVisibleIndexTop);
+
+        // restore index and top position
+        listView.setSelectionFromTop(mFirstVisibleIndex, mFirstVisibleIndexTop);
     }
 
     //todo TBD
