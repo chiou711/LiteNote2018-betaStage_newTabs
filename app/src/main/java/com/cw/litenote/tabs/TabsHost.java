@@ -150,33 +150,35 @@ public class TabsHost extends AppCompatDialogFragment implements TabLayout.OnTab
         System.out.println("TabsHost / _onTabSelected: " + tab.getPosition());
 
         selectedPos = tab.getPosition();
+
+        // keep focus view page table Id
         int pageTableId = adapter.mDbFolder.getPageTableId(selectedPos, true);
         Pref.setPref_focusView_page_tableId(getActivity(), pageTableId);
 
         // current page table Id
         currPageTableId = pageTableId;
 
-        viewPager.setCurrentItem(selectedPos);
-
-        if ( (AudioManager.getPlayerState() != AudioManager.PLAYER_AT_STOP) &&
-                (tab.getPosition() == audioPlayingPos) ){
-            tab.setIcon(R.drawable.ic_audio);
-        }
-        else
-            tab.setIcon(null);
-
         // refresh list view of selected page
         Page page = adapter.mFragmentList.get(selectedPos);
-        if((page != null) && (page.mItemAdapter != null) )
+        if( (tab.getPosition() == audioPlayingPos) && (page != null) && (page.mItemAdapter != null) )
         {
-            page.mItemAdapter.notifyDataSetChanged();
-
             DragSortListView listView = page.mDndListView;
             if( (listView != null) &&
-                (AudioManager.getPlayerState() != AudioManager.PLAYER_AT_STOP)  )
+                (AudioManager.getPlayerState() != AudioManager.PLAYER_AT_STOP)  ) {
                 audioPlayer_page.scrollHighlightAudioItemToVisible(listView);
+            }
+            page.mItemAdapter.notifyDataSetChanged();
         }
 
+        // set pager item
+        viewPager.setCurrentItem(selectedPos);
+
+        // set tab audio icon when audio playing
+        if ( (AudioManager.getPlayerState() != AudioManager.PLAYER_AT_STOP) &&
+                (tab.getPosition() == audioPlayingPos) )
+            tab.setIcon(R.drawable.ic_audio);
+        else
+            tab.setIcon(null);
 
     }
 
@@ -204,7 +206,7 @@ public class TabsHost extends AppCompatDialogFragment implements TabLayout.OnTab
         // default
         selectedPos = 0;
 
-        // Get current position
+        // restore focus view page
         int pageCount = adapter.mDbFolder.getPagesCount(true);
         for(int i=0;i<pageCount;i++)
         {
@@ -215,18 +217,21 @@ public class TabsHost extends AppCompatDialogFragment implements TabLayout.OnTab
                 currPageTableId = pageTableId;
             }
         }
-
-        System.out.println("TabsHost / _onResume / selectedPos = " + selectedPos);
         viewPager.setCurrentItem(selectedPos);
 
+        System.out.println("TabsHost / _onResume / selectedPos = " + selectedPos);
 
-        // for incoming phone call case or key protection off to on
+        // set audio icon after Key Protect
+        if ( (AudioManager.getPlayerState() != AudioManager.PLAYER_AT_STOP)  )
+            tabLayout.getTabAt(audioPlayingPos).setIcon(R.drawable.ic_audio);
+        else
+            tabLayout.getTabAt(audioPlayingPos).setIcon(null);
+
+        // for incoming phone call case or after Key Protect
         if( (page_audio != null) &&
             (AudioManager.getPlayerState() != AudioManager.PLAYER_AT_STOP) &&
             (AudioManager.getAudioPlayMode() == AudioManager.PAGE_PLAY_MODE)   )
         {
-            System.out.println("TabsHost / _onResume / page_audio != null ");
-
             page_audio.initAudioBlock(getActivity());
 
             audioPlayer_page.mRunContinueMode.run();

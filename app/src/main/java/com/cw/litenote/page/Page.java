@@ -490,7 +490,7 @@ public class Page extends UilListViewBaseFragment
 
         if( (AudioManager.getPlayerState() != AudioManager.PLAYER_AT_STOP) &&
             (pageTableId == TabsHost.currPageTableId) ){
-            TabsHost.resume_listView_vScroll(mDndListView);//todo Only for Key Guard
+            TabsHost.resume_listView_vScroll(mDndListView);
         }
     }
 
