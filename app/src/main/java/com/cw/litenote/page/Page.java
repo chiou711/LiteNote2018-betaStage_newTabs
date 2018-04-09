@@ -746,8 +746,8 @@ public class Page extends UilListViewBaseFragment
 					AudioManager.mAudioPos = position;
                     AudioManager.setAudioPlayMode(AudioManager.PAGE_PLAY_MODE);
 
-                    TabsHost.page_audio = new Page_audio(mAct,mDndListView);
-                    TabsHost.page_audio.initAudioBlock(MainAct.mAct);
+					TabsHost.page_audio = new Page_audio(mAct,mDndListView);
+					TabsHost.page_audio.initAudioBlock(MainAct.mAct);
 
                     TabsHost.audioPlayer_page = new AudioPlayer_page(mAct,TabsHost.page_audio);
 					AudioPlayer_page.prepareAudioInfo();

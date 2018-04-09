@@ -273,8 +273,8 @@ public class PageAdapter extends SimpleDragSortCursorAdapter // DragSortCursorAd
 			holder.imageAudio.setImageResource(R.drawable.ic_audio);
 
 			// set animation
-			Animation animation = AnimationUtils.loadAnimation(mContext , R.anim.right_in);
-			holder.audioBlock.startAnimation(animation);
+//			Animation animation = AnimationUtils.loadAnimation(mContext , R.anim.right_in);
+//			holder.audioBlock.startAnimation(animation);
 		}
 		else
 		{

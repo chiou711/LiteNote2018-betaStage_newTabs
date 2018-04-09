@@ -43,7 +43,7 @@ public class TabsHost extends AppCompatDialogFragment implements TabLayout.OnTab
 {
     public static int mStyle;
     TabLayout tabLayout;
-    static ViewPager viewPager;
+    ViewPager viewPager;
     public static TabsPagerAdapter adapter;
     public static int currPageTableId;
 
@@ -167,8 +167,10 @@ public class TabsHost extends AppCompatDialogFragment implements TabLayout.OnTab
                 (AudioManager.getPlayerState() != AudioManager.PLAYER_AT_STOP)  ) {
                 audioPlayer_page.scrollHighlightAudioItemToVisible(listView);
             }
-            page.mItemAdapter.notifyDataSetChanged();
         }
+
+        if(page.mItemAdapter != null)
+            page.mItemAdapter.notifyDataSetChanged();
 
         // set pager item
         viewPager.setCurrentItem(selectedPos);
