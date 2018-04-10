@@ -372,17 +372,6 @@ public class AudioPlayer_page
 							AudioManager.mMediaPlayer.start();
                             AudioManager.mMediaPlayer.seekTo(mPlaybackTime);
 
-                            //todo How to design the highlight
-							// set highlight of playing tab
-//							if ((AudioManager.getAudioPlayMode() == AudioManager.PAGE_PLAY_MODE) &&
-//								(MainAct.mPlaying_folderPos == FolderUi.getFocus_folderPos())  )
-//								TabsHost.setAudioPlayingTab_WithHighlight(true);
-//							else
-//								TabsHost.setAudioPlayingTab_WithHighlight(false);
-
-                            //todo TBD
-//							Page.mItemAdapter.notifyDataSetChanged();
-
 							// add for calling runnable
 							if (AudioManager.getAudioPlayMode() == AudioManager.PAGE_PLAY_MODE)
 								mAudioHandler.postDelayed(mRunContinueMode, Util.oneSecond / 4);
@@ -599,10 +588,6 @@ public class AudioPlayer_page
             // do not show highlight
             if(MainAct.mSubMenuItemAudio != null)
                 MainAct.mSubMenuItemAudio.setIcon(R.drawable.ic_menu_slideshow);
-
-			//todo TBD
-//            TabsHost.setAudioPlayingTab_WithHighlight(false);
-//            Page.mItemAdapter.notifyDataSetChanged();
 
             // stop media player
             AudioManager.stopAudioPlayer();

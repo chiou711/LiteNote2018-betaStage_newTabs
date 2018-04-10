@@ -515,32 +515,33 @@ public class PageUi
 		
 		// insert table for new tab
 		dbFolder.insertPageTable(dbFolder,DB_folder.getFocusFolder_tableId(),newTblId, true);
-//		TabsHost.mPagesCount++;
 
-//		// commit: final page viewed
-//		Pref.setPref_focusView_page_tableId(act, newTblId);
-//
-//	    // set scroll X
-//		final int scrollX = (TabsHost.mPagesCount) * 60 * 5; //over the last scroll X
-//
-//        FolderUi.startTabsHostRun();
-//
-//		if(TabsHost.mHorScrollView != null) {
-//			TabsHost.mHorScrollView.post(new Runnable() {
-//				@Override
-//				public void run() {
-//					TabsHost.mHorScrollView.scrollTo(scrollX, 0);
-//					Pref.setPref_focusView_scrollX_byFolderTableId(act, scrollX);
-//				}
-//			});
-//		}
+        int tabTotalCount = dbFolder.getPagesCount(true);
+
+		// commit: final page viewed
+		Pref.setPref_focusView_page_tableId(act, newTblId);
+
+	    // set scroll X
+		final int scrollX = (tabTotalCount) * 60 * 5; //over the last scroll X
+
+        FolderUi.startTabsHostRun();
+
+		if(TabsHost.tabLayout != null) {
+			TabsHost.tabLayout.post(new Runnable() {
+				@Override
+				public void run() {
+					TabsHost.tabLayout.scrollTo(scrollX, 0);
+					Pref.setPref_focusView_scrollX_byFolderTableId(act, scrollX);
+				}
+			});
+		}
 	}
 
 	/* 
 	 * Insert Page to Leftmost
 	 * 
 	 */
-	public static void insertPage_leftmost(final FragmentActivity act, int newTabId, String tabName)
+	private static void insertPage_leftmost(final FragmentActivity act, int newTabId, String tabName)
 	{
 		DB_folder dbFolder = new DB_folder(act,Pref.getPref_focusView_folder_tableId(act));
 		
@@ -550,9 +551,8 @@ public class PageUi
 		dbFolder.insertPage(DB_folder.getFocusFolder_tableName(),tabName, newTabId, style,true );
 		
 		// insert table for new tab
-//		dbFolder.insertPageTable(dbFolder,DB_folder.getFocusFolder_tableId(),newTabId, true);
-//		TabsHost.mPagesCount++;
-		
+		dbFolder.insertPageTable(dbFolder,DB_folder.getFocusFolder_tableId(),newTabId, true);
+
 		//change to leftmost tab Id
 		int tabTotalCount = dbFolder.getPagesCount(true);
 		for(int i=0;i <(tabTotalCount-1);i++)
@@ -564,17 +564,20 @@ public class PageUi
 		
 	    // set scroll X
 		final int scrollX = 0; // leftmost
-		
+
 		// commit: scroll X
         FolderUi.startTabsHostRun();
 
-//		TabsHost.mHorScrollView.post(new Runnable() {
-//	        @Override
-//	        public void run() {
-//	        	TabsHost.mHorScrollView.scrollTo(scrollX, 0);
-//	        	Pref.setPref_focusView_scrollX_byFolderTableId(act, scrollX );
-//	        }
-//	    });
+        if(TabsHost.tabLayout != null){
+            TabsHost.tabLayout.post(new Runnable() {
+                @Override
+                public void run() {
+                    System.out.println("PageUi / _insertPage_leftmost / _Runnable / scrollX = " + scrollX);
+                    TabsHost.tabLayout.scrollTo(scrollX, 0);
+                    Pref.setPref_focusView_scrollX_byFolderTableId(act, scrollX);
+                }
+            });
+        }
 		
 		// update highlight tab
 		if(MainAct.mPlaying_folderPos == FolderUi.getFocus_folderPos())
@@ -598,11 +601,11 @@ public class PageUi
 		// get final view tab index of focus
 		for(int i = 0; i<dbFolder.getPagesCount(false); i++)
 		{
-			if(Integer.valueOf(tableId) == dbFolder.getPageTableId(i, false))
+			if(tableId == dbFolder.getPageTableId(i, false))
 				setFocus_pagePos(i);
 			
-//	    	if(	dbFolder.getPageId(i, false)== TabsHost.mFirstPos_PageId)
-//	    		Pref.setPref_focusView_page_tableId(act, dbFolder.getPageTableId(i, false) );
+	    	if(	dbFolder.getPageId(i, false)== TabsHost.getFirstPos_pageId())
+	    		Pref.setPref_focusView_page_tableId(act, dbFolder.getPageTableId(i, false) );
 		}
 		dbFolder.close();
 	}

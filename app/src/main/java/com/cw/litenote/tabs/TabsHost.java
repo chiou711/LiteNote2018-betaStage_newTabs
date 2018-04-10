@@ -26,7 +26,6 @@ import android.support.v7.app.AppCompatDialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.cw.litenote.R;
 import com.cw.litenote.main.MainAct;
@@ -42,7 +41,7 @@ import com.mobeta.android.dslv.DragSortListView;
 public class TabsHost extends AppCompatDialogFragment implements TabLayout.OnTabSelectedListener
 {
     public static int mStyle;
-    TabLayout tabLayout;
+    public static TabLayout tabLayout;
     ViewPager viewPager;
     public static TabsPagerAdapter adapter;
     public static int currPageTableId;
@@ -52,6 +51,8 @@ public class TabsHost extends AppCompatDialogFragment implements TabLayout.OnTab
     int unSelectedPos;
     public static int lastPageTableId;
     public static int audioPlayingPos;
+
+    public static int firstPos_pageId;
 
     public static Page_audio page_audio;
     public static AudioPlayer_page audioPlayer_page;
@@ -70,6 +71,8 @@ public class TabsHost extends AppCompatDialogFragment implements TabLayout.OnTab
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        System.out.println("TabsHost / _onCreateView");
+
         View rootView = inflater.inflate(R.layout.tabs_host, container, false);
         // tool bar
 //        Toolbar toolbar = (Toolbar) rootView.findViewById(R.id.tabanim_toolbar);
@@ -120,6 +123,9 @@ public class TabsHost extends AppCompatDialogFragment implements TabLayout.OnTab
         for(int i=0;i<pageCount;i++)
         {
             int pageTableId = adapter.mDbFolder.getPageTableId(i, true);
+
+            if(i==0)
+                setFirstPos_pageId(adapter.mDbFolder.getPageId(i,true));
 
             if(pageTableId > lastPageTableId)
                 lastPageTableId = pageTableId;
@@ -289,31 +295,20 @@ public class TabsHost extends AppCompatDialogFragment implements TabLayout.OnTab
         listView.setSelectionFromTop(mFirstVisibleIndex, mFirstVisibleIndexTop);
     }
 
-    //todo TBD
-    public void setAudioPlayingTab_WithHighlight(boolean highlightIsOn)
-    {
-        // get first tab id and last tab id
-//        int tabCount = mTabsHost.getTabWidget().getTabCount();
-        int tabCount = tabLayout.getTabCount();
-        for (int i = 0; i < tabCount; i++)
-        {
-//            TextView textView= (TextView) mTabsHost.getTabWidget().getChildAt(i).findViewById(android.R.id.title);
-            TextView textView= (TextView) tabLayout.getChildAt(i).findViewById(android.R.id.title);
-            if(highlightIsOn && (MainAct.mPlaying_pagePos == i))
-                textView.setTextColor(ColorSet.getHighlightColor(MainAct.mAct));
-            else
-            {
-                int style = adapter.mDbFolder.getPageStyle(i, true);
-                if((style%2) == 1)
-                {
-                    textView.setTextColor(Color.argb(255,0,0,0));
-                }
-                else
-                {
-                    textView.setTextColor(Color.argb(255,255,255,255));
-                }
-            }
-        }
+    /**
+     * Get first position page Id
+     * @return page Id of 1st position
+     */
+    public static int getFirstPos_pageId() {
+        return firstPos_pageId;
+    }
+
+    /**
+     * Set first position table Id
+     * @param id: page Id
+     */
+    public static void setFirstPos_pageId(int id) {
+        firstPos_pageId = id;
     }
 
 }

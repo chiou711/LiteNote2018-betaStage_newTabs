@@ -201,8 +201,6 @@ public class Note_audio
                     UtilAudio.setPhoneListener(act);
 
                 isPausedAtSeekerAnchor = false;
-                //todo TBD
-//                TabsHost.setAudioPlayingTab_WithHighlight(false);// in case playing audio in pager
                 playAudioInPager(act,audioStr,_pager);
             }
         });

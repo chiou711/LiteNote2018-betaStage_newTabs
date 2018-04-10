@@ -637,9 +637,6 @@ public class Page extends UilListViewBaseFragment
             // Stop if unmarked item is at playing state
             if(AudioManager.mAudioPos == position) {
 				UtilAudio.stopAudioIfNeeded();
-				//todo TBD
-//				if(markingNow == 0)
-//                    TabsHost.setAudioPlayingTab_WithHighlight(false);
 			}
 
 			// update list view

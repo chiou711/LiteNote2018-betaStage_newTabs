@@ -943,9 +943,6 @@ public class MainAct extends FragmentActivity implements OnBackStackChangedListe
         			(AudioManager.getPlayerState() != AudioManager.PLAYER_AT_STOP))
         		{
                     AudioManager.stopAudioPlayer();
-//					TabsHost.setAudioPlayingTab_WithHighlight(false);
-                    //todo TBD
-//					Page.mItemAdapter.notifyDataSetChanged();
 					return true; // just stop playing, wait for user action
         		}
         		else // play first audio
