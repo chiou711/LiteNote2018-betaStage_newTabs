@@ -23,13 +23,13 @@ import com.cw.litenote.main.MainAct;
 import com.cw.litenote.operation.audio.AudioManager;
 import com.cw.litenote.operation.audio.AudioPlayer_page;
 import com.cw.litenote.operation.mail.MailNotes;
+import com.cw.litenote.tabs.TabsHost;
 import com.cw.litenote.util.Util;
 import com.cw.litenote.util.audio.UtilAudio;
 import com.cw.litenote.util.preferences.Pref;
 
 import java.util.ArrayList;
 import java.util.List;
-
 
 /**
  * Created by cw on 2017/11/4.
@@ -140,7 +140,7 @@ public class Checked_notes_option {
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                System.out.println("MainUi / _addNewNote / _OnItemClickListener / position = " + position +" id = " + id);
+                System.out.println("Checked_notes_option / _open_option_grid / _onItemClick / position = " + position +" id = " + id);
                 if(noItemChecked() && (position > CHECK_ALL))
                     Toast.makeText(act,R.string.delete_checked_no_checked_items,Toast.LENGTH_SHORT).show();
                 else
@@ -291,7 +291,11 @@ public class Checked_notes_option {
      */
     private void checkAll(int action)
     {
+        System.out.println("Checked_notes_option / _checkAll / action = " + action);
         boolean bStopAudio = false;
+
+        int pagePos = TabsHost.selectedPos;
+
         mDb_page.open();
         int count = mDb_page.getNotesCount(false);
         for(int i=0; i<count; i++)
@@ -316,7 +320,9 @@ public class Checked_notes_option {
         if(PageUi.isSamePageTable())
             AudioPlayer_page.prepareAudioInfo();
 
-//        Page.mItemAdapter.notifyDataSetChanged();
+        TabsHost.viewPager.setAdapter(TabsHost.adapter);
+        TabsHost.viewPager.setCurrentItem(pagePos);
+
         Page.showFooter(MainAct.mAct);
     }
 

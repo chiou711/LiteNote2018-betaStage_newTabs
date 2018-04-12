@@ -16,6 +16,7 @@ import com.cw.litenote.tabs.TabsHost;
 import com.cw.litenote.util.audio.UtilAudio;
 import com.cw.litenote.note.Note_edit;
 import com.cw.litenote.util.ColorSet;
+import com.cw.litenote.util.preferences.Pref;
 import com.cw.litenote.util.uil.UilCommon;
 import com.cw.litenote.util.uil.UilListViewBaseFragment;
 import com.cw.litenote.util.Util;
@@ -52,7 +53,6 @@ public class Page extends UilListViewBaseFragment
 	Cursor mCursor_note;
 	public static DB_page mDb_page;
 	public SharedPreferences mPref_show_note_attribute;
-	private List<Boolean> mSelectedList = new ArrayList<>();
 
 	// This is the Adapter being used to display the list's data.
 //	NoteListAdapter mAdapter;
@@ -261,12 +261,11 @@ public class Page extends UilListViewBaseFragment
 		listView.setAdapter(mItemAdapter);
 		mDb_page.close();// set close here, if cursor is used in adapter
 
-		// selected list
-		for(int i=0; i< count ; i++ )
-		{
-			mSelectedList.add(true);
-			mSelectedList.set(i,true);
-		}
+        listView.setDropListener(onDrop);
+        listView.setDragListener(onDrag);
+        listView.setMarkListener(onMark);
+        listView.setAudioListener(onAudio);
+        listView.setOnScrollListener(onScroll);
 
         showFooter(mAct);
 	}
@@ -381,10 +380,6 @@ public class Page extends UilListViewBaseFragment
 			if(startPosition >= mDb_page.getNotesCount(true)) // avoid footer error
 				return;
 
-			mSelectedList.set(startPosition, true);
-			mSelectedList.set(endPosition, true);
-
-
 			//reorder data base storage
 			int loop = Math.abs(startPosition-endPosition);
 			for(int i=0;i< loop;i++)
@@ -482,12 +477,6 @@ public class Page extends UilListViewBaseFragment
 
         super.onResume();
 
-        mDndListView.setDropListener(onDrop);
-        mDndListView.setDragListener(onDrag);
-        mDndListView.setMarkListener(onMark);
-        mDndListView.setAudioListener(onAudio);
-        mDndListView.setOnScrollListener(onScroll);
-
         if( (AudioManager.getPlayerState() != AudioManager.PLAYER_AT_STOP) &&
             (pageTableId == TabsHost.currPageTableId) ){
             TabsHost.resume_listView_vScroll(mDndListView);
@@ -549,11 +538,33 @@ public class Page extends UilListViewBaseFragment
 
 		@Override
 		public void onScrollStateChanged(AbsListView view, int scrollState) {
+            mFirstVisibleIndex = mDndListView.getFirstVisiblePosition();
+            View v = mDndListView.getChildAt(0);
+            mFirstVisibleIndexTop = (v == null) ? 0 : v.getTop();
+
+            if( (PageUi.getFocus_pagePos() == MainAct.mPlaying_pagePos)&&
+                    (MainAct.mPlaying_folderPos == FolderUi.getFocus_folderPos()) &&
+                    (AudioManager.getPlayerState() == AudioManager.PLAYER_AT_PLAY) &&
+                    (mDndListView.getChildAt(0) != null)                    )
+            {
+                // do nothing when playing audio
+                System.out.println("_onScrollStateChanged / do nothing");
+            }
+            else
+            {
+                // keep index and top position
+                Pref.setPref_focusView_list_view_first_visible_index(getActivity(), mFirstVisibleIndex);
+                Pref.setPref_focusView_list_view_first_visible_index_top(getActivity(), mFirstVisibleIndexTop);
+            }
 		}
 
 		@Override
 		public void onScroll(AbsListView view, int firstVisibleItem,
 				int visibleItemCount, int totalItemCount) {
+//			System.out.println("_onScroll / firstVisibleItem " + firstVisibleItem);
+//			System.out.println("_onScroll / visibleItemCount " + visibleItemCount);
+//			System.out.println("_onScroll / totalItemCount " + totalItemCount);
+//            TabsHost.store_listView_vScroll(mDndListView);
 		}
 	};
 
@@ -639,14 +650,34 @@ public class Page extends UilListViewBaseFragment
 				UtilAudio.stopAudioIfNeeded();
 			}
 
-			// update list view
-            fillData(mAct,mDndListView);
-			mItemAdapter.notifyDataSetChanged();
-			TabsHost.resume_listView_vScroll(mDndListView);
+			// update list view: just update selection to avoid scrolling back to top
+//			int firstVisiblePosition = mDndListView.getFirstVisiblePosition();
+//			int lastVisiblePosition = mDndListView.getLastVisiblePosition();
+//			if ((position >= firstVisiblePosition) && (position <= lastVisiblePosition) )
+//			{
+//				View view = mDndListView.getChildAt(position - firstVisiblePosition).findViewById(R.id.img_check);
+//				if(markingNow == 1)
+//				{
+//					view.setBackgroundResource(Page.mStyle % 2 == 1 ?
+//							R.drawable.btn_check_on_holo_light :
+//							R.drawable.btn_check_on_holo_dark);
+//				}
+//				else
+//				{
+//					view.setBackgroundResource(Page.mStyle % 2 == 1 ?
+//							R.drawable.btn_check_off_holo_light :
+//							R.drawable.btn_check_off_holo_dark);
+//				}
+//			}
+//
+//			mDndListView.setMarkListener(onMark);
+
+			int pagePos = TabsHost.selectedPos;
+			TabsHost.viewPager.setAdapter(TabsHost.adapter);
+			TabsHost.viewPager.setCurrentItem(pagePos);
 
 			// update footer
             showFooter(mAct);
-
 
 			// update audio info
             if(PageUi.isSamePageTable())
@@ -780,7 +811,6 @@ public class Page extends UilListViewBaseFragment
 //                    }
 
             mItemAdapter.notifyDataSetChanged();
-
         }
 	};
 

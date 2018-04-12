@@ -42,7 +42,7 @@ public class TabsHost extends AppCompatDialogFragment implements TabLayout.OnTab
 {
     public static int mStyle;
     public static TabLayout tabLayout;
-    ViewPager viewPager;
+    public static ViewPager viewPager;
     public static TabsPagerAdapter adapter;
     public static int currPageTableId;
 
