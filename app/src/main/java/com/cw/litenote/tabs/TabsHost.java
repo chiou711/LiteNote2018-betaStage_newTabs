@@ -311,4 +311,10 @@ public class TabsHost extends AppCompatDialogFragment implements TabLayout.OnTab
         firstPos_pageId = id;
     }
 
+    public static void reloadCurrentPage()
+    {
+        int pagePos = selectedPos;
+        viewPager.setAdapter(adapter);
+        viewPager.setCurrentItem(pagePos);
+    }
 }

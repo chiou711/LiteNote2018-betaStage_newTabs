@@ -294,8 +294,6 @@ public class Checked_notes_option {
         System.out.println("Checked_notes_option / _checkAll / action = " + action);
         boolean bStopAudio = false;
 
-        int pagePos = TabsHost.selectedPos;
-
         mDb_page.open();
         int count = mDb_page.getNotesCount(false);
         for(int i=0; i<count; i++)
@@ -320,8 +318,7 @@ public class Checked_notes_option {
         if(PageUi.isSamePageTable())
             AudioPlayer_page.prepareAudioInfo();
 
-        TabsHost.viewPager.setAdapter(TabsHost.adapter);
-        TabsHost.viewPager.setCurrentItem(pagePos);
+        TabsHost.reloadCurrentPage();
 
         Page.showFooter(MainAct.mAct);
     }

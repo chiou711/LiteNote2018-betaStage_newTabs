@@ -377,6 +377,7 @@ public class Page extends UilListViewBaseFragment
         	int oriStartPos = startPosition;
         	int oriEndPos = endPosition;
 
+            mDb_page = new DB_page(mAct, TabsHost.currPageTableId);
 			if(startPosition >= mDb_page.getNotesCount(true)) // avoid footer error
 				return;
 
@@ -425,10 +426,7 @@ public class Page extends UilListViewBaseFragment
 				AudioPlayer_page.prepareAudioInfo();
 			}
 
-			// update list view
-            fillData(mAct,mDndListView);
-			mItemAdapter.notifyDataSetChanged();
-			TabsHost.resume_listView_vScroll(mDndListView);
+            TabsHost.reloadCurrentPage();
 
             // update footer
 			showFooter(mAct);
@@ -481,6 +479,7 @@ public class Page extends UilListViewBaseFragment
             (pageTableId == TabsHost.currPageTableId) ){
             TabsHost.resume_listView_vScroll(mDndListView);
         }
+
     }
 
     @Override
@@ -672,9 +671,7 @@ public class Page extends UilListViewBaseFragment
 //
 //			mDndListView.setMarkListener(onMark);
 
-			int pagePos = TabsHost.selectedPos;
-			TabsHost.viewPager.setAdapter(TabsHost.adapter);
-			TabsHost.viewPager.setCurrentItem(pagePos);
+            TabsHost.reloadCurrentPage();
 
 			// update footer
             showFooter(mAct);
