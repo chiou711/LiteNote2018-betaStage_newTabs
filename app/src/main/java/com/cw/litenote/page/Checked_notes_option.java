@@ -354,9 +354,8 @@ public class Checked_notes_option {
         if(PageUi.isSamePageTable())
             AudioPlayer_page.prepareAudioInfo();
 
-        //todo TBD
-//        Page.mItemAdapter.notifyDataSetChanged();
-//        Page.showFooter();
+        TabsHost.reloadCurrentPage();
+        Page.showFooter(MainAct.mAct);
     }
 
 
@@ -382,7 +381,8 @@ public class Checked_notes_option {
         }
         db_folder.close();
 
-        pageNames[PageUi.getFocus_pagePos()] = pageNames[PageUi.getFocus_pagePos()] + " *"; // add mark to current page
+        // add * mark to current page
+        pageNames[TabsHost.selectedPos] = pageNames[TabsHost.selectedPos] + " *";
 
         AlertDialog.Builder builder = new AlertDialog.Builder(act);
         DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener()
@@ -422,21 +422,18 @@ public class Checked_notes_option {
                     }
                     mDb_page.close();
 
-                    //todo TBD
-//                    Page.mItemAdapter.notifyDataSetChanged();
-//                    Page.showFooter();
+                    TabsHost.reloadCurrentPage();
+                    Page.showFooter(MainAct.mAct);
                 }
                 else if(action == COPY_TO)
                 {
                     DB_page.setFocusPage_tableId(srcPageTableId);
                     if(destPageTableId == srcPageTableId)
                     {
-                        //todo TBD
-//                        Page.mItemAdapter.notifyDataSetChanged();
-//                        Page.showFooter();
+                        TabsHost.reloadCurrentPage();
+                        Page.showFooter(MainAct.mAct);
                     }
                 }
-
                 dialog.dismiss();
             }
         };
@@ -484,26 +481,26 @@ public class Checked_notes_option {
                         {/*cancel*/} })
                 .setPositiveButton(R.string.btn_OK,
                         new DialogInterface.OnClickListener()
-                        {	@Override
-                        public void onClick(DialogInterface dialog, int which)
                         {
-                            mDb_page.open();
-                            int count = mDb_page.getNotesCount(false);
-                            for(int i=0; i<count; i++)
+                            @Override
+                            public void onClick(DialogInterface dialog, int which)
                             {
-                                if(mDb_page.getNoteMarking(i,false) == 1)
-                                    mDb_page.deleteNote(mDb_page.getNoteId(i,false),false);
+                                mDb_page.open();
+                                int count = mDb_page.getNotesCount(false);
+                                for(int i=0; i<count; i++)
+                                {
+                                    if(mDb_page.getNoteMarking(i,false) == 1)
+                                        mDb_page.deleteNote(mDb_page.getNoteId(i,false),false);
+                                }
+                                mDb_page.close();
+
+                                // Stop Play/Pause if current tab's item is played and is not at Stop state
+                                if(AudioManager.mAudioPos == Page.mHighlightPosition)
+                                    UtilAudio.stopAudioIfNeeded();
+
+                                TabsHost.reloadCurrentPage();
+                                Page.showFooter(MainAct.mAct);
                             }
-                            mDb_page.close();
-
-                            // Stop Play/Pause if current tab's item is played and is not at Stop state
-                            if(AudioManager.mAudioPos == Page.mHighlightPosition)
-                                UtilAudio.stopAudioIfNeeded();
-
-                            //todo TBD
-//                            Page.mItemAdapter.notifyDataSetChanged();
-//                            Page.showFooter();
-                        }
                         });
 
         AlertDialog d = builder.create();

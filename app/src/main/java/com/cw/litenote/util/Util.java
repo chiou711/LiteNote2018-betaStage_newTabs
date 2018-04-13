@@ -33,6 +33,7 @@ import com.cw.litenote.page.PageUi;
 import com.cw.litenote.db.DB_folder;
 import com.cw.litenote.db.DB_page;
 import com.cw.litenote.note.Note;
+import com.cw.litenote.tabs.TabsHost;
 import com.cw.litenote.util.audio.UtilAudio;
 import com.cw.litenote.util.image.UtilImage;
 import com.cw.litenote.util.preferences.Pref;
@@ -368,7 +369,7 @@ public class Util
 	            View view = originalAdapter.getView(position, convertView, parent);
 	            //set CheckedTextView in order to change button color
 	            CheckedTextView textView = (CheckedTextView)view;
-	            if(mDbFolder.getPageTableId(position,true) == DB_page.getFocusPage_tableId())
+	            if(mDbFolder.getPageTableId(position,true) == TabsHost.currPageTableId)
 	            {
 		            textView.setTypeface(null, Typeface.BOLD_ITALIC);
 		            textView.setBackgroundColor(ColorSet.mBG_ColorArray[style]);
