@@ -16,6 +16,7 @@ import com.cw.litenote.folder.Folder;
 import com.cw.litenote.folder.FolderUi;
 import com.cw.litenote.note_add.Add_note_option;
 import com.cw.litenote.operation.audio.AudioManager;
+import com.cw.litenote.operation.audio.AudioPlayer_page;
 import com.cw.litenote.operation.delete.DeleteFolders;
 import com.cw.litenote.operation.delete.DeletePages;
 import com.cw.litenote.operation.import_export.Import_webAct;
@@ -23,6 +24,7 @@ import com.cw.litenote.page.Checked_notes_option;
 import com.cw.litenote.page.Page;
 import com.cw.litenote.page.PageUi;
 import com.cw.litenote.tabs.Page_audio;
+import com.cw.litenote.tabs.TabsHost;
 import com.cw.litenote.util.ColorSet;
 import com.cw.litenote.util.DeleteFileAlarmReceiver;
 import com.cw.litenote.operation.import_export.Export_toSDCardFragment;
@@ -943,6 +945,13 @@ public class MainAct extends FragmentActivity implements OnBackStackChangedListe
         			(AudioManager.getPlayerState() != AudioManager.PLAYER_AT_STOP))
         		{
                     AudioManager.stopAudioPlayer();
+
+                    // remove audio panel
+                    TabsHost.audioPlayer_page.mRunContinueMode.run();
+
+                    // refresh
+                    TabsHost.reloadCurrentPage();
+
 					return true; // just stop playing, wait for user action
         		}
         		else // play first audio
@@ -950,27 +959,26 @@ public class MainAct extends FragmentActivity implements OnBackStackChangedListe
                     AudioManager.setAudioPlayMode(AudioManager.PAGE_PLAY_MODE);
                     AudioManager.mAudioPos = 0;
 
-                    //todo How to get correct page?
-//                    Page page_new = TabsPagerAdapter.mFragmentList.get(TabsHost.selectedPos);
-                    Page page_new= new Page(DB_page.getFocusPage_tableId());
-//                    Page.page_audio = new Page_audio(mAct,page_new.mDndListView);
-//                    Page.page_audio.initAudioBlock();
-//
-//                    AudioPlayer_page audioPlayer_page = new AudioPlayer_page(this,Page.page_audio,page_new.mDndListView);
-//                    AudioPlayer_page.prepareAudioInfo();
-//                    audioPlayer_page.runAudioState();
-//
-//                    UtilAudio.updateAudioPanel(Page.page_audio.audioPanel_play_button, Page.page_audio.audio_panel_title_textView);
+                    Page page = TabsHost.adapter.mFragmentList.get(TabsHost.selectedPos);
+                    TabsHost.page_audio = new Page_audio(mAct,page.mDndListView);
+                    TabsHost.page_audio.initAudioBlock(mAct);
 
-                    //todo TBD
-//                    Page.mItemAdapter.notifyDataSetChanged();
+                    TabsHost.audioPlayer_page = new AudioPlayer_page(mAct,TabsHost.page_audio);
+                    TabsHost.audioPlayer_page.prepareAudioInfo();
+                    TabsHost.audioPlayer_page.runAudioState();
+
+                    // update audio play position
+                    TabsHost.audioPlayingPos = TabsHost.selectedPos;
+                    TabsHost.adapter.notifyDataSetChanged();
+
+                    UtilAudio.updateAudioPanel(TabsHost.page_audio.audioPanel_play_button,
+                                               TabsHost.page_audio.audio_panel_title_textView);
 
                     // update playing page position
                     mPlaying_pagePos = PageUi.getFocus_pagePos();
 
-                    // todo How to update page table Id
-                    // update page table Id
-//                    mPlaying_pageTableId = TabsHost.Now_pageTableId;
+                    // update playing page table Id
+                    mPlaying_pageTableId = TabsHost.currPageTableId;//mNow_pageTableId;
 
                     // update playing folder position
                     mPlaying_folderPos = FolderUi.getFocus_folderPos();
@@ -1090,7 +1098,8 @@ public class MainAct extends FragmentActivity implements OnBackStackChangedListe
                                         getResources().getString(R.string.set_enable),
                                    Toast.LENGTH_SHORT).show();
                 }
-//                FolderUi.startTabsHostRun();
+                invalidateOptionsMenu();
+                TabsHost.reloadCurrentPage();
 				return true;
 
 			case MenuId.SHOW_BODY:
@@ -1109,7 +1118,8 @@ public class MainAct extends FragmentActivity implements OnBackStackChangedListe
 										getResources().getString(R.string.set_enable),
 								   Toast.LENGTH_SHORT).show();
                 }
-//                FolderUi.startTabsHostRun();
+                invalidateOptionsMenu();
+                TabsHost.reloadCurrentPage();
                 return true;
 
 			case MenuId.CLICK_LAUNCH_YOUTUBE:
