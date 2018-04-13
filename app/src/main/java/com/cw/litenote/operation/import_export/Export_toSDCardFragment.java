@@ -22,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cw.litenote.operation.List_selectPage;
+import com.cw.litenote.tabs.TabsHost;
 import com.cw.litenote.util.BaseBackPressedListener;
 import com.cw.litenote.main.MainAct;
 import com.cw.litenote.R;
@@ -66,7 +67,7 @@ public class Export_toSDCardFragment extends Fragment {
 				mList_selPage.selectAllPages(false);
 		}
 		});
-		mStyle = Util.getCurrentPageStyle();
+		mStyle = Util.getCurrentPageStyle(TabsHost.selectedPos);
 
 		// list view: selecting which pages to send
 		mListView = (ListView)rootView.findViewById(R.id.listView1);

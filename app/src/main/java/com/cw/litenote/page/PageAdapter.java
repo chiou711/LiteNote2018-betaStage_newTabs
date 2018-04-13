@@ -53,13 +53,16 @@ public class PageAdapter extends SimpleDragSortCursorAdapter // DragSortCursorAd
 	Cursor cursor;
     int count;
 	String linkUri;
+	int style;
 
 	PageAdapter(Context context, int layout, Cursor c,
-				String[] from, int[] to, int flags)
+				String[] from, int[] to, int page_position)
 	{
-		super(context, layout, c, from, to, flags);
+		super(context, layout, c, from, to, page_position);
 		mAct = (FragmentActivity) context;
 		cursor = c;
+		this.style = Util.getCurrentPageStyle(page_position);
+
 		if(c != null)
 		    count = c.getCount();
 		else
@@ -120,10 +123,10 @@ public class PageAdapter extends SimpleDragSortCursorAdapter // DragSortCursorAd
 			convertView = mAct.getLayoutInflater().inflate(R.layout.page_view_row, parent, false);
 
 			// set rectangular background
-//				view.setBackgroundColor(Util.mBG_ColorArray[mStyle]);
+//				view.setBackgroundColor(Util.mBG_ColorArray[style]);
 			
 			//set round corner and background color
-    		switch(Page.mStyle)
+            switch(style)
     		{
     			case 0:
                     convertView.setBackgroundResource(R.drawable.bg_0);
@@ -187,7 +190,7 @@ public class PageAdapter extends SimpleDragSortCursorAdapter // DragSortCursorAd
 
 		// show row Id
 		holder.rowId.setText(String.valueOf(position+1));
-		holder.rowId.setTextColor(ColorSet.mText_ColorArray[Page.mStyle]);
+		holder.rowId.setTextColor(ColorSet.mText_ColorArray[style]);
 		
 		// show check box, title , picture
 		String strTitle = null;
@@ -233,7 +236,7 @@ public class PageAdapter extends SimpleDragSortCursorAdapter // DragSortCursorAd
 		{
 			holder.textTitle.setVisibility(View.VISIBLE);
 			holder.textTitle.setText(strTitle);
-			holder.textTitle.setTextColor(ColorSet.mText_ColorArray[Page.mStyle]);
+			holder.textTitle.setTextColor(ColorSet.mText_ColorArray[style]);
 		}
 
 
@@ -250,7 +253,7 @@ public class PageAdapter extends SimpleDragSortCursorAdapter // DragSortCursorAd
 //			holder.audioName.setTextSize(12.0f);
 
 		if(!Util.isEmptyString(audioUri))
-			holder.audioName.setTextColor(ColorSet.mText_ColorArray[Page.mStyle]);
+			holder.audioName.setTextColor(ColorSet.mText_ColorArray[style]);
 
 		// show audio highlight if audio is not at Stop
 		if( PageUi.isSamePageTable() &&
@@ -288,7 +291,7 @@ public class PageAdapter extends SimpleDragSortCursorAdapter // DragSortCursorAd
 
 			// set icon
 			holder.imageAudio.setVisibility(View.VISIBLE);
-			if(Page.mStyle % 2 == 0)
+			if(style % 2 == 0)
 				holder.imageAudio.setImageResource(R.drawable.ic_audio_off_white);
 			else
 				holder.imageAudio.setImageResource(R.drawable.ic_audio_off_black);
@@ -324,7 +327,7 @@ public class PageAdapter extends SimpleDragSortCursorAdapter // DragSortCursorAd
 				new UtilImage_bitmapLoader(holder.thumbPicture,
 										   pictureUri,
 										   holder.progressBar,
-										   (Page.mStyle % 2 == 1 ?
+										   (style % 2 == 1 ?
 											UilCommon.optionsForRounded_light:
 											UilCommon.optionsForRounded_dark),
 										   mAct);
@@ -423,7 +426,7 @@ public class PageAdapter extends SimpleDragSortCursorAdapter // DragSortCursorAd
 								!title.equalsIgnoreCase("about:blank")) {
 							holder.textTitle.setVisibility(View.VISIBLE);
 							holder.rowId.setText(String.valueOf(position + 1));
-							holder.rowId.setTextColor(ColorSet.mText_ColorArray[Page.mStyle]);
+							holder.rowId.setTextColor(ColorSet.mText_ColorArray[style]);
 
 						}
 					}
@@ -458,10 +461,10 @@ public class PageAdapter extends SimpleDragSortCursorAdapter // DragSortCursorAd
 //			holder.textBody.setTextSize(12);
 
 			holder.rowDivider.setVisibility(View.VISIBLE);
-			holder.textBody.setTextColor(ColorSet.mText_ColorArray[Page.mStyle]);
+			holder.textBody.setTextColor(ColorSet.mText_ColorArray[style]);
 			// time stamp
             holder.textTime.setText(Util.getTimeString(timeCreated));
-			holder.textTime.setTextColor(ColorSet.mText_ColorArray[Page.mStyle]);
+			holder.textTime.setTextColor(ColorSet.mText_ColorArray[style]);
 	  	}
 	  	else
 	  	{
@@ -479,13 +482,13 @@ public class PageAdapter extends SimpleDragSortCursorAdapter // DragSortCursorAd
 	  	// marking
         if(marking == 1)
         {
-			holder.imageCheck.setBackgroundResource(Page.mStyle % 2 == 1 ?
+			holder.imageCheck.setBackgroundResource(style % 2 == 1 ?
 					R.drawable.btn_check_on_holo_light :
 					R.drawable.btn_check_on_holo_dark);
 		}
 		else
 		{
-			holder.imageCheck.setBackgroundResource(Page.mStyle % 2 == 1 ?
+			holder.imageCheck.setBackgroundResource(style % 2 == 1 ?
 					R.drawable.btn_check_off_holo_light :
 					R.drawable.btn_check_off_holo_dark);
 		}

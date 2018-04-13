@@ -82,13 +82,13 @@ public class PageUi
 		// set current selection
 		for(int i=0;i< Util.getStyleCount();i++)
 		{
-			if(Util.getCurrentPageStyle() == i)
+			if(Util.getCurrentPageStyle(TabsHost.selectedPos) == i)
 			{
-				RadioButton buttton = (RadioButton) RG_view.getChildAt(i);
+				RadioButton button = (RadioButton) RG_view.getChildAt(i);
 		    	if(i%2 == 0)
-		    		buttton.setButtonDrawable(R.drawable.btn_radio_on_holo_dark);
+		    		button.setButtonDrawable(R.drawable.btn_radio_on_holo_dark);
 		    	else
-		    		buttton.setButtonDrawable(R.drawable.btn_radio_on_holo_light);
+		    		button.setButtonDrawable(R.drawable.btn_radio_on_holo_light);
 			}
 		}
 
@@ -102,13 +102,14 @@ public class PageUi
 		radioGroup.setOnCheckedChangeListener(new OnCheckedChangeListener()
 		{
 			@Override
-			public void onCheckedChanged(RadioGroup RG, int id) {
+			public void onCheckedChanged(RadioGroup radioGroup, int id) {
 				DB_folder db = new DB_folder(MainAct.mAct,DB_folder.getFocusFolder_tableId());
-				TabsHost.mStyle = RG.indexOfChild(RG.findViewById(id));
-				db.updatePage(db.getPageId(getFocus_pagePos(), true),
-							  db.getPageTitle(getFocus_pagePos(), true),
-							  db.getPageTableId(getFocus_pagePos(), true),
-							  TabsHost.mStyle,
+				int style = radioGroup.indexOfChild(radioGroup.findViewById(id));
+                int pos = TabsHost.selectedPos;
+				db.updatePage(db.getPageId(pos, true),
+							  db.getPageTitle(pos, true),
+							  db.getPageTableId(pos, true),
+							  style,
                               true);
 	 			dlg.dismiss();
 				FolderUi.startTabsHostRun();

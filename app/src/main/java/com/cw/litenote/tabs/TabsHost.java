@@ -40,7 +40,6 @@ import com.mobeta.android.dslv.DragSortListView;
 
 public class TabsHost extends AppCompatDialogFragment implements TabLayout.OnTabSelectedListener
 {
-    public static int mStyle;
     public static TabLayout tabLayout;
     public static ViewPager viewPager;
     public static TabsPagerAdapter adapter;
@@ -130,8 +129,8 @@ public class TabsHost extends AppCompatDialogFragment implements TabLayout.OnTab
             if(pageTableId > lastPageTableId)
                 lastPageTableId = pageTableId;
 
-            System.out.println("TabsHost / _addPages / pageTableId = " + pageTableId);
-            adapter.addFragment(new Page(pageTableId));
+            System.out.println("TabsHost / _addPages / page_tableId = " + pageTableId);
+            adapter.addFragment(new Page(i,pageTableId));
         }
     }
 

@@ -428,11 +428,8 @@ public class Checked_notes_option {
                 else if(action == COPY_TO)
                 {
                     DB_page.setFocusPage_tableId(srcPageTableId);
-                    if(destPageTableId == srcPageTableId)
-                    {
-                        TabsHost.reloadCurrentPage();
-                        Page.showFooter(MainAct.mAct);
-                    }
+                    TabsHost.reloadCurrentPage();
+                    Page.showFooter(MainAct.mAct);
                 }
                 dialog.dismiss();
             }

@@ -4,10 +4,10 @@ import java.util.Date;
 
 import com.cw.litenote.db.DB_folder;
 import com.cw.litenote.main.MainAct;
-import com.cw.litenote.page.Page;
 import com.cw.litenote.R;
 import com.cw.litenote.page.PageUi;
 import com.cw.litenote.db.DB_page;
+import com.cw.litenote.tabs.TabsHost;
 import com.cw.litenote.util.image.TouchImageView;
 import com.cw.litenote.util.image.UtilImage_bitmapLoader;
 import com.cw.litenote.util.ColorSet;
@@ -164,8 +164,9 @@ public class Note_common {
                 		{
 	                		if(Uri.parse(pictureUriInDB).isAbsolute())
 	                		{
+	                			int style =  Util.getCurrentPageStyle(TabsHost.selectedPos);
 	                			new UtilImage_bitmapLoader(enlargedImage, pictureUriInDB, progressBarExpand,
-	                					(Page.mStyle % 2 == 1 ? UilCommon.optionsForRounded_light: UilCommon.optionsForRounded_dark), act);
+	                					(style % 2 == 1 ? UilCommon.optionsForRounded_light: UilCommon.optionsForRounded_dark), act);
 	                			bShowEnlargedImage = true;
 	                		}
 	                		else
@@ -386,8 +387,9 @@ public class Note_common {
 			// load bitmap to image view
 			if(!Util.isEmptyString(pictureUriInDB))
 			{
+				int style =  Util.getCurrentPageStyle(TabsHost.selectedPos);
 				new UtilImage_bitmapLoader(picImageView, pictureUriInDB, progressBar,
-    					(Page.mStyle % 2 == 1 ? UilCommon.optionsForRounded_light: UilCommon.optionsForRounded_dark), act);
+    					(style % 2 == 1 ? UilCommon.optionsForRounded_light: UilCommon.optionsForRounded_dark), act);
 			}
 			else
 			{

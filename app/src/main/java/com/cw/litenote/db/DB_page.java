@@ -103,7 +103,7 @@ public class DB_page
 //						if(db_folder.mCursor_page.moveToPosition(pagePos))
 //						{
 //							int page_tableId = db_folder.getPageTableId(pagePos,true);
-//							System.out.println("DB_page / find pageTableId = " + page_tableId);
+//							System.out.println("DB_page / find page_tableId = " + page_tableId);
 //							setFocusPage_tableId(page_tableId);
 //							Util.setPref_focusView_page_tableId(MainAct.mAct, page_tableId);
 //							db_folder.close();

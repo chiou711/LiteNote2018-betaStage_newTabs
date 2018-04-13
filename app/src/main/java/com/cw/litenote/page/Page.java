@@ -66,31 +66,31 @@ public class Page extends UilListViewBaseFragment
 	ProgressBar mSpinner;
     public static int currPlayPosition;
     static boolean en_dbg_msg = true;//true //false
-	public int pageTableId;
+	public int page_tableId;
+	int page_pos;
 
     public Page(){
     }
 
 	@SuppressLint("ValidFragment")
-	public Page(int id){
-    	pageTableId = id;
+	public Page(int pos,int id){
+		page_pos = pos;
+    	page_tableId = id;
 	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-//		DB_page.setFocusPage_tableId(pageTableId);
-
 		if(en_dbg_msg)
-			System.out.println("Page / _onCreate / pageTableId = " + pageTableId);
+			System.out.println("Page / _onCreate / page_tableId = " + page_tableId);
 	}
 
 	View rootView;
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		if(en_dbg_msg)
-			System.out.println("Page / _onCreateView / pageTableId = " + pageTableId);
+			System.out.println("Page / _onCreateView / page_tableId = " + page_tableId);
 
 
         if(savedInstanceState == null)
@@ -98,16 +98,12 @@ public class Page extends UilListViewBaseFragment
         else
             System.out.println("Page / _onCreateView / savedInstanceState != null");
 
-//        mDb_page = new DB_page(getActivity(), pageTableId);
-
         rootView = inflater.inflate(R.layout.page_view_portrait, container, false);
 
 		mAct = getActivity();
 		mClassName = getClass().getSimpleName();
         listView = (DragSortListView)rootView.findViewById(android.R.id.list);
 		mDndListView = listView;
-
-//        mDndListView.setBackgroundColor(Color.RED);
 
 		if(Build.VERSION.SDK_INT >= 21)
 			mDndListView.setSelector(R.drawable.ripple);
@@ -136,7 +132,7 @@ public class Page extends UilListViewBaseFragment
 //		mDndListView.setScrollBarStyle(ListView.SCROLLBARS_OUTSIDE_OVERLAY);
 //		Util.setScrollThumb(getActivity(),mDndListView);
 
-		mStyle = Util.getCurrentPageStyle();
+		mStyle = Util.getCurrentPageStyle(page_pos);
 //    	System.out.println("Page / _onActivityCreated / mStyle = " + mStyle);
 
 		UilCommon.init();
@@ -195,14 +191,12 @@ public class Page extends UilListViewBaseFragment
 
 		// Prepare the loader. Either re-connect with an existing one or start a new one.
 //        getLoaderManager().initLoader(0, null, this);
-//        getLoaderManager().initLoader(pageTableId, null, Page.this);
+//        getLoaderManager().initLoader(page_tableId, null, Page.this);
 
         fillData(mAct,mDndListView);
 		mItemAdapter.notifyDataSetChanged();
 
-
 //        AudioPlayer_page.scrollHighlightAudioItemToVisible(mDndListView);
-
 
 		return rootView;
 	}
@@ -225,7 +219,7 @@ public class Page extends UilListViewBaseFragment
 	public void fillData(FragmentActivity mAct,DragSortListView listView)
 	{
 		if(en_dbg_msg)
-			System.out.println("Page / _fillData / pageTableId = " + pageTableId);
+			System.out.println("Page / _fillData / page_tableId = " + page_tableId);
 
     	/*
         // set background color of list view
@@ -240,10 +234,9 @@ public class Page extends UilListViewBaseFragment
         mDndListView.setDividerHeight(3);
         */
 
-        mDb_page = new DB_page(getActivity(), pageTableId);
+        mDb_page = new DB_page(getActivity(), page_tableId);
 		mDb_page.open();
 		mCursor_note = mDb_page.mCursor_note;
-		int count = mDb_page.getNotesCount(false);
 
 		// set adapter
 		String[] from = new String[] { DB_page.KEY_NOTE_TITLE};
@@ -255,7 +248,7 @@ public class Page extends UilListViewBaseFragment
 				mCursor_note,
 				from,
 				to,
-				0
+				page_pos
 		);
 
 		listView.setAdapter(mItemAdapter);
@@ -317,7 +310,7 @@ public class Page extends UilListViewBaseFragment
     void openLongClickedItem(int position)
     {
         Intent i = new Intent(getActivity(), Note_edit.class);
-		mDb_page = new DB_page(getActivity(), pageTableId);
+		mDb_page = new DB_page(getActivity(), page_tableId);
         Long rowId = mDb_page.getNoteId(position,true);
         i.putExtra("list_view_position", position);
         i.putExtra(DB_page.KEY_NOTE_ID, rowId);
@@ -471,12 +464,12 @@ public class Page extends UilListViewBaseFragment
     @Override
     public void onResume() {
 		if(en_dbg_msg)
-			System.out.println("Page / _onResume / pageTableId = " + pageTableId);
+			System.out.println("Page / _onResume / page_tableId = " + page_tableId);
 
         super.onResume();
 
         if( (AudioManager.getPlayerState() != AudioManager.PLAYER_AT_STOP) &&
-            (pageTableId == TabsHost.currPageTableId) ){
+            (page_tableId == TabsHost.currPageTableId) ){
             TabsHost.resume_listView_vScroll(mDndListView);
         }
 
@@ -486,7 +479,7 @@ public class Page extends UilListViewBaseFragment
     public void onPause() {
     	super.onPause();
 		if(en_dbg_msg)
-			System.out.println("Page / _onPause / pageTableId = " + pageTableId);
+			System.out.println("Page / _onPause / page_tableId = " + page_tableId);
 	 }
 
     @Override
@@ -508,7 +501,7 @@ public class Page extends UilListViewBaseFragment
 //							   List<String> data)
 //	{
 //		if(en_dbg_msg)
-//			System.out.println("Page / _onLoadFinished / pageTableId = " + pageTableId);
+//			System.out.println("Page / _onLoadFinished / page_tableId = " + page_tableId);
 //
 //        // Set the new data in the adapter.
 //		mAdapter.setData(data);
@@ -522,7 +515,7 @@ public class Page extends UilListViewBaseFragment
 //
 //		fillData();
 ////        getLoaderManager().destroyLoader(0); // add for fixing callback twice
-//        getLoaderManager().destroyLoader(pageTableId); // add for fixing callback twice
+//        getLoaderManager().destroyLoader(page_tableId); // add for fixing callback twice
 //
 //	}
 
