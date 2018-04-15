@@ -8,8 +8,8 @@ import com.cw.litenote.page.Page;
 import com.cw.litenote.R;
 import com.cw.litenote.db.DB_page;
 import com.cw.litenote.page.PageUi;
+import com.cw.litenote.tabs.TabsHost;
 import com.cw.litenote.util.Util;
-import com.cw.litenote.util.preferences.Pref;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -45,8 +45,7 @@ public class Note_addAudio extends FragmentActivity {
             (Long) savedInstanceState.getSerializable(DB_page.KEY_NOTE_ID);
         
         // get audio Uri in DB if instance is not null
-		dB = new DB_page(this, Pref.getPref_focusView_page_tableId(this));
-//        dB = Page.mDb_page;
+		dB = new DB_page(this, TabsHost.getCurrentPageTableId());
         if(savedInstanceState != null)
         {
 	        System.out.println("Note_addAudio / noteId =  " + noteId);

@@ -362,8 +362,8 @@ public class AudioPlayer_page
                                         String.format(Locale.US, "%02d", fileSec));
                             }
 
-                            scrollHighlightAudioItemToVisible(TabsHost.adapter.mFragmentList.get(TabsHost.selectedPos).mDndListView);
-                            TabsHost.adapter.mFragmentList.get(TabsHost.selectedPos).mItemAdapter.notifyDataSetChanged();
+                            scrollHighlightAudioItemToVisible(TabsHost.getCurrentPage().mDndListView);
+							TabsHost.getCurrentPage().mItemAdapter.notifyDataSetChanged();
                         }
 
 						if (AudioManager.mMediaPlayer != null)

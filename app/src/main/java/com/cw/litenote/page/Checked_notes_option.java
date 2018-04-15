@@ -44,7 +44,7 @@ public class Checked_notes_option {
     private FragmentActivity mAct;
 
     public Checked_notes_option(FragmentActivity act){
-        mDb_page = new DB_page(act, Pref.getPref_focusView_page_tableId(act));
+        mDb_page = new DB_page(act, TabsHost.getCurrentPageTableId());
         mAct = act;
     }
 
@@ -320,7 +320,7 @@ public class Checked_notes_option {
 
         TabsHost.reloadCurrentPage();
 
-        Page.showFooter(MainAct.mAct);
+        TabsHost.getCurrentPage().showFooter(MainAct.mAct);
     }
 
     /**
@@ -355,7 +355,7 @@ public class Checked_notes_option {
             AudioPlayer_page.prepareAudioInfo();
 
         TabsHost.reloadCurrentPage();
-        Page.showFooter(MainAct.mAct);
+        TabsHost.getCurrentPage().showFooter(MainAct.mAct);
     }
 
 
@@ -423,13 +423,13 @@ public class Checked_notes_option {
                     mDb_page.close();
 
                     TabsHost.reloadCurrentPage();
-                    Page.showFooter(MainAct.mAct);
+                    TabsHost.getCurrentPage().showFooter(MainAct.mAct);
                 }
                 else if(action == COPY_TO)
                 {
                     DB_page.setFocusPage_tableId(srcPageTableId);
                     TabsHost.reloadCurrentPage();
-                    Page.showFooter(MainAct.mAct);
+                    TabsHost.getCurrentPage().showFooter(MainAct.mAct);
                 }
                 dialog.dismiss();
             }
@@ -496,7 +496,7 @@ public class Checked_notes_option {
                                     UtilAudio.stopAudioIfNeeded();
 
                                 TabsHost.reloadCurrentPage();
-                                Page.showFooter(MainAct.mAct);
+                                TabsHost.getCurrentPage().showFooter(MainAct.mAct);
                             }
                         });
 
@@ -506,7 +506,7 @@ public class Checked_notes_option {
 
     private boolean noItemChecked()
     {
-        DB_page mDb_page = new DB_page(mAct, Pref.getPref_focusView_page_tableId(mAct));
+        DB_page mDb_page = new DB_page(mAct, TabsHost.getCurrentPageTableId());
         int checkedItemCount = mDb_page.getCheckedNotesCount();
         return (checkedItemCount == 0);
     }

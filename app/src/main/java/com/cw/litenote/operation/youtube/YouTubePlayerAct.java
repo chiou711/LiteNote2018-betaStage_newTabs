@@ -12,6 +12,7 @@ import com.cw.litenote.db.DB_page;
 import com.cw.litenote.note.Note;
 import com.cw.litenote.note.NoteUi;
 import com.cw.litenote.operation.audio.AudioManager;
+import com.cw.litenote.tabs.TabsHost;
 import com.cw.litenote.util.Util;
 import com.cw.litenote.util.preferences.Pref;
 import com.google.android.youtube.player.YouTubePlayerView;
@@ -164,7 +165,7 @@ public class YouTubePlayerAct extends YouTubeFailureRecoveryActivity
 
         youTubePlayer.setShowFullscreenButton(true);
 
-        DB_page db_page = new DB_page(act, Pref.getPref_focusView_page_tableId(act));
+        DB_page db_page = new DB_page(act, TabsHost.getCurrentPageTableId());
         String linkUri = db_page.getNoteLinkUri(NoteUi.getFocus_notePos(),true);
         System.out.println("YouTubePlayerAct / _prepare_play_YouTube / linkUri = " + linkUri);
 

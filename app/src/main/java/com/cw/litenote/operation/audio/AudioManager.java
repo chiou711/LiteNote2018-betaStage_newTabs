@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.cw.litenote.db.DB_page;
 import com.cw.litenote.main.MainAct;
+import com.cw.litenote.tabs.TabsHost;
 import com.cw.litenote.util.Util;
 
 public class AudioManager
@@ -156,7 +157,7 @@ public class AudioManager
 	// Update audio info
 	void updateAudioInfo()
 	{
-		DB_page db_page = new DB_page(MainAct.mAct,DB_page.getFocusPage_tableId());//Page.mDb_page;
+		DB_page db_page = new DB_page(MainAct.mAct, TabsHost.getCurrentPageTableId());
 		
 		db_page.open();
 	 	// update media info 

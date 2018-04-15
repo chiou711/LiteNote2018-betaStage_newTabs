@@ -535,14 +535,13 @@ public class MainAct extends FragmentActivity implements OnBackStackChangedListe
 
             builder = new AlertDialog.Builder(this);
 
-            //todo TDB
             do
             {
-//                Page.currPlayPosition++;
-//                if(Page.currPlayPosition >= Page.getNotesCountInPage(mAct))
-//                    Page.currPlayPosition = 0; //back to first index
-//
-//                nextLinkTitle = mMainUi.getYouTubeLink(this,Page.currPlayPosition);
+                TabsHost.getCurrentPage().currPlayPosition++;
+                if(Page.currPlayPosition >= TabsHost.getCurrentPage().getNotesCountInPage(mAct))
+                    TabsHost.getCurrentPage().currPlayPosition = 0; //back to first index
+
+                nextLinkTitle = mMainUi.getYouTubeLink(this,TabsHost.getCurrentPage().currPlayPosition);
             }
             while (!Util.isYouTubeLink(nextLinkTitle));
 
@@ -675,7 +674,7 @@ public class MainAct extends FragmentActivity implements OnBackStackChangedListe
                 int notesCnt = 0;
                 System.out.println(preStr + "DB_page.getFocusPage_tableId() = " + DB_page.getFocusPage_tableId());
 
-                DB_page dB_page = new DB_page(this,Pref.getPref_focusView_page_tableId(this));
+                DB_page dB_page = new DB_page(this,TabsHost.getCurrentPageTableId());
                 if(dB_page != null){
                     try {
                         notesCnt = dB_page.getNotesCount(true);
@@ -819,7 +818,7 @@ public class MainAct extends FragmentActivity implements OnBackStackChangedListe
     {
 		setMenuUiState(item.getItemId());
         DB_folder dB_folder = new DB_folder(this, Pref.getPref_focusView_folder_tableId(this));
-        DB_page dB_page = new DB_page(this,Pref.getPref_focusView_page_tableId(this));
+        DB_page dB_page = new DB_page(this,TabsHost.getCurrentPageTableId());
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 
@@ -959,7 +958,7 @@ public class MainAct extends FragmentActivity implements OnBackStackChangedListe
                     AudioManager.setAudioPlayMode(AudioManager.PAGE_PLAY_MODE);
                     AudioManager.mAudioPos = 0;
 
-                    Page page = TabsHost.adapter.mFragmentList.get(TabsHost.selectedPos);
+                    Page page = TabsHost.getCurrentPage();
                     TabsHost.page_audio = new Page_audio(mAct,page.mDndListView);
                     TabsHost.page_audio.initAudioBlock(mAct);
 

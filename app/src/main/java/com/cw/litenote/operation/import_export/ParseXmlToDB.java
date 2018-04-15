@@ -38,8 +38,7 @@ class ParseXmlToDB {
         int folderTableId = Pref.getPref_focusView_folder_tableId(mContext);
         mDb_folder = new DB_folder(MainAct.mAct, folderTableId);
 
-        int pageTableId = Pref.getPref_focusView_page_tableId(mContext);
-        mDb_page = new DB_page(MainAct.mAct,pageTableId);
+        mDb_page = new DB_page(MainAct.mAct,TabsHost.getCurrentPageTableId());
 
         isParsing = true;
     }

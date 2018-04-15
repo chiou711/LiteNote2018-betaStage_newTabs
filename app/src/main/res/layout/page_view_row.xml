@@ -127,7 +127,13 @@
     </LinearLayout>
     <!-- controls end -->
 
-
+    <LinearLayout
+        android:id="@+id/row_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="1dp"
+        android:background="@drawable/bg_gray_border"
+        android:orientation="vertical" >
     <!-- title start -->
     <TextView
         android:id="@+id/row_title"
@@ -146,12 +152,12 @@
     <!-- title end -->
 
     <!-- line -->
-    <View
-        android:id="@+id/row_divider"
-        android:layout_width="match_parent"
-        android:layout_height="1dip"
-        android:layout_margin="1dp"
-        android:background="#777777" />
+    <!--<View-->
+        <!--android:id="@+id/row_divider"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="1dip"-->
+        <!--android:layout_margin="1dp"-->
+        <!--android:background="#777777" />-->
 
     <!-- body start -->
    	<LinearLayout
@@ -184,6 +190,9 @@
         android:textSize="12sp" />
     </LinearLayout>
     <!-- body end -->
+
+    </LinearLayout>
+    <!-- text -->
 
     </LinearLayout>
     <!-- main end -->

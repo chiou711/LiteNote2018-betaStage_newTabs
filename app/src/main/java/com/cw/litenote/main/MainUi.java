@@ -17,6 +17,7 @@ import com.cw.litenote.db.DB_drawer;
 import com.cw.litenote.db.DB_folder;
 import com.cw.litenote.db.DB_page;
 import com.cw.litenote.page.Page;
+import com.cw.litenote.tabs.TabsHost;
 import com.cw.litenote.util.CustomWebView;
 import com.cw.litenote.util.Util;
 import com.cw.litenote.util.preferences.Pref;
@@ -71,7 +72,7 @@ public class MainUi {
             }
 
             System.out.println("MainUi / _addNote_IntentLink / path = " + path);
-            final DB_page dB_page = new DB_page(act,Pref.getPref_focusView_page_tableId(MainAct.mAct));
+            final DB_page dB_page = new DB_page(act, TabsHost.getCurrentPageTableId());
             dB_page.open();
             final long rowId = dB_page.insertNote("", "", "", "", path, "", 0, (long) 0);// add new note, get return row Id
             dB_page.close();
@@ -182,7 +183,7 @@ public class MainUi {
      */
     String getYouTubeLink(FragmentActivity act,int pos)
     {
-        DB_page dB_page = new DB_page(act, Pref.getPref_focusView_page_tableId(act));
+        DB_page dB_page = new DB_page(act, TabsHost.getCurrentPageTableId());
 
         dB_page.open();
         int count = dB_page.getNotesCount(false);

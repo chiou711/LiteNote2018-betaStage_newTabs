@@ -316,4 +316,14 @@ public class TabsHost extends AppCompatDialogFragment implements TabLayout.OnTab
         viewPager.setAdapter(adapter);
         viewPager.setCurrentItem(pagePos);
     }
+
+    public static Page getCurrentPage()
+    {
+        return TabsHost.adapter.mFragmentList.get(TabsHost.selectedPos);
+    }
+
+    public static int getCurrentPageTableId()
+    {
+        return currPageTableId;
+    }
 }

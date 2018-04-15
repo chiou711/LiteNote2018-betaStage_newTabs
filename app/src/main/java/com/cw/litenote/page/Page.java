@@ -10,7 +10,6 @@ import com.cw.litenote.folder.FolderUi;
 import com.cw.litenote.operation.audio.AudioManager;
 import com.cw.litenote.operation.audio.AudioPlayer_page;
 import com.cw.litenote.main.MainAct;
-import com.cw.litenote.note.Note;
 import com.cw.litenote.tabs.Page_audio;
 import com.cw.litenote.tabs.TabsHost;
 import com.cw.litenote.util.audio.UtilAudio;
@@ -39,7 +38,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.AbsListView;
 import android.widget.ProgressBar;
@@ -136,30 +134,6 @@ public class Page extends UilListViewBaseFragment
 //    	System.out.println("Page / _onActivityCreated / mStyle = " + mStyle);
 
 		UilCommon.init();
-
-		//listener: view note
-        mDndListView.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                System.out.println("Page / _onItemSelected / position = " + position);
-
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-
-		mDndListView.setOnItemClickListener(new OnItemClickListener()
-		{   @Override
-			public void onItemClick(AdapterView<?> arg0, View view, int position, long id)
-			{
-				System.out.println("Page / _setOnItemClickListener / position = " + position);
-				String linkUri = mDb_page.getNoteLinkUri(position,true);
-				openClickedItem(mAct,position,linkUri);
-			}
-		});
 
 		// listener: edit note
 		mDndListView.setOnItemLongClickListener(new OnItemLongClickListener()
@@ -263,49 +237,6 @@ public class Page extends UilListViewBaseFragment
         showFooter(mAct);
 	}
 
-
-
-	// Open clicked item of list view
-	static void openClickedItem(FragmentActivity mAct,int position, String linkStr)
-    {
-		if(en_dbg_msg) {
-			System.out.println("Page / _openClickedItem / position = " + position);
-			System.out.println("連結 Page / _openClickedItem / linkStr = " + linkStr);
-		}
-
-		currPlayPosition = position;
-//        DB_page mDb_page = new DB_page(mAct, DB_page.getFocusPage_tableId());
-//        mDb_page.open();
-//        int count = mDb_page.getNotesCount(false);
-//        String linkStr = mDb_page.getNoteLinkUri(position,false);
-//        mDb_page.close();
-
-//        if(position < count)
-        {
-
-            SharedPreferences pref_open_youtube;
-            pref_open_youtube = mAct.getSharedPreferences("show_note_attribute", 0);
-
-            if( Util.isYouTubeLink(linkStr) &&
-                pref_open_youtube.getString("KEY_VIEW_NOTE_LAUNCH_YOUTUBE", "no")
-						         .equalsIgnoreCase("yes") )
-            {
-                AudioManager.stopAudioPlayer();
-
-                // apply native YouTube
-                Util.openLink_YouTube(mAct, linkStr);
-            }
-            else
-            {
-                // apply Note class
-                Intent intent;
-                intent = new Intent(mAct, Note.class);
-                intent.putExtra("POSITION", position);
-                mAct.startActivity(intent);
-            }
-        }
-    }
-
     // Open long clicked item of list view
     void openLongClickedItem(int position)
     {
@@ -370,7 +301,7 @@ public class Page extends UilListViewBaseFragment
         	int oriStartPos = startPosition;
         	int oriEndPos = endPosition;
 
-            mDb_page = new DB_page(mAct, TabsHost.currPageTableId);
+            mDb_page = new DB_page(mAct, TabsHost.getCurrentPageTableId());
 			if(startPosition >= mDb_page.getNotesCount(true)) // avoid footer error
 				return;
 
@@ -724,7 +655,7 @@ public class Page extends UilListViewBaseFragment
 
 			AudioManager.setAudioPlayMode(AudioManager.PAGE_PLAY_MODE);
 
-			mDb_page = new DB_page(mAct, TabsHost.currPageTableId);
+			mDb_page = new DB_page(mAct, TabsHost.getCurrentPageTableId());
 
 			int notesCount = mDb_page.getNotesCount(true);
             if(position >= notesCount) //end of list
@@ -807,7 +738,7 @@ public class Page extends UilListViewBaseFragment
     static TextView mFooterMessage;
 
 	// set footer
-    public static void showFooter(FragmentActivity mAct)
+    public void showFooter(FragmentActivity mAct)
     {
 		if(en_dbg_msg)
 			System.out.println("Page / _showFooter ");
@@ -823,9 +754,9 @@ public class Page extends UilListViewBaseFragment
     }
 
 	// get footer message of list view
-    static String getFooterMessage(FragmentActivity mAct)
+    String getFooterMessage(FragmentActivity mAct)
     {
-        DB_page mDb_page = new DB_page(mAct, DB_page.getFocusPage_tableId());
+        DB_page mDb_page = new DB_page(mAct, page_tableId);
         return mAct.getResources().getText(R.string.footer_checked).toString() +
                "/" +
                mAct.getResources().getText(R.string.footer_total).toString() +
@@ -852,9 +783,9 @@ public class Page extends UilListViewBaseFragment
 		}
 	}
 
-    static public int getNotesCountInPage(FragmentActivity mAct)
+    public int getNotesCountInPage(FragmentActivity mAct)
     {
-        DB_page mDb_page = new DB_page(mAct, DB_page.getFocusPage_tableId());
+        DB_page mDb_page = new DB_page(mAct,page_tableId );
         mDb_page.open();
         int count = mDb_page.getNotesCount(false);
         mDb_page.close();

@@ -2,10 +2,12 @@ package com.cw.litenote.page;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
@@ -24,8 +26,10 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.cw.litenote.R;
-import com.cw.litenote.main.MainAct;
+import com.cw.litenote.db.DB_page;
+import com.cw.litenote.note.Note;
 import com.cw.litenote.operation.audio.AudioManager;
+import com.cw.litenote.tabs.TabsHost;
 import com.cw.litenote.util.ColorSet;
 import com.cw.litenote.util.CustomWebView;
 import com.cw.litenote.util.Util;
@@ -175,7 +179,7 @@ public class PageAdapter extends SimpleDragSortCursorAdapter // DragSortCursorAd
 			holder.imageDragger = (ImageView) convertView.findViewById(R.id.img_dragger);
 			holder.progressBar = (ProgressBar) convertView.findViewById(R.id.thumb_progress);
 			holder.textTitle = (TextView) convertView.findViewById(R.id.row_title);
-			holder.rowDivider = convertView.findViewById(R.id.row_divider);
+//			holder.rowDivider = convertView.findViewById(R.id.row_divider);
 			holder.textBodyBlock = convertView.findViewById(R.id.row_body);
 			holder.textBody = (TextView) convertView.findViewById(R.id.row_body_text_view);
 			holder.textTime = (TextView) convertView.findViewById(R.id.row_time);
@@ -187,6 +191,47 @@ public class PageAdapter extends SimpleDragSortCursorAdapter // DragSortCursorAd
 //			System.out.println("PageAdapter / _getView / convertView != null");
 			holder = (ViewHolder) convertView.getTag();
 		}
+
+        // on note view
+        convertView.findViewById(R.id.row_text).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                TabsHost.getCurrentPage().currPlayPosition = position;
+                DB_page mDb_page = new DB_page(mAct,TabsHost.getCurrentPageTableId());
+                int count = mDb_page.getNotesCount(true);
+                if(position < count)
+                {
+                    // apply Note class
+                    Intent intent;
+                    intent = new Intent(mAct, Note.class);
+                    intent.putExtra("POSITION", position);
+                    mAct.startActivity(intent);
+                }
+            }
+        });
+
+        // on photo
+        convertView.findViewById(R.id.row_thumb_nail).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                TabsHost.getCurrentPage().currPlayPosition = position;
+                DB_page mDb_page = new DB_page(mAct,TabsHost.getCurrentPageTableId());
+                mDb_page.open();
+                int count = mDb_page.getNotesCount(false);
+                String linkStr = mDb_page.getNoteLinkUri(position,false);
+                mDb_page.close();
+
+                if(position < count)
+                {
+                    if(Util.isYouTubeLink(linkStr)) {
+                        AudioManager.stopAudioPlayer();
+
+                        // apply native YouTube
+                        Util.openLink_YouTube(mAct, linkStr);
+                    }
+                }
+            }
+        });
 
 		// show row Id
 		holder.rowId.setText(String.valueOf(position+1));
@@ -396,7 +441,9 @@ public class PageAdapter extends SimpleDragSortCursorAdapter // DragSortCursorAd
                     if( (event.getAction() == MotionEvent.ACTION_POINTER_UP) ||
                         (event.getAction() == MotionEvent.ACTION_UP)            )
                     {
-                        Page.openClickedItem(MainAct.mAct, position, linkUri);
+                        //todo TBD
+                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(linkUri));
+                        mAct.startActivity(intent);
                     }
 					return true;
 				}
@@ -460,7 +507,7 @@ public class PageAdapter extends SimpleDragSortCursorAdapter // DragSortCursorAd
 			holder.textBody.setText(strBody);
 //			holder.textBody.setTextSize(12);
 
-			holder.rowDivider.setVisibility(View.VISIBLE);
+//			holder.rowDivider.setVisibility(View.VISIBLE);
 			holder.textBody.setTextColor(ColorSet.mText_ColorArray[style]);
 			// time stamp
             holder.textTime.setText(Util.getTimeString(timeCreated));
@@ -468,8 +515,8 @@ public class PageAdapter extends SimpleDragSortCursorAdapter // DragSortCursorAd
 	  	}
 	  	else
 	  	{
-			holder.rowDivider.setVisibility(View.GONE);
-	  		holder.textBodyBlock.setVisibility(View.GONE);
+//			holder.rowDivider.setVisibility(View.INVISIBLE);
+	  		holder.textBodyBlock.setVisibility(View.INVISIBLE);
 	  	}
 
 
@@ -492,19 +539,6 @@ public class PageAdapter extends SimpleDragSortCursorAdapter // DragSortCursorAd
 					R.drawable.btn_check_off_holo_light :
 					R.drawable.btn_check_off_holo_dark);
 		}
-
-		//todo TBD
-		///
-//		convertView.setOnClickListener(new View.OnClickListener() {
-//			@Override
-//			public void onClick(View v) {
-//
-//				cursor.moveToPosition(position);
-//				String linkUri = cursor.getString(cursor.getColumnIndex(KEY_NOTE_LINK_URI));
-//				Page.openClickedItem(mAct,position,linkUri);
-//			}
-//		});
-		///
 
 		return convertView;
 	}

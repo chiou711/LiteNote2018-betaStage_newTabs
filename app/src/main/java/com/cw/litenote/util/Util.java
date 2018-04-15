@@ -229,8 +229,7 @@ public class Util
     	mDbFolder = new DB_folder(mContext, folderTableId);
 
     	// page
-        int pageTableId = Pref.getPref_focusView_page_tableId(mContext);
-		mDbPage = new DB_page(mContext,pageTableId);
+		mDbPage = new DB_page(mContext,TabsHost.getCurrentPageTableId());
 
     	int tabCount = mDbFolder.getPagesCount(true);
     	for(int i=0;i<tabCount;i++)
@@ -532,7 +531,7 @@ public class Util
 	        for(int i=0;i< noteIdArray.size();i++)
 	        {
 				String strTitleEdit;
-				DB_page db_page = new DB_page(MainAct.mAct, DB_page.getFocusPage_tableId());
+				DB_page db_page = new DB_page(MainAct.mAct,TabsHost.getCurrentPageTableId());
                 db_page.open();
 		    	Cursor cursorNote = db_page.queryNote(noteIdArray.get(i));
 		        strTitleEdit = cursorNote.getString(

@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.cw.litenote.R;
 import com.cw.litenote.db.DB_page;
 import com.cw.litenote.operation.mail.MailNotes;
+import com.cw.litenote.tabs.TabsHost;
 import com.cw.litenote.util.Util;
 import com.cw.litenote.util.preferences.Pref;
 
@@ -124,7 +125,7 @@ public class View_note_option {
 				String sentString = Util.getStringWithXmlTag(noteIdArray);
 				sentString = Util.addXmlTag(sentString);
 
-                DB_page dB_page = new DB_page(act, Pref.getPref_focusView_page_tableId(act));
+                DB_page dB_page = new DB_page(act, TabsHost.getCurrentPageTableId());
 				String picFile = dB_page.getNotePictureUri_byId(noteId);
 				System.out.println("-> picFile = " + picFile);
 				String[] picFileArray = null;

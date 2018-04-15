@@ -7,6 +7,7 @@ import com.cw.litenote.main.MainAct;
 import com.cw.litenote.operation.audio.AudioManager;
 import com.cw.litenote.page.Page;
 import com.cw.litenote.page.PageUi;
+import com.cw.litenote.tabs.TabsHost;
 import com.cw.litenote.util.CustomWebView;
 import com.cw.litenote.util.DeleteFileAlarmReceiver;
 import com.cw.litenote.util.audio.UtilAudio;
@@ -149,7 +150,7 @@ public class Note extends FragmentActivity
 		UilCommon.init();
 
 		// DB
-		mDb_page = new DB_page(act, Pref.getPref_focusView_page_tableId(act));
+		mDb_page = new DB_page(act, TabsHost.getCurrentPageTableId());
 
 		// Instantiate a ViewPager and a PagerAdapter.
 		mPager = (ViewPager) findViewById(R.id.tabs_pager);
