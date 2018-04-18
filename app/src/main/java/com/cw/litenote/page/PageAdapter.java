@@ -15,8 +15,6 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -27,8 +25,10 @@ import android.widget.TextView;
 
 import com.cw.litenote.R;
 import com.cw.litenote.db.DB_page;
+import com.cw.litenote.main.MainAct;
 import com.cw.litenote.note.Note;
 import com.cw.litenote.operation.audio.AudioManager;
+import com.cw.litenote.operation.audio.AudioPlayer_page;
 import com.cw.litenote.tabs.TabsHost;
 import com.cw.litenote.util.ColorSet;
 import com.cw.litenote.util.CustomWebView;
@@ -58,13 +58,15 @@ public class PageAdapter extends SimpleDragSortCursorAdapter // DragSortCursorAd
     int count;
 	String linkUri;
 	int style;
+	int page_pos;
 
-	PageAdapter(Context context, int layout, Cursor c,
+	public PageAdapter(Context context, int layout, Cursor c,
 				String[] from, int[] to, int page_position)
 	{
 		super(context, layout, c, from, to, page_position);
 		mAct = (FragmentActivity) context;
 		cursor = c;
+        page_pos = page_position;
 		this.style = Util.getCurrentPageStyle(page_position);
 
 		if(c != null)
@@ -233,6 +235,30 @@ public class PageAdapter extends SimpleDragSortCursorAdapter // DragSortCursorAd
             }
         });
 
+        // on mark
+        holder.imageCheck.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                System.out.println("PageAdapter / _getView / _onClick");
+                // toggle marking
+				int markingNow = toggleNoteMarking(MainAct.mAct,position);
+
+                // Stop if unmarked item is at playing state
+                if(AudioManager.mAudioPos == position) {
+                    UtilAudio.stopAudioIfNeeded();
+                }
+
+                TabsHost.reloadCurrentPage();
+//				TabsHost.getPage_rowItemView(position); //??? use this will not update item view, what else?
+				TabsHost.getCurrentPage().showFooter(MainAct.mAct);
+
+                // update audio info
+                if(PageUi.isSamePageTable())
+                    AudioPlayer_page.prepareAudioInfo();
+            }
+        });
+
 		// show row Id
 		holder.rowId.setText(String.valueOf(position+1));
 		holder.rowId.setTextColor(ColorSet.mText_ColorArray[style]);
@@ -245,7 +271,8 @@ public class PageAdapter extends SimpleDragSortCursorAdapter // DragSortCursorAd
         Long timeCreated = null;
         linkUri = null;
         int marking = 0;
-		if(cursor.moveToPosition(position)) {
+
+        if(cursor.moveToPosition(position)) {
             strTitle = cursor.getString(cursor.getColumnIndexOrThrow(KEY_NOTE_TITLE));
             strBody = cursor.getString(cursor.getColumnIndexOrThrow(KEY_NOTE_BODY));
             pictureUri = cursor.getString(cursor.getColumnIndexOrThrow(KEY_NOTE_PICTURE_URI));
@@ -305,11 +332,10 @@ public class PageAdapter extends SimpleDragSortCursorAdapter // DragSortCursorAd
 			(position == AudioManager.mAudioPos)  &&
 //			(AudioManager.mMediaPlayer != null) &&
 			(AudioManager.getPlayerState() != AudioManager.PLAYER_AT_STOP) &&
-			(AudioManager.getAudioPlayMode() == AudioManager.PAGE_PLAY_MODE)
-				)
+			(AudioManager.getAudioPlayMode() == AudioManager.PAGE_PLAY_MODE) 	)
 		{
-//			System.out.println("PageAdapter / _getView / show highlight ");
-			Page.mHighlightPosition = position;
+//            System.out.println("PageAdapter / _getView / show highlight / position = " + position);
+			TabsHost.getCurrentPage().mHighlightPosition = position;
 			holder.audioBlock.setBackgroundResource(R.drawable.bg_highlight_border);
 			holder.audioBlock.setVisibility(View.VISIBLE);
 
@@ -542,5 +568,42 @@ public class PageAdapter extends SimpleDragSortCursorAdapter // DragSortCursorAd
 
 		return convertView;
 	}
+
+    // toggle mark of note
+    public static int toggleNoteMarking(FragmentActivity mAct,int position)
+    {
+        int marking = 0;
+		DB_page mDb_page = new DB_page(mAct,TabsHost.getCurrentPageTableId());
+        mDb_page.open();
+        int count = mDb_page.getNotesCount(false);
+        if(position >= count) //end of list
+        {
+            mDb_page.close();
+            return marking;
+        }
+
+        String strNote = mDb_page.getNoteTitle(position,false);
+        String strPictureUri = mDb_page.getNotePictureUri(position,false);
+        String strAudioUri = mDb_page.getNoteAudioUri(position,false);
+        String strLinkUri = mDb_page.getNoteLinkUri(position,false);
+        String strNoteBody = mDb_page.getNoteBody(position,false);
+        Long idNote =  mDb_page.getNoteId(position,false);
+
+        // toggle the marking
+        if(mDb_page.getNoteMarking(position,false) == 0)
+        {
+            mDb_page.updateNote(idNote, strNote, strPictureUri, strAudioUri, "", strLinkUri, strNoteBody, 1, 0, false);
+            marking = 1;
+        }
+        else
+        {
+            mDb_page.updateNote(idNote, strNote, strPictureUri, strAudioUri, "", strLinkUri, strNoteBody, 0, 0, false);
+            marking = 0;
+        }
+        mDb_page.close();
+
+        System.out.println("Page / _toggleNoteMarking / position = " + position + ", marking = " + mDb_page.getNoteMarking(position,true));
+        return  marking;
+    }
 
 }

@@ -224,13 +224,12 @@ public class Page extends UilListViewBaseFragment
 				to,
 				page_pos
 		);
+		mDb_page.close();// set close here, if cursor is used in adapter
 
 		listView.setAdapter(mItemAdapter);
-		mDb_page.close();// set close here, if cursor is used in adapter
 
         listView.setDropListener(onDrop);
         listView.setDragListener(onDrag);
-        listView.setMarkListener(onMark);
         listView.setAudioListener(onAudio);
         listView.setOnScrollListener(onScroll);
 
@@ -280,7 +279,7 @@ public class Page extends UilListViewBaseFragment
 	}
 
     // list view listener: on drag
-    private DragSortListView.DragListener onDrag = new DragSortListView.DragListener()
+    public DragSortListView.DragListener onDrag = new DragSortListView.DragListener()
     {
                 @Override
                 public void drag(int startPosition, int endPosition) {
@@ -293,7 +292,7 @@ public class Page extends UilListViewBaseFragment
     };
 
     // list view listener: on drop
-    private DragSortListView.DropListener onDrop = new DragSortListView.DropListener()
+    public DragSortListView.DropListener onDrop = new DragSortListView.DropListener()
     {
         @Override
         public void drop(int startPosition, int endPosition) {
@@ -383,6 +382,7 @@ public class Page extends UilListViewBaseFragment
         controller.setMarkEnabled(true);
         controller.setClickMarkId(R.id.img_check);
         controller.setMarkMode(DragSortController.ON_DOWN);
+
         // audio
         controller.setAudioEnabled(true);
 //        controller.setClickAudioId(R.id.img_audio);
@@ -400,7 +400,8 @@ public class Page extends UilListViewBaseFragment
         super.onResume();
 
         if( (AudioManager.getPlayerState() != AudioManager.PLAYER_AT_STOP) &&
-            (page_tableId == TabsHost.currPageTableId) ){
+            (page_tableId == TabsHost.currPageTableId) )
+        {
             TabsHost.resume_listView_vScroll(mDndListView);
         }
 
@@ -457,7 +458,7 @@ public class Page extends UilListViewBaseFragment
 //	}
 
 
-    OnScrollListener onScroll = new OnScrollListener() {
+    public OnScrollListener onScroll = new OnScrollListener() {
 
 		@Override
 		public void onScrollStateChanged(AbsListView view, int scrollState) {
@@ -557,54 +558,62 @@ public class Page extends UilListViewBaseFragment
 	}
 
     // list view listener: on mark
-    private DragSortListView.MarkListener onMark =
-    new DragSortListView.MarkListener()
-	{   @Override
-        public void mark(int position)
-		{
-			if(en_dbg_msg)
-				System.out.println("Page / _onMark");
-
-            // toggle marking
-			markingNow = toggleNoteMarking(MainAct.mAct,position);
-
-            // Stop if unmarked item is at playing state
-            if(AudioManager.mAudioPos == position) {
-				UtilAudio.stopAudioIfNeeded();
-			}
-
-			// update list view: just update selection to avoid scrolling back to top
-//			int firstVisiblePosition = mDndListView.getFirstVisiblePosition();
-//			int lastVisiblePosition = mDndListView.getLastVisiblePosition();
-//			if ((position >= firstVisiblePosition) && (position <= lastVisiblePosition) )
-//			{
-//				View view = mDndListView.getChildAt(position - firstVisiblePosition).findViewById(R.id.img_check);
-//				if(markingNow == 1)
-//				{
-//					view.setBackgroundResource(Page.mStyle % 2 == 1 ?
-//							R.drawable.btn_check_on_holo_light :
-//							R.drawable.btn_check_on_holo_dark);
-//				}
-//				else
-//				{
-//					view.setBackgroundResource(Page.mStyle % 2 == 1 ?
-//							R.drawable.btn_check_off_holo_light :
-//							R.drawable.btn_check_off_holo_dark);
-//				}
+//    private DragSortListView.MarkListener onMark =
+//    new DragSortListView.MarkListener()
+//	{   @Override
+//        public void mark(int position)
+//		{
+//			if(en_dbg_msg)
+//				System.out.println("Page / _onMark");
+//
+//            // toggle marking
+//			markingNow = toggleNoteMarking(MainAct.mAct,position);
+//
+//            // Stop if unmarked item is at playing state
+//            if(AudioManager.mAudioPos == position) {
+//				UtilAudio.stopAudioIfNeeded();
 //			}
 //
-//			mDndListView.setMarkListener(onMark);
-
-            TabsHost.reloadCurrentPage();
-
-			// update footer
-            showFooter(mAct);
-
-			// update audio info
-            if(PageUi.isSamePageTable())
-            	AudioPlayer_page.prepareAudioInfo();
-        }
-    };
+//			// update list view: just update selection to avoid scrolling back to top
+////			int firstVisiblePosition = mDndListView.getFirstVisiblePosition();
+////			int lastVisiblePosition = mDndListView.getLastVisiblePosition();
+////			if ((position >= firstVisiblePosition) && (position <= lastVisiblePosition) )
+////			{
+////				View view = mDndListView.getChildAt(position - firstVisiblePosition).findViewById(R.id.img_check);
+////				if(markingNow == 1)
+////				{
+////					view.setBackgroundResource(Page.mStyle % 2 == 1 ?
+////							R.drawable.btn_check_on_holo_light :
+////							R.drawable.btn_check_on_holo_dark);
+////				}
+////				else
+////				{
+////					view.setBackgroundResource(Page.mStyle % 2 == 1 ?
+////							R.drawable.btn_check_off_holo_light :
+////							R.drawable.btn_check_off_holo_dark);
+////				}
+////			}
+////
+//
+////            TabsHost.reloadCurrentPage();
+//
+//            TabsHost.getPage_rowItemView(position);
+//            mDndListView.setDropListener(onDrop);
+//            mDndListView.setDragListener(onDrag);
+//            mDndListView.setMarkListener(onMark);
+//            mDndListView.setAudioListener(onAudio);
+//            mDndListView.setOnScrollListener(onScroll);
+//
+//            TabsHost.adapter.notifyDataSetChanged();
+//
+//			// update footer
+//            showFooter(mAct);
+//
+//			// update audio info
+//            if(PageUi.isSamePageTable())
+//            	AudioPlayer_page.prepareAudioInfo();
+//        }
+//    };
 
 	// toggle mark of note
 	public static int toggleNoteMarking(FragmentActivity mAct,int position)
@@ -646,7 +655,7 @@ public class Page extends UilListViewBaseFragment
 
 
     // list view listener: on audio
-    private DragSortListView.AudioListener onAudio = new DragSortListView.AudioListener()
+    public DragSortListView.AudioListener onAudio = new DragSortListView.AudioListener()
 	{   @Override
         public void audio(int position)
 		{
@@ -731,11 +740,13 @@ public class Page extends UilListViewBaseFragment
 //                        mDndListView.getAdapter().getView(i, view, mDndListView);
 //                    }
 
-            mItemAdapter.notifyDataSetChanged();
+//            mItemAdapter.notifyDataSetChanged();
+            TabsHost.getPage_rowItemView(position);
+
         }
 	};
 
-    static TextView mFooterMessage;
+    TextView mFooterMessage;
 
 	// set footer
     public void showFooter(FragmentActivity mAct)
@@ -831,6 +842,5 @@ public class Page extends UilListViewBaseFragment
 //			}
 //		}
 //	}
-
 
 }

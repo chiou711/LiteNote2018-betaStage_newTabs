@@ -131,6 +131,7 @@ public class TabsHost extends AppCompatDialogFragment implements TabLayout.OnTab
 
             System.out.println("TabsHost / _addPages / page_tableId = " + pageTableId);
             adapter.addFragment(new Page(i,pageTableId));
+
         }
     }
 
@@ -173,9 +174,6 @@ public class TabsHost extends AppCompatDialogFragment implements TabLayout.OnTab
                 audioPlayer_page.scrollHighlightAudioItemToVisible(listView);
             }
         }
-
-        if(page.mItemAdapter != null)
-            page.mItemAdapter.notifyDataSetChanged();
 
         // set pager item
         viewPager.setCurrentItem(selectedPos);
@@ -319,11 +317,19 @@ public class TabsHost extends AppCompatDialogFragment implements TabLayout.OnTab
 
     public static Page getCurrentPage()
     {
-        return TabsHost.adapter.mFragmentList.get(TabsHost.selectedPos);
+        return adapter.mFragmentList.get(selectedPos);
     }
 
     public static int getCurrentPageTableId()
     {
         return currPageTableId;
+    }
+
+
+    public static void getPage_rowItemView(int rowPos)
+    {
+        DragSortListView listView = getCurrentPage().mDndListView;
+        View convertView = listView.getChildAt(rowPos);
+        listView.getAdapter().getView(rowPos, convertView, listView);
     }
 }
