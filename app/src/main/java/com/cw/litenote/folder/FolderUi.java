@@ -615,7 +615,7 @@ public class FolderUi
         for(int folderPos=0; folderPos<foldersCount; folderPos++)
         {
             String folderTitle = dB_drawer.getFolderTitle(folderPos,true);
-            FolderUi.setFocus_folderPos(folderPos);
+            setFocus_folderPos(folderPos);
 
             // list all folder tables
             int folderTableId = dB_drawer.getFolderTableId(folderPos,true);

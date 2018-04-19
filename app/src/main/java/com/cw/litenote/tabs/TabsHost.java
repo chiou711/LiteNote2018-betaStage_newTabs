@@ -28,6 +28,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.cw.litenote.R;
+import com.cw.litenote.folder.FolderUi;
 import com.cw.litenote.main.MainAct;
 import com.cw.litenote.operation.audio.AudioManager;
 import com.cw.litenote.operation.audio.AudioPlayer_page;
@@ -177,22 +178,23 @@ public class TabsHost extends AppCompatDialogFragment implements TabLayout.OnTab
         if((page != null) && (page.mItemAdapter != null))
             page.mItemAdapter.notifyDataSetChanged();
 
-        // set pager item
-        mViewPager.setCurrentItem(mFocusTabPos);
-
         // set tab audio icon when audio playing
-        if ( (AudioManager.getPlayerState() != AudioManager.PLAYER_AT_STOP) &&
+        if ( (MainAct.mPlaying_folderPos == FolderUi.getFocus_folderPos()) &&
+             (AudioManager.getPlayerState() != AudioManager.PLAYER_AT_STOP) &&
                 (tab.getPosition() == audioPlayTabPos) )
             tab.setIcon(R.drawable.ic_audio);
         else
             tab.setIcon(null);
 
+        // set pager item
+        mViewPager.setCurrentItem(mFocusTabPos);
 
     }
 
     @Override
     public void onTabUnselected(TabLayout.Tab tab) {
-        if ( (AudioManager.getPlayerState() != AudioManager.PLAYER_AT_STOP) &&
+        if ( (MainAct.mPlaying_folderPos == FolderUi.getFocus_folderPos()) &&
+             (AudioManager.getPlayerState() != AudioManager.PLAYER_AT_STOP) &&
              (tab.getPosition() == audioPlayTabPos) )
             tab.setIcon(R.drawable.ic_audio);
         else
@@ -225,7 +227,8 @@ public class TabsHost extends AppCompatDialogFragment implements TabLayout.OnTab
         System.out.println("TabsHost / _onResume / mFocusTabPos = " + mFocusTabPos);
 
         // set audio icon after Key Protect
-        if ( (AudioManager.getPlayerState() != AudioManager.PLAYER_AT_STOP)  )
+        if ( (MainAct.mPlaying_folderPos == FolderUi.getFocus_folderPos()) &&
+             (AudioManager.getPlayerState() != AudioManager.PLAYER_AT_STOP)   )
             mTabLayout.getTabAt(audioPlayTabPos).setIcon(R.drawable.ic_audio);
         else
             mTabLayout.getTabAt(audioPlayTabPos).setIcon(null);
@@ -329,5 +332,6 @@ public class TabsHost extends AppCompatDialogFragment implements TabLayout.OnTab
         DragSortListView listView = getCurrentPage().drag_listView;
         View convertView = listView.getChildAt(rowPos);
         listView.getAdapter().getView(rowPos, convertView, listView);
+        mTabsPagerAdapter.notifyDataSetChanged();
     }
 }
