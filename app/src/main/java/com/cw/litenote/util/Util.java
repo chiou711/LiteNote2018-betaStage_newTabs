@@ -335,7 +335,7 @@ public class Util
 		mDbFolder = new DB_folder(MainAct.mAct, Pref.getPref_focusView_folder_tableId(MainAct.mAct));
 	    ListView listView = ((AlertDialog) dialogInterface).getListView();
 	    final ListAdapter originalAdapter = listView.getAdapter();
-	    final int style = Util.getCurrentPageStyle(TabsHost.selectedPos);
+	    final int style = Util.getCurrentPageStyle(TabsHost.mFocusTabPos);
         CheckedTextView textViewDefault = new CheckedTextView(mAct) ;
         defaultBgClr = textViewDefault.getDrawingCacheBackgroundColor();
         defaultTextClr = textViewDefault.getCurrentTextColor();
@@ -367,7 +367,7 @@ public class Util
 	            View view = originalAdapter.getView(position, convertView, parent);
 	            //set CheckedTextView in order to change button color
 	            CheckedTextView textView = (CheckedTextView)view;
-	            if(mDbFolder.getPageTableId(position,true) == TabsHost.currPageTableId)
+	            if(mDbFolder.getPageTableId(position,true) == TabsHost.mFocusPageTableId)
 	            {
 		            textView.setTypeface(null, Typeface.BOLD_ITALIC);
 		            textView.setBackgroundColor(ColorSet.mBG_ColorArray[style]);

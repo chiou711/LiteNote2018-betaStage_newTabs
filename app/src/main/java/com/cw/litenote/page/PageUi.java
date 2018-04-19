@@ -82,7 +82,7 @@ public class PageUi
 		// set current selection
 		for(int i=0;i< Util.getStyleCount();i++)
 		{
-			if(Util.getCurrentPageStyle(TabsHost.selectedPos) == i)
+			if(Util.getCurrentPageStyle(TabsHost.mFocusTabPos) == i)
 			{
 				RadioButton button = (RadioButton) RG_view.getChildAt(i);
 		    	if(i%2 == 0)
@@ -105,7 +105,7 @@ public class PageUi
 			public void onCheckedChanged(RadioGroup radioGroup, int id) {
 				DB_folder db = new DB_folder(MainAct.mAct,DB_folder.getFocusFolder_tableId());
 				int style = radioGroup.indexOfChild(radioGroup.findViewById(id));
-                int pos = TabsHost.selectedPos;
+                int pos = TabsHost.mFocusTabPos;
 				db.updatePage(db.getPageId(pos, true),
 							  db.getPageTitle(pos, true),
 							  db.getPageTableId(pos, true),
@@ -527,11 +527,11 @@ public class PageUi
 
         FolderUi.startTabsHostRun();
 
-		if(TabsHost.tabLayout != null) {
-			TabsHost.tabLayout.post(new Runnable() {
+		if(TabsHost.mTabLayout != null) {
+			TabsHost.mTabLayout.post(new Runnable() {
 				@Override
 				public void run() {
-					TabsHost.tabLayout.scrollTo(scrollX, 0);
+					TabsHost.mTabLayout.scrollTo(scrollX, 0);
 					Pref.setPref_focusView_scrollX_byFolderTableId(act, scrollX);
 				}
 			});
@@ -569,12 +569,12 @@ public class PageUi
 		// commit: scroll X
         FolderUi.startTabsHostRun();
 
-        if(TabsHost.tabLayout != null){
-            TabsHost.tabLayout.post(new Runnable() {
+        if(TabsHost.mTabLayout != null){
+            TabsHost.mTabLayout.post(new Runnable() {
                 @Override
                 public void run() {
                     System.out.println("PageUi / _insertPage_leftmost / _Runnable / scrollX = " + scrollX);
-                    TabsHost.tabLayout.scrollTo(scrollX, 0);
+                    TabsHost.mTabLayout.scrollTo(scrollX, 0);
                     Pref.setPref_focusView_scrollX_byFolderTableId(act, scrollX);
                 }
             });
@@ -611,9 +611,9 @@ public class PageUi
 		dbFolder.close();
 	}
 
-    public static boolean isSamePageTable()
+    public static boolean isAudioPlayingPage()
     {
-	    return ( (MainAct.mPlaying_pageTableId == TabsHost.currPageTableId)&&//mNow_pageTableId) &&
+	    return ( (MainAct.mPlaying_pageTableId == TabsHost.mFocusPageTableId)&&//mNow_pageTableId) &&
 			     (MainAct.mPlaying_pagePos == getFocus_pagePos()) &&
 	     	     (MainAct.mPlaying_folderPos == FolderUi.getFocus_folderPos())  );
     }

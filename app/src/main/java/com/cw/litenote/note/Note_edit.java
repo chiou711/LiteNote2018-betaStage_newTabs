@@ -151,7 +151,7 @@ public class Note_edit extends Activity
 								note_common.deleteNote(noteId);
 
 
-								if(PageUi.isSamePageTable())
+								if(PageUi.isAudioPlayingPage())
 									AudioPlayer_page.prepareAudioInfo();
 
 								// Stop Play/Pause if current edit item is played and is not at Stop state

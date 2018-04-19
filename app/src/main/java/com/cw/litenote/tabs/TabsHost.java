@@ -40,16 +40,14 @@ import com.mobeta.android.dslv.DragSortListView;
 
 public class TabsHost extends AppCompatDialogFragment implements TabLayout.OnTabSelectedListener
 {
-    public static TabLayout tabLayout;
-    public static ViewPager viewPager;
-    public static TabsPagerAdapter adapter;
-    public static int currPageTableId;
+    public static TabLayout mTabLayout;
+    public static ViewPager mViewPager;
+    public static TabsPagerAdapter mTabsPagerAdapter;
+    public static int mFocusPageTableId;
+    public static int mFocusTabPos;
 
-    public static int selectedPos;
-    int reSelectedPos;
-    int unSelectedPos;
     public static int lastPageTableId;
-    public static int audioPlayingPos;
+    public static int audioPlayTabPos;
 
     public static int firstPos_pageId;
 
@@ -78,32 +76,32 @@ public class TabsHost extends AppCompatDialogFragment implements TabLayout.OnTab
 //        rootView.setSupportActionBar(toolbar);
 
         // view pager
-        viewPager = (ViewPager) rootView.findViewById(R.id.tabs_pager);
+        mViewPager = (ViewPager) rootView.findViewById(R.id.tabs_pager);
 
-        // adapter
-        adapter = new TabsPagerAdapter(getActivity(),getActivity().getSupportFragmentManager());
+        // mTabsPagerAdapter
+        mTabsPagerAdapter = new TabsPagerAdapter(getActivity(),getActivity().getSupportFragmentManager());
 
-        // add pages to adapter
-        addPages(adapter);
+        // add pages to mTabsPagerAdapter
+        addPages(mTabsPagerAdapter);
 
-        // set adapter of view pager
-        viewPager.setAdapter(adapter);
+        // set mTabsPagerAdapter of view pager
+        mViewPager.setAdapter(mTabsPagerAdapter);
 
         // set tab layout
-        tabLayout = (TabLayout) rootView.findViewById(R.id.tabs);
-        tabLayout.setupWithViewPager(viewPager);
-        tabLayout.setOnTabSelectedListener(this);
-        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
-//        tabLayout.setTabMode(TabLayout.MODE_FIXED);
-        tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
-        tabLayout.setBackgroundColor(ColorSet.getBarColor(getActivity()));
+        mTabLayout = (TabLayout) rootView.findViewById(R.id.tabs);
+        mTabLayout.setupWithViewPager(mViewPager);
+        mTabLayout.setOnTabSelectedListener(this);
+        mTabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+//        mTabLayout.setTabMode(TabLayout.MODE_FIXED);
+        mTabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
+        mTabLayout.setBackgroundColor(ColorSet.getBarColor(getActivity()));
 
         // tab indicator
-        tabLayout.setSelectedTabIndicatorHeight(15);
-        tabLayout.setSelectedTabIndicatorColor(Color.parseColor("#FFFF7F00"));
-//        tabLayout.setSelectedTabIndicatorHeight((int) (5 * getResources().getDisplayMetrics().density));
+        mTabLayout.setSelectedTabIndicatorHeight(15);
+        mTabLayout.setSelectedTabIndicatorColor(Color.parseColor("#FFFF7F00"));
+//        mTabLayout.setSelectedTabIndicatorHeight((int) (5 * getResources().getDisplayMetrics().density));
 
-//        tabLayout.setTabTextColors(
+//        mTabLayout.setTabTextColors(
 //                ContextCompat.getColor(getActivity(),R.color.bg_light),
 //                ContextCompat.getColor(getActivity(),R.color.highlight_color)
 //        );
@@ -117,14 +115,14 @@ public class TabsHost extends AppCompatDialogFragment implements TabLayout.OnTab
     private void addPages(TabsPagerAdapter adapter)
     {
         lastPageTableId = 0;
-        int pageCount = adapter.mDbFolder.getPagesCount(true);
+        int pageCount = adapter.dbFolder.getPagesCount(true);
         System.out.println("TabsHost / _addPages / pageCount = " + pageCount);
         for(int i=0;i<pageCount;i++)
         {
-            int pageTableId = adapter.mDbFolder.getPageTableId(i, true);
+            int pageTableId = adapter.dbFolder.getPageTableId(i, true);
 
             if(i==0)
-                setFirstPos_pageId(adapter.mDbFolder.getPageId(i,true));
+                setFirstPos_pageId(adapter.dbFolder.getPageId(i,true));
 
             if(pageTableId > lastPageTableId)
                 lastPageTableId = pageTableId;
@@ -155,45 +153,47 @@ public class TabsHost extends AppCompatDialogFragment implements TabLayout.OnTab
     public void onTabSelected(TabLayout.Tab tab) {
         System.out.println("TabsHost / _onTabSelected: " + tab.getPosition());
 
-        selectedPos = tab.getPosition();
+        mFocusTabPos = tab.getPosition();
 
         // keep focus view page table Id
-        int pageTableId = adapter.mDbFolder.getPageTableId(selectedPos, true);
-        Pref.setPref_focusView_page_tableId(getActivity(), pageTableId);
+        int pageTableId = mTabsPagerAdapter.dbFolder.getPageTableId(mFocusTabPos, true);
+        Pref.setPref_focusView_page_tableId(MainAct.mAct, pageTableId);
 
         // current page table Id
-        currPageTableId = pageTableId;
+        mFocusPageTableId = pageTableId;
 
         // refresh list view of selected page
-        Page page = adapter.mFragmentList.get(selectedPos);
-        if( (tab.getPosition() == audioPlayingPos) && (page != null) && (page.mItemAdapter != null) )
+        Page page = mTabsPagerAdapter.fragmentList.get(mFocusTabPos);
+        if( (tab.getPosition() == audioPlayTabPos) && (page != null) && (page.mItemAdapter != null) )
         {
-            DragSortListView listView = page.mDndListView;
+            DragSortListView listView = page.drag_listView;
             if( (listView != null) &&
                 (AudioManager.getPlayerState() != AudioManager.PLAYER_AT_STOP)  ) {
                 audioPlayer_page.scrollHighlightAudioItemToVisible(listView);
             }
         }
 
+        // add for update page item view
+        if((page != null) && (page.mItemAdapter != null))
+            page.mItemAdapter.notifyDataSetChanged();
+
         // set pager item
-        viewPager.setCurrentItem(selectedPos);
+        mViewPager.setCurrentItem(mFocusTabPos);
 
         // set tab audio icon when audio playing
         if ( (AudioManager.getPlayerState() != AudioManager.PLAYER_AT_STOP) &&
-                (tab.getPosition() == audioPlayingPos) )
+                (tab.getPosition() == audioPlayTabPos) )
             tab.setIcon(R.drawable.ic_audio);
         else
             tab.setIcon(null);
+
 
     }
 
     @Override
     public void onTabUnselected(TabLayout.Tab tab) {
-        System.out.println("TabsHost / _onTabUnselected: " + tab.getPosition());
-        unSelectedPos = tab.getPosition();
-
         if ( (AudioManager.getPlayerState() != AudioManager.PLAYER_AT_STOP) &&
-             (tab.getPosition() == audioPlayingPos) )
+             (tab.getPosition() == audioPlayTabPos) )
             tab.setIcon(R.drawable.ic_audio);
         else
             tab.setIcon(null);
@@ -201,36 +201,34 @@ public class TabsHost extends AppCompatDialogFragment implements TabLayout.OnTab
 
     @Override
     public void onTabReselected(TabLayout.Tab tab) {
-        System.out.println("TabsHost / _onTabReselected: " + tab.getPosition());
-        reSelectedPos = tab.getPosition();
     }
 
     @Override
     public void onResume() {
         super.onResume();
         // default
-        selectedPos = 0;
+        mFocusTabPos = 0;
 
         // restore focus view page
-        int pageCount = adapter.mDbFolder.getPagesCount(true);
+        int pageCount = mTabsPagerAdapter.dbFolder.getPagesCount(true);
         for(int i=0;i<pageCount;i++)
         {
-            int pageTableId = adapter.mDbFolder.getPageTableId(i, true);
+            int pageTableId = mTabsPagerAdapter.dbFolder.getPageTableId(i, true);
 
             if(pageTableId == Pref.getPref_focusView_page_tableId(getActivity())) {
-                selectedPos = i;
-                currPageTableId = pageTableId;
+                mFocusTabPos = i;
+                mFocusPageTableId = pageTableId;
             }
         }
-        viewPager.setCurrentItem(selectedPos);
+        mViewPager.setCurrentItem(mFocusTabPos);
 
-        System.out.println("TabsHost / _onResume / selectedPos = " + selectedPos);
+        System.out.println("TabsHost / _onResume / mFocusTabPos = " + mFocusTabPos);
 
         // set audio icon after Key Protect
         if ( (AudioManager.getPlayerState() != AudioManager.PLAYER_AT_STOP)  )
-            tabLayout.getTabAt(audioPlayingPos).setIcon(R.drawable.ic_audio);
+            mTabLayout.getTabAt(audioPlayTabPos).setIcon(R.drawable.ic_audio);
         else
-            tabLayout.getTabAt(audioPlayingPos).setIcon(null);
+            mTabLayout.getTabAt(audioPlayTabPos).setIcon(null);
 
         // for incoming phone call case or after Key Protect
         if( (page_audio != null) &&
@@ -239,7 +237,7 @@ public class TabsHost extends AppCompatDialogFragment implements TabLayout.OnTab
         {
             page_audio.initAudioBlock(getActivity());
 
-            audioPlayer_page.mRunContinueMode.run();
+            audioPlayer_page.page_runnable.run();
 
             UtilAudio.updateAudioPanel(page_audio.audioPanel_play_button,
                                        page_audio.audio_panel_title_textView);
@@ -252,12 +250,12 @@ public class TabsHost extends AppCompatDialogFragment implements TabLayout.OnTab
         super.onPause();
         System.out.println("TabsHost / _onPause");
 
-        store_listView_vScroll(adapter.mFragmentList.get(selectedPos).mDndListView);
+        store_listView_vScroll(mTabsPagerAdapter.fragmentList.get(mFocusTabPos).drag_listView);
 
         //  Remove fragments
-        if( adapter.mFragmentList != null) {
-            for (int i = 0; i < adapter.mFragmentList.size(); i++) {
-                getActivity().getSupportFragmentManager().beginTransaction().remove(adapter.mFragmentList.get(i)).commit();
+        if( mTabsPagerAdapter.fragmentList != null) {
+            for (int i = 0; i < mTabsPagerAdapter.fragmentList.size(); i++) {
+                getActivity().getSupportFragmentManager().beginTransaction().remove(mTabsPagerAdapter.fragmentList.get(i)).commit();
             }
         }
     }
@@ -265,7 +263,7 @@ public class TabsHost extends AppCompatDialogFragment implements TabLayout.OnTab
     // store scroll of list view
     public static void store_listView_vScroll(DragSortListView listView)
     {
-//        DragSortListView listView = adapter.mFragmentList.get(selectedPos).mDndListView;
+//        DragSortListView listView = mTabsPagerAdapter.fragmentList.get(mFocusTabPos).drag_listView;
         int mFirstVisibleIndex = listView.getFirstVisiblePosition();
         View v = listView.getChildAt(0);
         int mFirstVisibleIndexTop = (v == null) ? 0 : v.getTop();
@@ -310,25 +308,25 @@ public class TabsHost extends AppCompatDialogFragment implements TabLayout.OnTab
 
     public static void reloadCurrentPage()
     {
-        int pagePos = selectedPos;
-        viewPager.setAdapter(adapter);
-        viewPager.setCurrentItem(pagePos);
+        int pagePos = mFocusTabPos;
+        mViewPager.setAdapter(mTabsPagerAdapter);
+        mViewPager.setCurrentItem(pagePos);
     }
 
     public static Page getCurrentPage()
     {
-        return adapter.mFragmentList.get(selectedPos);
+        return mTabsPagerAdapter.fragmentList.get(mFocusTabPos);
     }
 
     public static int getCurrentPageTableId()
     {
-        return currPageTableId;
+        return mFocusPageTableId;
     }
 
 
     public static void getPage_rowItemView(int rowPos)
     {
-        DragSortListView listView = getCurrentPage().mDndListView;
+        DragSortListView listView = getCurrentPage().drag_listView;
         View convertView = listView.getChildAt(rowPos);
         listView.getAdapter().getView(rowPos, convertView, listView);
     }

@@ -67,7 +67,7 @@ public class Export_toSDCardFragment extends Fragment {
 				mList_selPage.selectAllPages(false);
 		}
 		});
-		mStyle = Util.getCurrentPageStyle(TabsHost.selectedPos);
+		mStyle = Util.getCurrentPageStyle(TabsHost.mFocusTabPos);
 
 		// list view: selecting which pages to send
 		mListView = (ListView)rootView.findViewById(R.id.listView1);

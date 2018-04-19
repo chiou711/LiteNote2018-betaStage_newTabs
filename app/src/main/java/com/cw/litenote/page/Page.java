@@ -50,17 +50,17 @@ public class Page extends UilListViewBaseFragment
 {
 	Cursor mCursor_note;
 	public static DB_page mDb_page;
-	public SharedPreferences mPref_show_note_attribute;
+	public SharedPreferences pref_show_note_attribute;
 
 	// This is the Adapter being used to display the list's data.
 //	NoteListAdapter mAdapter;
-	public DragSortListView mDndListView;
-	private DragSortController mController;
+	public DragSortListView drag_listView;
+	DragSortController drag_controller;
     public static int mStyle = 0;
 	public FragmentActivity mAct;
 	String mClassName;
     public static int mHighlightPosition;
-	public static SeekBar seekBarProgress;
+	public SeekBar seekBarProgress;
 	ProgressBar mSpinner;
     public static int currPlayPosition;
     static boolean en_dbg_msg = true;//true //false
@@ -101,10 +101,10 @@ public class Page extends UilListViewBaseFragment
 		mAct = getActivity();
 		mClassName = getClass().getSimpleName();
         listView = (DragSortListView)rootView.findViewById(android.R.id.list);
-		mDndListView = listView;
+		drag_listView = listView;
 
 		if(Build.VERSION.SDK_INT >= 21)
-			mDndListView.setSelector(R.drawable.ripple);
+			drag_listView.setSelector(R.drawable.ripple);
 
 		mFooterMessage = (TextView) rootView.findViewById(R.id.footerText);
         mFooterMessage.setBackgroundColor(Color.BLUE);
@@ -124,11 +124,11 @@ public class Page extends UilListViewBaseFragment
 		// show scroll thumb
         //todo TBD
 //		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
-//			mDndListView.setFastScrollAlwaysVisible(true);
+//			drag_listView.setFastScrollAlwaysVisible(true);
 //
-//		mDndListView.setScrollbarFadingEnabled(true);
-//		mDndListView.setScrollBarStyle(ListView.SCROLLBARS_OUTSIDE_OVERLAY);
-//		Util.setScrollThumb(getActivity(),mDndListView);
+//		drag_listView.setScrollbarFadingEnabled(true);
+//		drag_listView.setScrollBarStyle(ListView.SCROLLBARS_OUTSIDE_OVERLAY);
+//		Util.setScrollThumb(getActivity(),drag_listView);
 
 		mStyle = Util.getCurrentPageStyle(page_pos);
 //    	System.out.println("Page / _onActivityCreated / mStyle = " + mStyle);
@@ -136,7 +136,7 @@ public class Page extends UilListViewBaseFragment
 		UilCommon.init();
 
 		// listener: edit note
-		mDndListView.setOnItemLongClickListener(new OnItemLongClickListener()
+		drag_listView.setOnItemLongClickListener(new OnItemLongClickListener()
 		{
 			public boolean onItemLongClick(AdapterView<?> parent, View v, int position, long id)
 			{
@@ -146,16 +146,16 @@ public class Page extends UilListViewBaseFragment
 			}
 		});
 
-		mController = buildController(mDndListView);
-		mDndListView.setFloatViewManager(mController);
-		mDndListView.setOnTouchListener(mController);
+		drag_controller = buildController(drag_listView);
+		drag_listView.setFloatViewManager(drag_controller);
+		drag_listView.setOnTouchListener(drag_controller);
 		//called on it but does not override performClick
-		mDndListView.setDragEnabled(true);
+		drag_listView.setDragEnabled(true);
 
 		// We have a menu item to show in action bar.
 //		setHasOptionsMenu(true);
 
-		// Create an empty adapter we will use to display the loaded data.
+		// Create an empty mTabsPagerAdapter we will use to display the loaded data.
 //		mAdapter = new NoteListAdapter(getActivity());
 
 //		setListAdapter(mAdapter);
@@ -167,10 +167,10 @@ public class Page extends UilListViewBaseFragment
 //        getLoaderManager().initLoader(0, null, this);
 //        getLoaderManager().initLoader(page_tableId, null, Page.this);
 
-        fillData(mAct,mDndListView);
+        fillData(mAct, drag_listView);
 		mItemAdapter.notifyDataSetChanged();
 
-//        AudioPlayer_page.scrollHighlightAudioItemToVisible(mDndListView);
+//        AudioPlayer_page.scrollHighlightAudioItemToVisible(drag_listView);
 
 		return rootView;
 	}
@@ -197,15 +197,15 @@ public class Page extends UilListViewBaseFragment
 
     	/*
         // set background color of list view
-        mDndListView.setBackgroundColor(Util.mBG_ColorArray[mStyle]);
+        drag_listView.setBackgroundColor(Util.mBG_ColorArray[mStyle]);
 
     	//show divider color
         if(mStyle%2 == 0)
-	    	mDndListView.setDivider(new ColorDrawable(0xFFffffff));//for dark
+	    	drag_listView.setDivider(new ColorDrawable(0xFFffffff));//for dark
         else
-          mDndListView.setDivider(new ColorDrawable(0xff000000));//for light
+          drag_listView.setDivider(new ColorDrawable(0xff000000));//for light
 
-        mDndListView.setDividerHeight(3);
+        drag_listView.setDividerHeight(3);
         */
 
         mDb_page = new DB_page(getActivity(), page_tableId);
@@ -224,7 +224,7 @@ public class Page extends UilListViewBaseFragment
 				to,
 				page_pos
 		);
-		mDb_page.close();// set close here, if cursor is used in adapter
+		mDb_page.close();// set close here, if cursor is used in mTabsPagerAdapter
 
 		listView.setAdapter(mItemAdapter);
 
@@ -256,7 +256,7 @@ public class Page extends UilListViewBaseFragment
 	private class SpinnerTask extends AsyncTask <Void,Void,Void>{
 	    @Override
 	    protected void onPreExecute(){
-			mDndListView.setVisibility(View.GONE);
+			drag_listView.setVisibility(View.GONE);
 			mFooterMessage.setVisibility(View.GONE);
 			mSpinner.setVisibility(View.VISIBLE);
 	    }
@@ -269,7 +269,7 @@ public class Page extends UilListViewBaseFragment
 	    @Override
 	    protected void onPostExecute(Void result) {
 	    	mSpinner.setVisibility(View.GONE);
-			mDndListView.setVisibility(View.VISIBLE);
+			drag_listView.setVisibility(View.VISIBLE);
 			mFooterMessage.setVisibility(View.VISIBLE);
 			if(!this.isCancelled())
 			{
@@ -284,7 +284,7 @@ public class Page extends UilListViewBaseFragment
                 @Override
                 public void drag(int startPosition, int endPosition) {
                 	//add highlight boarder
-//                    View v = mDndListView.mFloatView;
+//                    View v = drag_listView.mFloatView;
 //                    v.setBackgroundColor(Color.rgb(255,128,0));
 //                	v.setBackgroundResource(R.drawable.listview_item_shape_dragging);
 //                    v.setPadding(0, 4, 0,4);
@@ -315,7 +315,7 @@ public class Page extends UilListViewBaseFragment
 					endPosition--;
 			}
 
-			if( PageUi.isSamePageTable() &&
+			if( PageUi.isAudioPlayingPage() &&
 	     		(AudioManager.mMediaPlayer != null)				   )
 			{
 				if( (mHighlightPosition == oriEndPos)  && (oriStartPos > oriEndPos))
@@ -367,16 +367,16 @@ public class Page extends UilListViewBaseFragment
         controller.setSortEnabled(true);
 
         //drag
-	  	mPref_show_note_attribute = getActivity().getSharedPreferences("show_note_attribute", 0);
-	  	if(mPref_show_note_attribute.getString("KEY_ENABLE_DRAGGABLE", "no").equalsIgnoreCase("yes"))
+	  	pref_show_note_attribute = getActivity().getSharedPreferences("show_note_attribute", 0);
+	  	if(pref_show_note_attribute.getString("KEY_ENABLE_DRAGGABLE", "no").equalsIgnoreCase("yes"))
 	  		controller.setDragInitMode(DragSortController.ON_DOWN); // click
 	  	else
 	        controller.setDragInitMode(DragSortController.MISS);
 
 	  	controller.setDragHandleId(R.id.img_dragger);// handler
-//        controller.setDragInitMode(DragSortController.ON_LONG_PRESS); //long click to drag
+//        drag_controller.setDragInitMode(DragSortController.ON_LONG_PRESS); //long click to drag
 	  	controller.setBackgroundColor(Color.argb(128,128,64,0));// background color when dragging
-//        controller.setBackgroundColor(Util.mBG_ColorArray[mStyle]);// background color when dragging
+//        drag_controller.setBackgroundColor(Util.mBG_ColorArray[mStyle]);// background color when dragging
 
 	  	// mark
         controller.setMarkEnabled(true);
@@ -385,7 +385,7 @@ public class Page extends UilListViewBaseFragment
 
         // audio
         controller.setAudioEnabled(true);
-//        controller.setClickAudioId(R.id.img_audio);
+//        drag_controller.setClickAudioId(R.id.img_audio);
         controller.setClickAudioId(R.id.audio_block);
         controller.setAudioMode(DragSortController.ON_DOWN);
 
@@ -400,9 +400,9 @@ public class Page extends UilListViewBaseFragment
         super.onResume();
 
         if( (AudioManager.getPlayerState() != AudioManager.PLAYER_AT_STOP) &&
-            (page_tableId == TabsHost.currPageTableId) )
+            (page_tableId == TabsHost.mFocusPageTableId) )
         {
-            TabsHost.resume_listView_vScroll(mDndListView);
+            TabsHost.resume_listView_vScroll(drag_listView);
         }
 
     }
@@ -435,7 +435,7 @@ public class Page extends UilListViewBaseFragment
 //		if(en_dbg_msg)
 //			System.out.println("Page / _onLoadFinished / page_tableId = " + page_tableId);
 //
-//        // Set the new data in the adapter.
+//        // Set the new data in the mTabsPagerAdapter.
 //		mAdapter.setData(data);
 //
 //		// The list should now be shown.
@@ -462,14 +462,14 @@ public class Page extends UilListViewBaseFragment
 
 		@Override
 		public void onScrollStateChanged(AbsListView view, int scrollState) {
-            mFirstVisibleIndex = mDndListView.getFirstVisiblePosition();
-            View v = mDndListView.getChildAt(0);
+            mFirstVisibleIndex = drag_listView.getFirstVisiblePosition();
+            View v = drag_listView.getChildAt(0);
             mFirstVisibleIndexTop = (v == null) ? 0 : v.getTop();
 
             if( (PageUi.getFocus_pagePos() == MainAct.mPlaying_pagePos)&&
                     (MainAct.mPlaying_folderPos == FolderUi.getFocus_folderPos()) &&
                     (AudioManager.getPlayerState() == AudioManager.PLAYER_AT_PLAY) &&
-                    (mDndListView.getChildAt(0) != null)                    )
+                    (drag_listView.getChildAt(0) != null)                    )
             {
                 // do nothing when playing audio
                 System.out.println("_onScrollStateChanged / do nothing");
@@ -488,7 +488,7 @@ public class Page extends UilListViewBaseFragment
 //			System.out.println("_onScroll / firstVisibleItem " + firstVisibleItem);
 //			System.out.println("_onScroll / visibleItemCount " + visibleItemCount);
 //			System.out.println("_onScroll / totalItemCount " + totalItemCount);
-//            TabsHost.store_listView_vScroll(mDndListView);
+//            TabsHost.store_listView_vScroll(drag_listView);
 		}
 	};
 
@@ -575,11 +575,11 @@ public class Page extends UilListViewBaseFragment
 //			}
 //
 //			// update list view: just update selection to avoid scrolling back to top
-////			int firstVisiblePosition = mDndListView.getFirstVisiblePosition();
-////			int lastVisiblePosition = mDndListView.getLastVisiblePosition();
+////			int firstVisiblePosition = drag_listView.getFirstVisiblePosition();
+////			int lastVisiblePosition = drag_listView.getLastVisiblePosition();
 ////			if ((position >= firstVisiblePosition) && (position <= lastVisiblePosition) )
 ////			{
-////				View view = mDndListView.getChildAt(position - firstVisiblePosition).findViewById(R.id.img_check);
+////				View view = drag_listView.getChildAt(position - firstVisiblePosition).findViewById(R.id.img_check);
 ////				if(markingNow == 1)
 ////				{
 ////					view.setBackgroundResource(Page.mStyle % 2 == 1 ?
@@ -598,19 +598,19 @@ public class Page extends UilListViewBaseFragment
 ////            TabsHost.reloadCurrentPage();
 //
 //            TabsHost.getPage_rowItemView(position);
-//            mDndListView.setDropListener(onDrop);
-//            mDndListView.setDragListener(onDrag);
-//            mDndListView.setMarkListener(onMark);
-//            mDndListView.setAudioListener(onAudio);
-//            mDndListView.setOnScrollListener(onScroll);
+//            drag_listView.setDropListener(onDrop);
+//            drag_listView.setDragListener(onDrag);
+//            drag_listView.setMarkListener(onMark);
+//            drag_listView.setAudioListener(onAudio);
+//            drag_listView.setOnScrollListener(onScroll);
 //
-//            TabsHost.adapter.notifyDataSetChanged();
+//            TabsHost.mTabsPagerAdapter.notifyDataSetChanged();
 //
 //			// update footer
 //            showFooter(mAct);
 //
 //			// update audio info
-//            if(PageUi.isSamePageTable())
+//            if(PageUi.isAudioPlayingPage())
 //            	AudioPlayer_page.prepareAudioInfo();
 //        }
 //    };
@@ -619,7 +619,7 @@ public class Page extends UilListViewBaseFragment
 	public static int toggleNoteMarking(FragmentActivity mAct,int position)
 	{
 		int marking = 0;
-		int pageTableId = TabsHost.currPageTableId;
+		int pageTableId = TabsHost.mFocusPageTableId;
         DB_page mDb_page = new DB_page(mAct, pageTableId);
 		mDb_page.open();
 		int count = mDb_page.getNotesCount(false);
@@ -692,7 +692,7 @@ public class Page extends UilListViewBaseFragment
 							AudioManager.mMediaPlayer.pause();
 
 		   			   	if(TabsHost.audioPlayer_page != null) {
-							AudioPlayer_page.mAudioHandler.removeCallbacks(TabsHost.audioPlayer_page.mRunContinueMode);
+							AudioPlayer_page.mAudioHandler.removeCallbacks(TabsHost.audioPlayer_page.page_runnable);
                         }
 						AudioManager.mMediaPlayer.release();
 						AudioManager.mMediaPlayer = null;
@@ -704,7 +704,7 @@ public class Page extends UilListViewBaseFragment
 					AudioManager.mAudioPos = position;
                     AudioManager.setAudioPlayMode(AudioManager.PAGE_PLAY_MODE);
 
-					TabsHost.page_audio = new Page_audio(mAct,mDndListView);
+					TabsHost.page_audio = new Page_audio(mAct, drag_listView);
 					TabsHost.page_audio.initAudioBlock(MainAct.mAct);
 
                     TabsHost.audioPlayer_page = new AudioPlayer_page(mAct,TabsHost.page_audio);
@@ -712,8 +712,8 @@ public class Page extends UilListViewBaseFragment
 					TabsHost.audioPlayer_page.runAudioState();
 
 					// update audio play position
-					TabsHost.audioPlayingPos = TabsHost.selectedPos;
-					TabsHost.adapter.notifyDataSetChanged();
+					TabsHost.audioPlayTabPos = page_pos;
+					TabsHost.mTabsPagerAdapter.notifyDataSetChanged();
 
                     UtilAudio.updateAudioPanel(TabsHost.page_audio.audioPanel_play_button,
                                                TabsHost.page_audio.audio_panel_title_textView);
@@ -722,7 +722,7 @@ public class Page extends UilListViewBaseFragment
                     MainAct.mPlaying_pagePos = PageUi.getFocus_pagePos();
 
 					// update playing page table Id
-					MainAct.mPlaying_pageTableId = TabsHost.currPageTableId;//mNow_pageTableId;
+					MainAct.mPlaying_pageTableId = TabsHost.mFocusPageTableId;//mNow_pageTableId;
 
 					// update playing folder position
 				    MainAct.mPlaying_folderPos = FolderUi.getFocus_folderPos();
@@ -733,11 +733,11 @@ public class Page extends UilListViewBaseFragment
 				}
 			}
             // redraw list view item
-//                    int first = mDndListView.getFirstVisiblePosition();
-//                    int last = mDndListView.getLastVisiblePosition();
+//                    int first = drag_listView.getFirstVisiblePosition();
+//                    int last = drag_listView.getLastVisiblePosition();
 //                    for(int i=first; i<=last; i++) {
-//                        View view = mDndListView.getChildAt(i-first);
-//                        mDndListView.getAdapter().getView(i, view, mDndListView);
+//                        View view = drag_listView.getChildAt(i-first);
+//                        drag_listView.getAdapter().getView(i, view, drag_listView);
 //                    }
 
 //            mItemAdapter.notifyDataSetChanged();

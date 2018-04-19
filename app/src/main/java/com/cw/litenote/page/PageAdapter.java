@@ -254,7 +254,7 @@ public class PageAdapter extends SimpleDragSortCursorAdapter // DragSortCursorAd
 				TabsHost.getCurrentPage().showFooter(MainAct.mAct);
 
                 // update audio info
-                if(PageUi.isSamePageTable())
+                if(PageUi.isAudioPlayingPage())
                     AudioPlayer_page.prepareAudioInfo();
             }
         });
@@ -328,7 +328,7 @@ public class PageAdapter extends SimpleDragSortCursorAdapter // DragSortCursorAd
 			holder.audioName.setTextColor(ColorSet.mText_ColorArray[style]);
 
 		// show audio highlight if audio is not at Stop
-		if( PageUi.isSamePageTable() &&
+		if( PageUi.isAudioPlayingPage() &&
 			(position == AudioManager.mAudioPos)  &&
 //			(AudioManager.mMediaPlayer != null) &&
 			(AudioManager.getPlayerState() != AudioManager.PLAYER_AT_STOP) &&

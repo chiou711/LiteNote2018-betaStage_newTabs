@@ -18,7 +18,6 @@ import android.widget.Toast;
 
 import com.cw.litenote.R;
 import com.cw.litenote.main.MainAct;
-import com.cw.litenote.page.Page;
 import com.cw.litenote.tabs.Page_audio;
 import com.cw.litenote.tabs.TabsHost;
 import com.cw.litenote.util.Util;
@@ -87,7 +86,7 @@ public class AudioPlayer_page
 			{
 				System.out.println("AudioPlayer_page / _runAudioState / play -> pause");
 				AudioManager.mMediaPlayer.pause();
-				mAudioHandler.removeCallbacks(mRunContinueMode);
+				mAudioHandler.removeCallbacks(page_runnable);
                 AudioManager.setPlayerState(AudioManager.PLAYER_AT_PAUSE);
 			}
 			else // from pause to play
@@ -97,7 +96,7 @@ public class AudioPlayer_page
 				AudioManager.mMediaPlayer.start();
 
                 if(AudioManager.getAudioPlayMode() == AudioManager.PAGE_PLAY_MODE)
-					mAudioHandler.post(mRunContinueMode);
+					mAudioHandler.post(page_runnable);
 
                 AudioManager.setPlayerState(AudioManager.PLAYER_AT_PLAY);
 			}
@@ -149,8 +148,8 @@ public class AudioPlayer_page
     /**
      * Continue mode runnable
      */
-	private static String mAudioStrContinueMode;
-	public Runnable mRunContinueMode = new Runnable()
+	private String audioUrl_page;
+	public Runnable page_runnable = new Runnable()
 	{   @Override
 		public void run()
 		{
@@ -174,9 +173,9 @@ public class AudioPlayer_page
 
 	   			if(AudioManager.mMediaPlayer == null)
 	   			{
-//					System.out.println("AudioPlayer_page / mRunContinueMode / AudioManager.mMediaPlayer = null");
+//					System.out.println("AudioPlayer_page / page_runnable / AudioManager.mMediaPlayer = null");
 		    		// check if audio file exists or not
-   					mAudioStrContinueMode = AudioManager.getAudioStringAt(AudioManager.mAudioPos);
+   					audioUrl_page = AudioManager.getAudioStringAt(AudioManager.mAudioPos);
 
 					if(!Async_audioUrlVerify.mIsOkUrl)
 					{
@@ -185,7 +184,7 @@ public class AudioPlayer_page
 					}
 					else
    					{
-                        System.out.println("AudioPlayer_page / mRunContinueMode / AudioManager.isRunnableOn = " + AudioManager.isRunnableOn_page);
+                        System.out.println("AudioPlayer_page / page_runnable / AudioManager.isRunnableOn = " + AudioManager.isRunnableOn_page);
 
    						//create a MediaPlayer
    						AudioManager.mMediaPlayer = new MediaPlayer();
@@ -199,8 +198,8 @@ public class AudioPlayer_page
 	   					{
 	   						@Override
 	   						public void onBufferingUpdate(MediaPlayer mp, int percent) {
-								if(Page.seekBarProgress != null)
-	   								Page.seekBarProgress.setSecondaryProgress(percent);
+								if(TabsHost.getCurrentPage().seekBarProgress != null)
+	   								TabsHost.getCurrentPage().seekBarProgress.setSecondaryProgress(percent);
 	   						}
 	   					});
    						
@@ -211,7 +210,7 @@ public class AudioPlayer_page
    						{
    							// set data source
 //							AudioManager.mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-							AudioManager.mMediaPlayer.setDataSource(act, Uri.parse(mAudioStrContinueMode));
+							AudioManager.mMediaPlayer.setDataSource(act, Uri.parse(audioUrl_page));
    							
    							// prepare the MediaPlayer to play, could delay system response
    							AudioManager.mMediaPlayer.prepare();
@@ -227,7 +226,7 @@ public class AudioPlayer_page
 	   			}
 	   			else//AudioManager.mMediaPlayer != null
 	   			{
-//                    System.out.println("AudioPlayer_page / mRunContinueMode / AudioManager.mMediaPlayer != null");
+//                    System.out.println("AudioPlayer_page / page_runnable / AudioManager.mMediaPlayer != null");
 	   				// keep looping, do not set post() here, it will affect slide show timing
 	   				if(mAudio_tryTimes < AudioManager.getAudioFilesCount())
 	   				{
@@ -236,9 +235,9 @@ public class AudioPlayer_page
 	   						update_audioPanel_progress(page_audio);
 
 						if(mAudio_tryTimes == 0)
-							mAudioHandler.postDelayed(mRunContinueMode,DURATION_1S);
+							mAudioHandler.postDelayed(page_runnable,DURATION_1S);
 						else
-							mAudioHandler.postDelayed(mRunContinueMode,DURATION_1S/10);
+							mAudioHandler.postDelayed(page_runnable,DURATION_1S/10);
 	   				}
 	   			}
 	   		}
@@ -267,7 +266,7 @@ public class AudioPlayer_page
 	private void stopHandler()
     {
         if(mAudioHandler != null) {
-            mAudioHandler.removeCallbacks(mRunContinueMode);
+            mAudioHandler.removeCallbacks(page_runnable);
             mAudioHandler = null;
         }
     }
@@ -343,7 +342,7 @@ public class AudioPlayer_page
                         System.out.println("AudioPlayer_page / _setAudioPlayerListeners / media_file_length = " + media_file_length);
 
 						// set footer message: media name
-						if (!Util.isEmptyString(mAudioStrContinueMode))
+						if (!Util.isEmptyString(audioUrl_page))
 //                                &&
 //                            listView.isShown()                ) //todo How to handle list view? If not, side effect?
 						{
@@ -362,7 +361,7 @@ public class AudioPlayer_page
                                         String.format(Locale.US, "%02d", fileSec));
                             }
 
-                            scrollHighlightAudioItemToVisible(TabsHost.getCurrentPage().mDndListView);
+                            scrollHighlightAudioItemToVisible(TabsHost.getCurrentPage().drag_listView);
 							TabsHost.getCurrentPage().mItemAdapter.notifyDataSetChanged();
                         }
 
@@ -374,7 +373,7 @@ public class AudioPlayer_page
 
 							// add for calling runnable
 							if (AudioManager.getAudioPlayMode() == AudioManager.PAGE_PLAY_MODE)
-								mAudioHandler.postDelayed(mRunContinueMode, Util.oneSecond / 4);
+								mAudioHandler.postDelayed(page_runnable, Util.oneSecond / 4);
 						}
 					}
 				}
@@ -411,7 +410,7 @@ public class AudioPlayer_page
 		System.out.println("AudioPlayer_page / _scrollHighlightAudioItemToVisible");
 
 		// version limitation: _scrollListBy
-		// NoteFragment.mDndListView.scrollListBy(firstVisibleIndex_top);
+		// NoteFragment.drag_listView.scrollListBy(firstVisibleIndex_top);
 		if(Build.VERSION.SDK_INT < 19)
 			return;
 
@@ -479,7 +478,7 @@ public class AudioPlayer_page
 					}
 
 					System.out.println("---------------- firstVisible_note_pos = " + firstVisible_note_pos);
-					System.out.println("---------------- Page.mDndListView.getFirstVisiblePosition() = " + listView.getFirstVisiblePosition());
+					System.out.println("---------------- Page.drag_listView.getFirstVisiblePosition() = " + listView.getFirstVisiblePosition());
 					if(firstVisible_note_pos == listView.getFirstVisiblePosition())
 						noScroll = true;
 					else {
@@ -505,7 +504,7 @@ public class AudioPlayer_page
 
 		// remove call backs to make sure next toast will appear soon
 		if(mAudioHandler != null)
-			mAudioHandler.removeCallbacks(mRunContinueMode);
+			mAudioHandler.removeCallbacks(page_runnable);
         mAudioHandler = null;
         mAudioHandler = new Handler();
 
@@ -519,7 +518,7 @@ public class AudioPlayer_page
 		if( (AudioManager.getAudioPlayMode() == AudioManager.PAGE_PLAY_MODE) &&
             (AudioManager.getCheckedAudio(AudioManager.mAudioPos) == 0)          )
 		{
-			mAudioHandler.postDelayed(mRunContinueMode,Util.oneSecond/4);		}
+			mAudioHandler.postDelayed(page_runnable,Util.oneSecond/4);		}
 		else
 		{
 			mAudioUrlVerifyTask = new Async_audioUrlVerify(act, mAudioManager.getAudioStringAt(AudioManager.mAudioPos));
@@ -544,7 +543,7 @@ public class AudioPlayer_page
             if( (AudioManager.getPlayerState() != AudioManager.PLAYER_AT_STOP) &&
                 (AudioManager.getAudioPlayMode() == AudioManager.PAGE_PLAY_MODE)   )
             {
-                mAudioHandler.postDelayed(mRunContinueMode, Util.oneSecond / 4);
+                mAudioHandler.postDelayed(page_runnable, Util.oneSecond / 4);
             }
 
             // during audio Preparing

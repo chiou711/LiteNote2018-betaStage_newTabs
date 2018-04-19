@@ -164,7 +164,7 @@ public class Note_common {
                 		{
 	                		if(Uri.parse(pictureUriInDB).isAbsolute())
 	                		{
-	                			int style =  Util.getCurrentPageStyle(TabsHost.selectedPos);
+	                			int style =  Util.getCurrentPageStyle(TabsHost.mFocusTabPos);
 	                			new UtilImage_bitmapLoader(enlargedImage, pictureUriInDB, progressBarExpand,
 	                					(style % 2 == 1 ? UilCommon.optionsForRounded_light: UilCommon.optionsForRounded_dark), act);
 	                			bShowEnlargedImage = true;
@@ -387,7 +387,7 @@ public class Note_common {
 			// load bitmap to image view
 			if(!Util.isEmptyString(pictureUriInDB))
 			{
-				int style =  Util.getCurrentPageStyle(TabsHost.selectedPos);
+				int style =  Util.getCurrentPageStyle(TabsHost.mFocusTabPos);
 				new UtilImage_bitmapLoader(picImageView, pictureUriInDB, progressBar,
     					(style % 2 == 1 ? UilCommon.optionsForRounded_light: UilCommon.optionsForRounded_dark), act);
 			}

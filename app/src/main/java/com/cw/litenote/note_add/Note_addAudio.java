@@ -258,7 +258,7 @@ public class Note_addAudio extends FragmentActivity {
 	        	chooseAudioMedia();	
 	        	
 	        	// to avoid exception due to playing tab is different with focus tab
-	        	if(PageUi.isSamePageTable())
+	        	if(PageUi.isAudioPlayingPage())
 	        	{
 		        	AudioPlayer_page.prepareAudioInfo();
 		        	//todo TBD

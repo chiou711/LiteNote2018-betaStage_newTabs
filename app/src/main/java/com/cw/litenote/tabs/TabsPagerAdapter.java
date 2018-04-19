@@ -18,37 +18,37 @@ import java.util.ArrayList;
  *
  */
 public class TabsPagerAdapter extends FragmentPagerAdapter {
-    public ArrayList<Page> mFragmentList = new ArrayList<>();
-    DB_folder mDbFolder;
+    public ArrayList<Page> fragmentList = new ArrayList<>();
+    DB_folder dbFolder;
 
     TabsPagerAdapter(FragmentActivity act, FragmentManager fm)
     {
         super(fm);
         int folderTableId = Pref.getPref_focusView_folder_tableId(act);
-        mDbFolder = new DB_folder(act, folderTableId);
+        dbFolder = new DB_folder(act, folderTableId);
     }
 
     @Override
     public Page getItem(int position)
     {
 //        System.out.println("TabsPagerAdapter / _getItem / position = " + position);
-        return mFragmentList.get(position);
+        return fragmentList.get(position);
     }
 
     // add fragment
     public void addFragment(Page fragment) {
-        mFragmentList.add(fragment);
+        fragmentList.add(fragment);
     }
 
     @Override
     public int getCount(){
-        return mFragmentList.size();
+        return fragmentList.size();
     }
 
     @Override
     public CharSequence getPageTitle(int position){
 //        System.out.println("TabsPagerAdapter / _getPageTitle / position = " + position);
-        return mDbFolder.getPageTitle(position,true);
+        return dbFolder.getPageTitle(position,true);
     }
 
     @Override

@@ -181,7 +181,7 @@ public class Page_audio {
                 UtilAudio.updateAudioPanel((ImageView)v, audio_panel_title_textView); // here v is audio play button
 
                 if(AudioManager.getPlayerState() != AudioManager.PLAYER_AT_STOP)
-                    TabsHost.audioPlayer_page.scrollHighlightAudioItemToVisible(TabsHost.getCurrentPage().mDndListView);
+                    TabsHost.audioPlayer_page.scrollHighlightAudioItemToVisible(TabsHost.getCurrentPage().drag_listView);
 
                 TabsHost.getCurrentPage().mItemAdapter.notifyDataSetChanged();
 
@@ -251,7 +251,7 @@ public class Page_audio {
         UtilAudio.updateAudioPanel(audioPanel_play_button, audio_panel_title_textView);
 
         if(AudioManager.getPlayerState() != AudioManager.PLAYER_AT_STOP)
-            TabsHost.audioPlayer_page.scrollHighlightAudioItemToVisible(TabsHost.getCurrentPage().mDndListView);
+            TabsHost.audioPlayer_page.scrollHighlightAudioItemToVisible(TabsHost.getCurrentPage().drag_listView);
 
         TabsHost.getCurrentPage().mItemAdapter.notifyDataSetChanged();
     }

@@ -946,7 +946,7 @@ public class MainAct extends FragmentActivity implements OnBackStackChangedListe
                     AudioManager.stopAudioPlayer();
 
                     // remove audio panel
-                    TabsHost.audioPlayer_page.mRunContinueMode.run();
+                    TabsHost.audioPlayer_page.page_runnable.run();
 
                     // refresh
                     TabsHost.reloadCurrentPage();
@@ -959,7 +959,7 @@ public class MainAct extends FragmentActivity implements OnBackStackChangedListe
                     AudioManager.mAudioPos = 0;
 
                     Page page = TabsHost.getCurrentPage();
-                    TabsHost.page_audio = new Page_audio(mAct,page.mDndListView);
+                    TabsHost.page_audio = new Page_audio(mAct,page.drag_listView);
                     TabsHost.page_audio.initAudioBlock(mAct);
 
                     TabsHost.audioPlayer_page = new AudioPlayer_page(mAct,TabsHost.page_audio);
@@ -967,8 +967,8 @@ public class MainAct extends FragmentActivity implements OnBackStackChangedListe
                     TabsHost.audioPlayer_page.runAudioState();
 
                     // update audio play position
-                    TabsHost.audioPlayingPos = TabsHost.selectedPos;
-                    TabsHost.adapter.notifyDataSetChanged();
+                    TabsHost.audioPlayTabPos = TabsHost.mFocusTabPos;
+                    TabsHost.mTabsPagerAdapter.notifyDataSetChanged();
 
                     UtilAudio.updateAudioPanel(TabsHost.page_audio.audioPanel_play_button,
                                                TabsHost.page_audio.audio_panel_title_textView);
@@ -977,7 +977,7 @@ public class MainAct extends FragmentActivity implements OnBackStackChangedListe
                     mPlaying_pagePos = PageUi.getFocus_pagePos();
 
                     // update playing page table Id
-                    mPlaying_pageTableId = TabsHost.currPageTableId;//mNow_pageTableId;
+                    mPlaying_pageTableId = TabsHost.mFocusPageTableId;//mNow_pageTableId;
 
                     // update playing folder position
                     mPlaying_folderPos = FolderUi.getFocus_folderPos();

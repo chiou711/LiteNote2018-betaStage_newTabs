@@ -315,7 +315,7 @@ public class Checked_notes_option {
             UtilAudio.stopAudioIfNeeded();
 
         // update audio play list
-        if(PageUi.isSamePageTable())
+        if(PageUi.isAudioPlayingPage())
             AudioPlayer_page.prepareAudioInfo();
 
         TabsHost.reloadCurrentPage();
@@ -351,7 +351,7 @@ public class Checked_notes_option {
             UtilAudio.stopAudioIfNeeded();
 
         // update audio play list
-        if(PageUi.isSamePageTable())
+        if(PageUi.isAudioPlayingPage())
             AudioPlayer_page.prepareAudioInfo();
 
         TabsHost.reloadCurrentPage();
@@ -382,7 +382,7 @@ public class Checked_notes_option {
         db_folder.close();
 
         // add * mark to current page
-        pageNames[TabsHost.selectedPos] = pageNames[TabsHost.selectedPos] + " *";
+        pageNames[TabsHost.mFocusTabPos] = pageNames[TabsHost.mFocusTabPos] + " *";
 
         AlertDialog.Builder builder = new AlertDialog.Builder(act);
         DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener()
