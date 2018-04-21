@@ -216,22 +216,26 @@ public class PageAdapter extends SimpleDragSortCursorAdapter // DragSortCursorAd
         convertView.findViewById(R.id.row_thumb_nail).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                TabsHost.getCurrentPage().currPlayPosition = position;
-                DB_page mDb_page = new DB_page(mAct,TabsHost.getCurrentPageTableId());
-                mDb_page.open();
-                int count = mDb_page.getNotesCount(false);
-                String linkStr = mDb_page.getNoteLinkUri(position,false);
-                mDb_page.close();
+				SharedPreferences pref_open_youtube = mAct.getSharedPreferences("show_note_attribute", 0);
+				if(pref_open_youtube.getString("KEY_VIEW_NOTE_LAUNCH_YOUTUBE", "no")
+									.equalsIgnoreCase("yes") )
+				{
+					TabsHost.getCurrentPage().currPlayPosition = position;
+					DB_page mDb_page = new DB_page(mAct, TabsHost.getCurrentPageTableId());
+					mDb_page.open();
+					int count = mDb_page.getNotesCount(false);
+					String linkStr = mDb_page.getNoteLinkUri(position, false);
+					mDb_page.close();
 
-                if(position < count)
-                {
-                    if(Util.isYouTubeLink(linkStr)) {
-                        AudioManager.stopAudioPlayer();
+					if (position < count) {
+						if (Util.isYouTubeLink(linkStr)) {
+							AudioManager.stopAudioPlayer();
 
-                        // apply native YouTube
-                        Util.openLink_YouTube(mAct, linkStr);
-                    }
-                }
+							// apply native YouTube
+							Util.openLink_YouTube(mAct, linkStr);
+						}
+					}
+				}
             }
         });
 
