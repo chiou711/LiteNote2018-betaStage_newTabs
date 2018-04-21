@@ -189,6 +189,8 @@ public class TabsHost extends AppCompatDialogFragment implements TabLayout.OnTab
         // set pager item
         mViewPager.setCurrentItem(mFocusTabPos);
 
+        // call onCreateOptionsMenu
+        MainAct.mAct.invalidateOptionsMenu();
     }
 
     @Override
