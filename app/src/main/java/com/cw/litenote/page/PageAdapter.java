@@ -126,7 +126,8 @@ public class PageAdapter extends SimpleDragSortCursorAdapter // DragSortCursorAd
 
 		if (convertView == null)
 		{
-			convertView = mAct.getLayoutInflater().inflate(R.layout.page_view_row, parent, false);
+//            convertView = mAct.getLayoutInflater().inflate(R.layout.page_view_row, parent, false);
+            convertView = mAct.getLayoutInflater().inflate(R.layout.page_view_card, parent, false);
 
 			// set rectangular background
 //				view.setBackgroundColor(Util.mBG_ColorArray[style]);
@@ -344,7 +345,8 @@ public class PageAdapter extends SimpleDragSortCursorAdapter // DragSortCursorAd
 			holder.audioBlock.setVisibility(View.VISIBLE);
 
 			// set type face
-			holder.audioName.setTypeface(Typeface.DEFAULT, Typeface.BOLD);
+//			holder.audioName.setTypeface(Typeface.DEFAULT, Typeface.BOLD);
+			holder.audioName.setTextColor(ColorSet.getHighlightColor(mAct));
 
 			// set icon
 			holder.imageAudio.setVisibility(View.VISIBLE);
@@ -362,7 +364,7 @@ public class PageAdapter extends SimpleDragSortCursorAdapter // DragSortCursorAd
 			holder.audioBlock.setVisibility(View.VISIBLE);
 
 			// set type face
-			holder.audioName.setTypeface(Typeface.DEFAULT, Typeface.NORMAL);
+//			holder.audioName.setTypeface(Typeface.DEFAULT, Typeface.NORMAL);
 
 			// set icon
 			holder.imageAudio.setVisibility(View.VISIBLE);

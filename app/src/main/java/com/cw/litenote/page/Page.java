@@ -218,7 +218,8 @@ public class Page extends UilListViewBaseFragment
 
 		mItemAdapter = new PageAdapter(
 				mAct,
-				R.layout.page_view_row,
+//				R.layout.page_view_row,
+				R.layout.page_view_card,
 				mCursor_note,
 				from,
 				to,

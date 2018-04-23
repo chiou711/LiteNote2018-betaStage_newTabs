@@ -63,7 +63,7 @@ public class UilCommon
 			.imageScaleType(ImageScaleType.EXACTLY)
 			.bitmapConfig(Bitmap.Config.RGB_565)
 			.considerExifParams(true)
-			.displayer(new RoundedBitmapDisplayer(20));
+			.displayer(new RoundedBitmapDisplayer(0));//ori 20
 		
 		optionsForRounded_light = optionsForRounded
 			.showImageForEmptyUri(R.drawable.btn_radio_off_holo_light)

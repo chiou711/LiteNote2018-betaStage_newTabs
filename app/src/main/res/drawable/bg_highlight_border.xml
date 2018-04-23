@@ -5,13 +5,13 @@
        			android:shape="rectangle">
 			<stroke android:width="5px" android:color="@color/highlight_color" />
 		    <gradient android:angle="90" 
-	                  android:endColor="#00222222" 
-	                  android:centerColor="#00222222" 
+	                  android:endColor="#00222222"
+	                  android:centerColor="#00222222"
 	                  android:startColor="#00222222" />
 	
-			<corners android:bottomLeftRadius="6dp" 
-			    	 android:bottomRightRadius="6dp" 
-			    	 android:topLeftRadius="6dp" 
-			    	 android:topRightRadius="6dp" />
+			<corners android:bottomLeftRadius="0dp"
+			    	 android:bottomRightRadius="0dp"
+			    	 android:topLeftRadius="0dp"
+			    	 android:topRightRadius="0dp" />
  		</shape>
 

@@ -103,7 +103,6 @@ public class AudioManager
 				  size++;
 		  }
 	   }
-//	   System.out.println( " AudioManager / getAudioFilesCount = " + size);
 	   return size;
    }
 
@@ -170,7 +169,8 @@ public class AudioManager
 	 		addCheckedAudio(i);
 
 	 		// set playable
-	 		if( !Util.isEmptyString(audioUri)  && (db_page.getNoteMarking(i,false) == 1))
+	 		if( !Util.isEmptyString(audioUri)  &&
+                (db_page.getNoteMarking(i,false) == 1) )
 		 		setCheckedAudio(i,1);
 	 		else
 	 			setCheckedAudio(i,0);

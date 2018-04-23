@@ -155,7 +155,7 @@ public class AudioPlayer_page
 		{
             if(!AudioManager.isRunnableOn_page)
             {
-                System.out.println("AudioPlayer_page / _mRunContinueMode / AudioManager.isRunnableOn_page = " + AudioManager.isRunnableOn_page);
+//                System.out.println("AudioPlayer_page / _mRunContinueMode / AudioManager.isRunnableOn_page = " + AudioManager.isRunnableOn_page);
                 stopHandler();
                 stopAsyncTask();
 
@@ -241,9 +241,9 @@ public class AudioPlayer_page
 	   				}
 	   			}
 	   		}
-	   		else if( AudioManager.getCheckedAudio(AudioManager.mAudioPos) == 0 )// for non-marking item
+	   		else if( (AudioManager.getCheckedAudio(AudioManager.mAudioPos) == 0 ) )// for non-audio item
 	   		{
-	   			System.out.println("--- for non-marking item");
+//	   			System.out.println("AudioPlayer_page / page_runnable / for non-audio item");
 	   			// get next index
 	   			if(willPlayNext)
 	   				AudioManager.mAudioPos++;
@@ -260,7 +260,7 @@ public class AudioPlayer_page
 	   			
 	   			startNewAudio();
 	   		}
-		} 
+		}
 	};	
 
 	private void stopHandler()
@@ -320,8 +320,9 @@ public class AudioPlayer_page
 					if(AudioManager.getAudioPlayMode() == AudioManager.PAGE_PLAY_MODE)
 					{
                         playNextAudio();
-                        //todo TBD
-//                        Page.mItemAdapter.notifyDataSetChanged();
+                        // todo TBD
+						TabsHost.audioPlayer_page.scrollHighlightAudioItemToVisible(TabsHost.getCurrentPage().drag_listView);
+						TabsHost.getCurrentPage().mItemAdapter.notifyDataSetChanged();
 					}
 				}
 			});
@@ -428,18 +429,18 @@ public class AudioPlayer_page
             View v;
 
 			pos = listView.getFirstVisiblePosition();
-			System.out.println("---------------- pos = " + pos);
+//			System.out.println("---------------- pos = " + pos);
 
             View childView;
 			if(listView.getAdapter() != null) {
                 childView = listView.getAdapter().getView(pos, null, listView);
                 childView.measure(UNBOUNDED, UNBOUNDED);
                 itemHeight = childView.getMeasuredHeight();
-                System.out.println("---------------- itemHeight = " + itemHeight);
+//                System.out.println("---------------- itemHeight = " + itemHeight);
             }
 
 			dividerHeight = listView.getDividerHeight();
-			System.out.println("---------------- dividerHeight = " + dividerHeight);
+//			System.out.println("---------------- dividerHeight = " + dividerHeight);
 
 			firstVisible_note_pos = listView.getFirstVisiblePosition();
 			System.out.println("---------------- firstVisible_note_pos = " + firstVisible_note_pos);
@@ -447,14 +448,14 @@ public class AudioPlayer_page
 			v = listView.getChildAt(0);
 
 			int firstVisibleNote_top = (v == null) ? 0 : v.getTop();
-			System.out.println("---------------- firstVisibleNote_top = " + firstVisibleNote_top);
+//			System.out.println("---------------- firstVisibleNote_top = " + firstVisibleNote_top);
 
 			System.out.println("---------------- AudioManager.mAudioPos = " + AudioManager.mAudioPos);
 
 			if(firstVisibleNote_top < 0)
 			{
 				listView.scrollListBy(firstVisibleNote_top);
-				System.out.println("----- scroll backwards by firstVisibleNote_top " + firstVisibleNote_top);
+//				System.out.println("----- scroll backwards by firstVisibleNote_top " + firstVisibleNote_top);
 			}
 
 			boolean noScroll = false;
@@ -468,17 +469,17 @@ public class AudioPlayer_page
 					if (firstVisible_note_pos > AudioManager.mAudioPos)
 					{
 						listView.scrollListBy(-offset);
-						System.out.println("-----scroll forwards (to top)" + (-offset));
+//						System.out.println("-----scroll forwards (to top)" + (-offset));
 					}
 					// scroll backwards
 					else if (firstVisible_note_pos < AudioManager.mAudioPos)
 					{
 						listView.scrollListBy(offset);
-						System.out.println("-----scroll backwards (to bottom)" + offset);
+//						System.out.println("-----scroll backwards (to bottom)" + offset);
 					}
 
-					System.out.println("---------------- firstVisible_note_pos = " + firstVisible_note_pos);
-					System.out.println("---------------- Page.drag_listView.getFirstVisiblePosition() = " + listView.getFirstVisiblePosition());
+//					System.out.println("---------------- firstVisible_note_pos = " + firstVisible_note_pos);
+//					System.out.println("---------------- Page.drag_listView.getFirstVisiblePosition() = " + listView.getFirstVisiblePosition());
 					if(firstVisible_note_pos == listView.getFirstVisiblePosition())
 						noScroll = true;
 					else {
@@ -518,44 +519,44 @@ public class AudioPlayer_page
 		if( (AudioManager.getAudioPlayMode() == AudioManager.PAGE_PLAY_MODE) &&
             (AudioManager.getCheckedAudio(AudioManager.mAudioPos) == 0)          )
 		{
-			mAudioHandler.postDelayed(page_runnable,Util.oneSecond/4);		}
+			mAudioHandler.postDelayed(page_runnable,Util.oneSecond/4);
+		}
 		else
 		{
 			mAudioUrlVerifyTask = new Async_audioUrlVerify(act, mAudioManager.getAudioStringAt(AudioManager.mAudioPos));
 			mAudioUrlVerifyTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,"Searching media ...");
-		}
 
-		while(!Async_audioUrlVerify.mIsOkUrl)
-        {
-            //wait for Url verification
-			//wait for Url verification
-			try {
-				Thread.sleep(Util.oneSecond/20);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
+			while(!Async_audioUrlVerify.mIsOkUrl)
+			{
+				//wait for Url verification
+				try {
+					Thread.sleep(Util.oneSecond/20);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
 			}
-        }
 
-		// prepare audio
-        if(Async_audioUrlVerify.mIsOkUrl)
-        {
-            // launch handler
-            if( (AudioManager.getPlayerState() != AudioManager.PLAYER_AT_STOP) &&
-                (AudioManager.getAudioPlayMode() == AudioManager.PAGE_PLAY_MODE)   )
-            {
-                mAudioHandler.postDelayed(page_runnable, Util.oneSecond / 4);
-            }
+			// prepare audio
+			if(Async_audioUrlVerify.mIsOkUrl)
+			{
+				// launch handler
+				if( (AudioManager.getPlayerState() != AudioManager.PLAYER_AT_STOP) &&
+						(AudioManager.getAudioPlayMode() == AudioManager.PAGE_PLAY_MODE)   )
+				{
+					mAudioHandler.postDelayed(page_runnable, Util.oneSecond / 4);
+				}
 
-            // during audio Preparing
-            Async_audioPrepare mAsyncTaskAudioPrepare = new Async_audioPrepare(act);
-            mAsyncTaskAudioPrepare.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,"Preparing to play ...");
-        }
+				// during audio Preparing
+				Async_audioPrepare mAsyncTaskAudioPrepare = new Async_audioPrepare(act);
+				mAsyncTaskAudioPrepare.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,"Preparing to play ...");
+			}
+		}
 
     }
 	
 
     /**
-     * Play next audio
+     * Play next audio at AudioPlayer_page
      */
     private void playNextAudio()
     {
