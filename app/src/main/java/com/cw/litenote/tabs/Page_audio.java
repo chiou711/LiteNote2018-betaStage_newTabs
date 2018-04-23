@@ -194,15 +194,18 @@ public class Page_audio {
             @Override
             public void onClick(View v)
             {
-                AudioPlayer_page.willPlayNext = false;
+                AudioPlayer_page.willPlayNextAudio = false;
 
                 do {
-                    AudioManager.mAudioPos--;
-                    if( AudioManager.mAudioPos < 0)
-                        AudioManager.mAudioPos++; //back to first index
-
+                    if(AudioManager.mAudioPos > 0)
+                        AudioManager.mAudioPos--;
+                    else if( (AudioManager.mAudioPos == 0) &&
+                             (AudioManager.getCheckedAudio(AudioManager.mAudioPos) == 0 ) )
+                    {
+                        AudioManager.mAudioPos = AudioManager.getNotesCount()-1;
+                    }
                 }
-                while (AudioManager.getCheckedAudio(AudioManager.mAudioPos) == 0);
+                while (AudioManager.getCheckedAudio(AudioManager.mAudioPos) == 0);//todo logic error if id=0 is non-audio
 
                 playNextAudio();
             }
@@ -214,12 +217,12 @@ public class Page_audio {
             @Override
             public void onClick(View v)
             {
-                AudioPlayer_page.willPlayNext = true;
+                AudioPlayer_page.willPlayNextAudio = true;
 
                 do
                 {
                     AudioManager.mAudioPos++;
-                    if( AudioManager.mAudioPos >= AudioManager.getAudioList().size())
+                    if( AudioManager.mAudioPos >= AudioManager.getNotesCount())
                         AudioManager.mAudioPos = 0; //back to first index
                 }
                 while (AudioManager.getCheckedAudio(AudioManager.mAudioPos) == 0);

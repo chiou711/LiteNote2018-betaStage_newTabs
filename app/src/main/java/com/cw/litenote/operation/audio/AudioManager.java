@@ -59,11 +59,6 @@ public class AudioManager
         mAudioPlayMode = audioPlayMode;
     }
 
-    public static List<String> getAudioList()
-   {
-      return audioList;
-   }
-
     /**
      * Stop audio
      */
@@ -95,9 +90,9 @@ public class AudioManager
    static int getAudioFilesCount()
    {
 	   int size = 0; 
-	   if(getAudioList()!= null)
+	   if(audioList != null)
 	   {
-		  for(int i=0;i< getAudioList().size();i++)
+		  for(int i=0;i< audioList.size();i++)
 		  {
 			  if( !Util.isEmptyString(audioList.get(i)) && (getCheckedAudio(i) == 1) )
 				  size++;
@@ -112,11 +107,6 @@ public class AudioManager
       audioList.add(path);
    }
    
-//   public void setAudio(int i, String path)
-//   {
-//      audioList.set(i,path);
-//   }
-
    // Add audio with marking to list
    private static void addCheckedAudio(int i)
    {
@@ -132,17 +122,6 @@ public class AudioManager
    {
 	   return  audioList_checked.get(index);
    }
-   
-//   public int getFirstAudioMarking()
-//   {
-//	   int first = 0;
-//	   for(int i = 0;i < audioList_checked.size() ; i++ )
-//	   {
-//		   if( audioList_checked.get(i) == 1)
-//			   first = Math.min(first,i);
-//	   }
-//	   return first;
-//   }
    
    // return String at position index
    public static String getAudioStringAt(int index)
@@ -177,5 +156,12 @@ public class AudioManager
 	 	}
 	 	db_page.close();
 	}
+
+	public static int getNotesCount()
+    {
+        DB_page db_page = new DB_page(MainAct.mAct, TabsHost.getCurrentPageTableId());
+
+        return db_page.getNotesCount(true);
+    }
 	
 }

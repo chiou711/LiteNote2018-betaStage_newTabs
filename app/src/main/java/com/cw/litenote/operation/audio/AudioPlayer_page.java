@@ -32,7 +32,7 @@ public class AudioPlayer_page
     private static AudioManager mAudioManager; // slide show being played
 	private static int mPlaybackTime; // time in miniSeconds from which media should play
 	private static int mAudio_tryTimes; // use to avoid useless looping in Continue mode
-    public static boolean willPlayNext;
+    public static boolean willPlayNextAudio;
     private FragmentActivity act;
     private Async_audioUrlVerify mAudioUrlVerifyTask;
 	private Page_audio page_audio;
@@ -189,7 +189,7 @@ public class AudioPlayer_page
    						//create a MediaPlayer
    						AudioManager.mMediaPlayer = new MediaPlayer();
 	   					AudioManager.mMediaPlayer.reset();
-	   					willPlayNext = true; // default: play next
+	   					willPlayNextAudio = true; // default: play next
 	   					Page_audio.mProgress = 0;
 
 
@@ -245,21 +245,23 @@ public class AudioPlayer_page
 	   		{
 //	   			System.out.println("AudioPlayer_page / page_runnable / for non-audio item");
 	   			// get next index
-	   			if(willPlayNext)
-	   				AudioManager.mAudioPos++;
-	   			else
-	   				AudioManager.mAudioPos--;
+	   			if(willPlayNextAudio) {
+					AudioManager.mAudioPos++;
+					if( AudioManager.mAudioPos >= AudioManager.getNotesCount())
+						AudioManager.mAudioPos = 0; //back to first index
+				}
+	   			else {
+					AudioManager.mAudioPos--;
+					if( AudioManager.mAudioPos < 0)
+						AudioManager.mAudioPos = (AudioManager.getNotesCount()-1);
+				}
 	   			
-	   			if( AudioManager.mAudioPos >= AudioManager.getAudioList().size())
-	   				AudioManager.mAudioPos = 0; //back to first index
-	   			else if( AudioManager.mAudioPos < 0)
-	   			{
-	   				AudioManager.mAudioPos++;
-	   				willPlayNext = true;
-	   			}
-	   			
-	   			startNewAudio();
-	   		}
+				playNextAudio();
+
+				TabsHost.audioPlayer_page.scrollHighlightAudioItemToVisible(TabsHost.getCurrentPage().drag_listView);
+				TabsHost.getCurrentPage().mItemAdapter.notifyDataSetChanged();
+
+			}
 		}
 	};	
 
@@ -572,7 +574,7 @@ public class AudioPlayer_page
         // new audio index
         AudioManager.mAudioPos++;
 
-        if(AudioManager.mAudioPos >= AudioManager.getAudioList().size())
+		if(AudioManager.mAudioPos >= AudioManager.getNotesCount())
             AudioManager.mAudioPos = 0; //back to first index
 
         // check try times,had tried or not tried yet, anyway the audio file is found
@@ -592,7 +594,7 @@ public class AudioPlayer_page
             // stop media player
             AudioManager.stopAudioPlayer();
         }
-        System.out.println("Next AudioManager.mAudioPos = " + AudioManager.mAudioPos);
+        System.out.println("AudioPlayer_page / _playNextAudio / AudioManager.mAudioPos = " + AudioManager.mAudioPos);
     }
 
     private void update_audioPanel_progress(Page_audio page_audio)

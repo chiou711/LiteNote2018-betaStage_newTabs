@@ -326,7 +326,7 @@ public class AudioPlayer_note
         // new audio index
         mAudioPos++;
 
-        if(mAudioPos >= AudioManager.getAudioList().size())
+        if(mAudioPos >= AudioManager.getNotesCount())
             mAudioPos = 0; //back to first index
 
         mPlaybackTime = 0;
