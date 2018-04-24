@@ -18,7 +18,7 @@ import android.widget.Toast;
 
 import com.cw.litenote.R;
 import com.cw.litenote.main.MainAct;
-import com.cw.litenote.tabs.Page_audio;
+import com.cw.litenote.tabs.AudioUi_page;
 import com.cw.litenote.tabs.TabsHost;
 import com.cw.litenote.util.Util;
 import com.mobeta.android.dslv.DragSortListView;
@@ -35,12 +35,12 @@ public class AudioPlayer_page
     public static boolean willPlayNextAudio;
     private FragmentActivity act;
     private Async_audioUrlVerify mAudioUrlVerifyTask;
-	private Page_audio page_audio;
+	private AudioUi_page audioUi_page;
     public static Handler mAudioHandler;
 
-	public AudioPlayer_page(FragmentActivity act, Page_audio page_audio){
+	public AudioPlayer_page(FragmentActivity act, AudioUi_page audioUi_page){
 		this.act = act;
-		this.page_audio = page_audio;
+		this.audioUi_page = audioUi_page;
 
 		System.out.println("AudioPlayer_page / constructor ");
 		// start a new handler
@@ -159,7 +159,7 @@ public class AudioPlayer_page
                 stopHandler();
                 stopAsyncTask();
 
-                if((page_audio != null) &&
+                if((audioUi_page != null) &&
                    (AudioManager.getPlayerState() == AudioManager.PLAYER_AT_STOP))
                     showAudioPanel(act,false);
                 return;
@@ -180,7 +180,7 @@ public class AudioPlayer_page
 					if(!Async_audioUrlVerify.mIsOkUrl)
 					{
 						mAudio_tryTimes++;
-						playNextAudio();
+						nextAudio_player();
 					}
 					else
    					{
@@ -190,7 +190,7 @@ public class AudioPlayer_page
    						AudioManager.mMediaPlayer = new MediaPlayer();
 	   					AudioManager.mMediaPlayer.reset();
 	   					willPlayNextAudio = true; // default: play next
-	   					Page_audio.mProgress = 0;
+	   					AudioUi_page.mProgress = 0;
 
 
 						// for network stream buffer change
@@ -220,7 +220,7 @@ public class AudioPlayer_page
    							System.out.println("AudioPlayer_page on Exception");
    							Log.e(TAG, e.toString());
 							mAudio_tryTimes++;
-   							playNextAudio();
+   							nextAudio_player();
    						}
    					}
 	   			}
@@ -231,8 +231,8 @@ public class AudioPlayer_page
 	   				if(mAudio_tryTimes < AudioManager.getAudioFilesCount())
 	   				{
 						// update page audio seek bar
-						if(page_audio != null)
-	   						update_audioPanel_progress(page_audio);
+						if(audioUi_page != null)
+	   						update_audioPanel_progress(audioUi_page);
 
 						if(mAudio_tryTimes == 0)
 							mAudioHandler.postDelayed(page_runnable,DURATION_1S);
@@ -256,7 +256,7 @@ public class AudioPlayer_page
 						AudioManager.mAudioPos = (AudioManager.getNotesCount()-1);
 				}
 	   			
-				playNextAudio();
+				nextAudio_player();
 
 				TabsHost.audioPlayer_page.scrollHighlightAudioItemToVisible(TabsHost.getCurrentPage().drag_listView);
 				TabsHost.getCurrentPage().mItemAdapter.notifyDataSetChanged();
@@ -321,7 +321,7 @@ public class AudioPlayer_page
 					// get next index
 					if(AudioManager.getAudioPlayMode() == AudioManager.PAGE_PLAY_MODE)
 					{
-                        playNextAudio();
+                        nextAudio_player();
                         // todo TBD
 						TabsHost.audioPlayer_page.scrollHighlightAudioItemToVisible(TabsHost.getCurrentPage().drag_listView);
 						TabsHost.getCurrentPage().mItemAdapter.notifyDataSetChanged();
@@ -350,8 +350,8 @@ public class AudioPlayer_page
 //                            listView.isShown()                ) //todo How to handle list view? If not, side effect?
 						{
                             // set seek bar progress
-                            if(page_audio != null)
-                                update_audioPanel_progress(page_audio);
+                            if(audioUi_page != null)
+                                update_audioPanel_progress(audioUi_page);
 
 							TextView audioPanel_file_length = (TextView) act.findViewById(R.id.audioPanel_file_length);
 							// show audio file length of playing
@@ -560,7 +560,7 @@ public class AudioPlayer_page
     /**
      * Play next audio at AudioPlayer_page
      */
-    private void playNextAudio()
+    private void nextAudio_player()
     {
 //		Toast.makeText(act,"Can not open file, try next one.",Toast.LENGTH_SHORT).show();
         System.out.println("AudioPlayer_page / _playNextAudio");
@@ -597,7 +597,7 @@ public class AudioPlayer_page
         System.out.println("AudioPlayer_page / _playNextAudio / AudioManager.mAudioPos = " + AudioManager.mAudioPos);
     }
 
-    private void update_audioPanel_progress(Page_audio page_audio)
+    private void update_audioPanel_progress(AudioUi_page audioUi_page)
     {
 //        if(!listView.isShown())
 //            return;
@@ -614,12 +614,12 @@ public class AudioPlayer_page
         int curSec = Math.round((float)((currentPos - curHour * 60 * 60 * 1000 - curMin * 60 * 1000)/ 1000));
 
         // set current playing time
-        page_audio.audioPanel_curr_pos.setText(String.format(Locale.US,"%2d", curHour)+":" +
+        audioUi_page.audioPanel_curr_pos.setText(String.format(Locale.US,"%2d", curHour)+":" +
                 String.format(Locale.US,"%02d", curMin)+":" +
                 String.format(Locale.US,"%02d", curSec) );//??? why affect audio title?
 
         // set current progress
-        Page_audio.mProgress = (int)(((float)currentPos/ media_file_length)*100);
-        page_audio.seekBarProgress.setProgress(Page_audio.mProgress); // This math construction give a percentage of "was playing"/"song length"
+        AudioUi_page.mProgress = (int)(((float)currentPos/ media_file_length)*100);
+        audioUi_page.seekBarProgress.setProgress(AudioUi_page.mProgress); // This math construction give a percentage of "was playing"/"song length"
     }
 }

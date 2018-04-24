@@ -23,7 +23,7 @@ import com.cw.litenote.operation.import_export.Import_webAct;
 import com.cw.litenote.page.Checked_notes_option;
 import com.cw.litenote.page.Page;
 import com.cw.litenote.page.PageUi;
-import com.cw.litenote.tabs.Page_audio;
+import com.cw.litenote.tabs.AudioUi_page;
 import com.cw.litenote.tabs.TabsHost;
 import com.cw.litenote.util.ColorSet;
 import com.cw.litenote.util.DeleteFileAlarmReceiver;
@@ -329,7 +329,7 @@ public class MainAct extends FragmentActivity implements OnBackStackChangedListe
        outState.putInt("NowFolderPosition", FolderUi.getFocus_folderPos());
        outState.putInt("Playing_pageId", mPlaying_pagePos);
        outState.putInt("Playing_folderPos", mPlaying_folderPos);
-       outState.putInt("SeekBarProgress", Page_audio.mProgress);
+       outState.putInt("SeekBarProgress", AudioUi_page.mProgress);
        outState.putInt("AudioInfo_state", AudioManager.getPlayerState());
        outState.putBoolean("CalledWhilePlayingAudio", UtilAudio.mIsCalledWhilePlayingAudio);
        if(FolderUi.mHandler != null)
@@ -349,7 +349,7 @@ public class MainAct extends FragmentActivity implements OnBackStackChangedListe
     		mPlaying_pagePos = savedInstanceState.getInt("Playing_pageId");
     		mPlaying_folderPos = savedInstanceState.getInt("Playing_folderPos");
             AudioManager.setPlayerState(savedInstanceState.getInt("AudioInfo_state"));
-    		Page_audio.mProgress = savedInstanceState.getInt("SeekBarProgress");
+    		AudioUi_page.mProgress = savedInstanceState.getInt("SeekBarProgress");
     		UtilAudio.mIsCalledWhilePlayingAudio = savedInstanceState.getBoolean("CalledWhilePlayingAudio");
     	}
     }
@@ -959,10 +959,10 @@ public class MainAct extends FragmentActivity implements OnBackStackChangedListe
                     AudioManager.mAudioPos = 0;
 
                     Page page = TabsHost.getCurrentPage();
-                    TabsHost.page_audio = new Page_audio(mAct,page.drag_listView);
-                    TabsHost.page_audio.initAudioBlock(mAct);
+                    TabsHost.audioUi_page = new AudioUi_page(mAct,page.drag_listView);
+                    TabsHost.audioUi_page.initAudioBlock(mAct);
 
-                    TabsHost.audioPlayer_page = new AudioPlayer_page(mAct,TabsHost.page_audio);
+                    TabsHost.audioPlayer_page = new AudioPlayer_page(mAct,TabsHost.audioUi_page);
                     TabsHost.audioPlayer_page.prepareAudioInfo();
                     TabsHost.audioPlayer_page.runAudioState();
 
@@ -970,8 +970,8 @@ public class MainAct extends FragmentActivity implements OnBackStackChangedListe
                     TabsHost.audioPlayTabPos = TabsHost.mFocusTabPos;
                     TabsHost.mTabsPagerAdapter.notifyDataSetChanged();
 
-                    UtilAudio.updateAudioPanel(TabsHost.page_audio.audioPanel_play_button,
-                                               TabsHost.page_audio.audio_panel_title_textView);
+                    UtilAudio.updateAudioPanel(TabsHost.audioUi_page.audioPanel_play_button,
+                                               TabsHost.audioUi_page.audio_panel_title_textView);
 
                     // update playing page position
                     mPlaying_pagePos = PageUi.getFocus_pagePos();

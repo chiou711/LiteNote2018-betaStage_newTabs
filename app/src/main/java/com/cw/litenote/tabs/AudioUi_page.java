@@ -27,7 +27,7 @@ import static android.os.Build.VERSION_CODES.M;
  * Created by cw on 2017/10/21.
  */
 
-public class Page_audio {
+public class AudioUi_page {
 
     FragmentActivity mAct;
     View audio_panel;
@@ -38,7 +38,7 @@ public class Page_audio {
     public static int mProgress;
     DragSortListView listView;
 
-    public Page_audio(FragmentActivity act,DragSortListView _listView)
+    public AudioUi_page(FragmentActivity act, DragSortListView _listView)
     {
         this.mAct = act;
         listView = _listView;
@@ -65,7 +65,7 @@ public class Page_audio {
      */
     public void initAudioBlock(FragmentActivity act)
     {
-        System.out.println("Page_audio / _initAudioBlock");
+        System.out.println("AudioUi_page / _initAudioBlock");
 
         audio_panel = act.findViewById(R.id.audio_panel);
 
@@ -112,7 +112,7 @@ public class Page_audio {
 
         // show audio file audio length of playing
         int media_length = AudioPlayer_page.media_file_length;
-        System.out.println("Page_audio / _initAudioBlock / audioLen = " + media_length);
+        System.out.println("AudioUi_page / _initAudioBlock / audioLen = " + media_length);
         int fileHour = Math.round((float)(media_length / 1000 / 60 / 60));
         int fileMin = Math.round((float)((media_length - fileHour * 60 * 60 * 1000) / 1000 / 60));
         int fileSec = Math.round((float)((media_length - fileHour * 60 * 60 * 1000 - fileMin * 1000 * 60 )/ 1000));
@@ -207,7 +207,7 @@ public class Page_audio {
                 }
                 while (AudioManager.getCheckedAudio(AudioManager.mAudioPos) == 0);//todo logic error if id=0 is non-audio
 
-                playNextAudio();
+                nextAudio_panel();
             }
         });
 
@@ -227,15 +227,15 @@ public class Page_audio {
                 }
                 while (AudioManager.getCheckedAudio(AudioManager.mAudioPos) == 0);
 
-                playNextAudio();
+                nextAudio_panel();
             }
         });
     }
 
     /**
-     * Play next audio at Page_audio
+     * Play next audio at AudioUi_page
      */
-    private void playNextAudio()
+    private void nextAudio_panel()
     {
         // cancel playing
         if(AudioManager.mMediaPlayer != null)

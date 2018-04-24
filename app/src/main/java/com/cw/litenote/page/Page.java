@@ -10,7 +10,7 @@ import com.cw.litenote.folder.FolderUi;
 import com.cw.litenote.operation.audio.AudioManager;
 import com.cw.litenote.operation.audio.AudioPlayer_page;
 import com.cw.litenote.main.MainAct;
-import com.cw.litenote.tabs.Page_audio;
+import com.cw.litenote.tabs.AudioUi_page;
 import com.cw.litenote.tabs.TabsHost;
 import com.cw.litenote.util.audio.UtilAudio;
 import com.cw.litenote.note.Note_edit;
@@ -705,10 +705,10 @@ public class Page extends UilListViewBaseFragment
 					AudioManager.mAudioPos = position;
                     AudioManager.setAudioPlayMode(AudioManager.PAGE_PLAY_MODE);
 
-					TabsHost.page_audio = new Page_audio(mAct, drag_listView);
-					TabsHost.page_audio.initAudioBlock(MainAct.mAct);
+					TabsHost.audioUi_page = new AudioUi_page(mAct, drag_listView);
+					TabsHost.audioUi_page.initAudioBlock(MainAct.mAct);
 
-                    TabsHost.audioPlayer_page = new AudioPlayer_page(mAct,TabsHost.page_audio);
+                    TabsHost.audioPlayer_page = new AudioPlayer_page(mAct,TabsHost.audioUi_page);
 					AudioPlayer_page.prepareAudioInfo();
 					TabsHost.audioPlayer_page.runAudioState();
 
@@ -716,8 +716,8 @@ public class Page extends UilListViewBaseFragment
 					TabsHost.audioPlayTabPos = page_pos;
 					TabsHost.mTabsPagerAdapter.notifyDataSetChanged();
 
-                    UtilAudio.updateAudioPanel(TabsHost.page_audio.audioPanel_play_button,
-                                               TabsHost.page_audio.audio_panel_title_textView);
+                    UtilAudio.updateAudioPanel(TabsHost.audioUi_page.audioPanel_play_button,
+                                               TabsHost.audioUi_page.audio_panel_title_textView);
 
                     // update playing page position
                     MainAct.mPlaying_pagePos = PageUi.getFocus_pagePos();

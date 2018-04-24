@@ -52,7 +52,7 @@ public class TabsHost extends AppCompatDialogFragment implements TabLayout.OnTab
 
     public static int firstPos_pageId;
 
-    public static Page_audio page_audio;
+    public static AudioUi_page audioUi_page;
     public static AudioPlayer_page audioPlayer_page;
 
     public TabsHost()
@@ -236,16 +236,16 @@ public class TabsHost extends AppCompatDialogFragment implements TabLayout.OnTab
             mTabLayout.getTabAt(audioPlayTabPos).setIcon(null);
 
         // for incoming phone call case or after Key Protect
-        if( (page_audio != null) &&
+        if( (audioUi_page != null) &&
             (AudioManager.getPlayerState() != AudioManager.PLAYER_AT_STOP) &&
             (AudioManager.getAudioPlayMode() == AudioManager.PAGE_PLAY_MODE)   )
         {
-            page_audio.initAudioBlock(getActivity());
+            audioUi_page.initAudioBlock(getActivity());
 
             audioPlayer_page.page_runnable.run();
 
-            UtilAudio.updateAudioPanel(page_audio.audioPanel_play_button,
-                                       page_audio.audio_panel_title_textView);
+            UtilAudio.updateAudioPanel(audioUi_page.audioPanel_play_button,
+                                       audioUi_page.audio_panel_title_textView);
         }
 
     }
