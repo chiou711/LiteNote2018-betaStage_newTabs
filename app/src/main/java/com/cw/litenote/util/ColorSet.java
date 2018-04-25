@@ -40,6 +40,11 @@ public class ColorSet
         return act.getResources().getColor(R.color.bar_color);
     }
 
+    public static int getButtonColor(Activity act)
+    {
+        return act.getResources().getColor(R.color.button_color);
+    }
+
     public static int getHighlightColor(Activity act)
     {
         return act.getResources().getColor(R.color.highlight_color);

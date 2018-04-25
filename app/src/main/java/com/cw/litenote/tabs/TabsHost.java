@@ -95,7 +95,10 @@ public class TabsHost extends AppCompatDialogFragment implements TabLayout.OnTab
         mTabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 //        mTabLayout.setTabMode(TabLayout.MODE_FIXED);
         mTabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
-        mTabLayout.setBackgroundColor(ColorSet.getBarColor(getActivity()));
+
+//        mTabLayout.setBackgroundColor(ColorSet.getBarColor(getActivity()));
+        mTabLayout.setBackgroundColor(ColorSet.getButtonColor(getActivity()));
+//        mTabLayout.setBackgroundColor(Color.parseColor("#FF303030"));
 
         // tab indicator
         mTabLayout.setSelectedTabIndicatorHeight(15);

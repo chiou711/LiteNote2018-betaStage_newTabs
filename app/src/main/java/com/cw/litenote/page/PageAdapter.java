@@ -6,10 +6,10 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.v4.app.FragmentActivity;
+import android.support.v7.widget.CardView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -130,44 +130,44 @@ public class PageAdapter extends SimpleDragSortCursorAdapter // DragSortCursorAd
             convertView = mAct.getLayoutInflater().inflate(R.layout.page_view_card, parent, false);
 
 			// set rectangular background
-//				view.setBackgroundColor(Util.mBG_ColorArray[style]);
+			((CardView)convertView).setCardBackgroundColor(ColorSet.mBG_ColorArray[style]);
 			
 			//set round corner and background color
-            switch(style)
-    		{
-    			case 0:
-                    convertView.setBackgroundResource(R.drawable.bg_0);
-    				break;
-    			case 1:
-					convertView.setBackgroundResource(R.drawable.bg_1);
-    				break;
-    			case 2:
-					convertView.setBackgroundResource(R.drawable.bg_2);
-    				break;
-    			case 3:
-					convertView.setBackgroundResource(R.drawable.bg_3);
-    				break;
-    			case 4:
-					convertView.setBackgroundResource(R.drawable.bg_4);
-    				break;
-    			case 5:
-					convertView.setBackgroundResource(R.drawable.bg_5);
-    				break;
-    			case 6:
-					convertView.setBackgroundResource(R.drawable.bg_6);
-    				break;
-    			case 7:
-					convertView.setBackgroundResource(R.drawable.bg_7);
-    				break;
-    			case 8:
-					convertView.setBackgroundResource(R.drawable.bg_8);
-    				break;
-    			case 9:
-					convertView.setBackgroundResource(R.drawable.bg_9);
-    				break;
-    			default:
-    				break;
-    		}
+//            switch(style)
+//    		{
+//    			case 0:
+//                    convertView.setBackgroundResource(R.drawable.bg_0);
+//    				break;
+//    			case 1:
+//					convertView.setBackgroundResource(R.drawable.bg_1);
+//    				break;
+//    			case 2:
+//					convertView.setBackgroundResource(R.drawable.bg_2);
+//    				break;
+//    			case 3:
+//					convertView.setBackgroundResource(R.drawable.bg_3);
+//    				break;
+//    			case 4:
+//					convertView.setBackgroundResource(R.drawable.bg_4);
+//    				break;
+//    			case 5:
+//					convertView.setBackgroundResource(R.drawable.bg_5);
+//    				break;
+//    			case 6:
+//					convertView.setBackgroundResource(R.drawable.bg_6);
+//    				break;
+//    			case 7:
+//					convertView.setBackgroundResource(R.drawable.bg_7);
+//    				break;
+//    			case 8:
+//					convertView.setBackgroundResource(R.drawable.bg_8);
+//    				break;
+//    			case 9:
+//					convertView.setBackgroundResource(R.drawable.bg_9);
+//    				break;
+//    			default:
+//    				break;
+//    		}
     		
 			holder = new ViewHolder();
 			holder.rowId= (TextView) convertView.findViewById(R.id.row_id);
