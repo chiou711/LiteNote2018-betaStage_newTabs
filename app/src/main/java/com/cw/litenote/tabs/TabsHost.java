@@ -16,24 +16,33 @@
 
 package com.cw.litenote.tabs;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatDialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 
 import com.cw.litenote.R;
+import com.cw.litenote.db.DB_folder;
 import com.cw.litenote.folder.FolderUi;
 import com.cw.litenote.main.MainAct;
 import com.cw.litenote.operation.audio.AudioManager;
 import com.cw.litenote.operation.audio.AudioPlayer_page;
 import com.cw.litenote.page.Page;
 import com.cw.litenote.util.ColorSet;
+import com.cw.litenote.util.Util;
 import com.cw.litenote.util.audio.UtilAudio;
 import com.cw.litenote.util.preferences.Pref;
 import com.mobeta.android.dslv.DragSortListView;
@@ -105,10 +114,10 @@ public class TabsHost extends AppCompatDialogFragment implements TabLayout.OnTab
         mTabLayout.setSelectedTabIndicatorColor(Color.parseColor("#FFFF7F00"));
 //        mTabLayout.setSelectedTabIndicatorHeight((int) (5 * getResources().getDisplayMetrics().density));
 
-//        mTabLayout.setTabTextColors(
-//                ContextCompat.getColor(getActivity(),R.color.bg_light),
-//                ContextCompat.getColor(getActivity(),R.color.highlight_color)
-//        );
+        mTabLayout.setTabTextColors(
+                ContextCompat.getColor(getActivity(),R.color.colorGray), //normal
+                ContextCompat.getColor(getActivity(),R.color.colorWhite) //selected
+        );
 
         return rootView;
     }
@@ -133,7 +142,6 @@ public class TabsHost extends AppCompatDialogFragment implements TabLayout.OnTab
 
             System.out.println("TabsHost / _addPages / page_tableId = " + pageTableId);
             adapter.addFragment(new Page(i,pageTableId));
-
         }
     }
 
@@ -194,6 +202,14 @@ public class TabsHost extends AppCompatDialogFragment implements TabLayout.OnTab
 
         // call onCreateOptionsMenu
         MainAct.mAct.invalidateOptionsMenu();
+
+        // set long click listener
+        setLongClickListener();
+
+        mTabLayout.setTabTextColors(
+                ContextCompat.getColor(getActivity(),R.color.colorGray), //normal
+                ContextCompat.getColor(getActivity(),R.color.colorWhite) //selected
+        );
     }
 
     @Override
@@ -251,6 +267,8 @@ public class TabsHost extends AppCompatDialogFragment implements TabLayout.OnTab
                                        audioUi_page.audio_panel_title_textView);
         }
 
+        // set long click listener
+        setLongClickListener();
     }
 
     @Override
@@ -338,5 +356,111 @@ public class TabsHost extends AppCompatDialogFragment implements TabLayout.OnTab
         View convertView = listView.getChildAt(rowPos);
         listView.getAdapter().getView(rowPos, convertView, listView);
         mTabsPagerAdapter.notifyDataSetChanged();
+    }
+
+    /**
+     * Set long click listeners for tabs editing
+     */
+    void setLongClickListener()
+    {
+        //https://stackoverflow.com/questions/33367245/add-onlongclicklistener-on-android-support-tablayout-tablayout-tab
+        // on long click listener
+        LinearLayout tabStrip = (LinearLayout) mTabLayout.getChildAt(0);
+        final int tabsCount =  tabStrip.getChildCount();
+        for (int i = 0; i < tabsCount; i++)
+        {
+            final int tabPos = i;
+            tabStrip.getChildAt(tabPos).setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    editPageTitle(tabPos,MainAct.mAct);
+                    return false;
+                }
+            });
+        }
+    }
+
+    /**
+     * edit page title
+     *
+     */
+    static void editPageTitle(final int tabPos, final FragmentActivity act)
+    {
+        final DB_folder mDbFolder = mTabsPagerAdapter.dbFolder;
+
+        // get tab name
+        String title = mDbFolder.getPageTitle(tabPos, true);
+
+        final EditText editText1 = new EditText(act.getBaseContext());
+        editText1.setText(title);
+        editText1.setSelection(title.length()); // set edit text start position
+        editText1.setTextColor(Color.BLACK);
+
+        //update tab info
+        AlertDialog.Builder builder = new AlertDialog.Builder(mTabLayout.getContext());
+        builder.setTitle(R.string.edit_page_tab_title)
+                .setMessage(R.string.edit_page_tab_message)
+                .setView(editText1)
+                .setNegativeButton(R.string.btn_Cancel, new DialogInterface.OnClickListener()
+                                    {   @Override
+                                        public void onClick(DialogInterface dialog, int which)
+                                        {/*cancel*/}
+                                    })
+                .setNeutralButton(R.string.edit_page_button_delete, new DialogInterface.OnClickListener()
+                                    {   @Override
+                                        public void onClick(DialogInterface dialog, int which)
+                                        {
+                                            // delete
+                                            Util util = new Util(act);
+                                            util.vibrate();
+
+                    //                        AlertDialog.Builder builder1 = new AlertDialog.Builder(mTabsHost.getContext());
+                    //                        builder1.setTitle(R.string.confirm_dialog_title)
+                    //                                .setMessage(R.string.confirm_dialog_message_page)
+                    //                                .setNegativeButton(R.string.confirm_dialog_button_no, new DialogInterface.OnClickListener(){
+                    //                                    @Override
+                    //                                    public void onClick(DialogInterface dialog1, int which1){
+                    //                                        /*nothing to do*/}})
+                    //                                .setPositiveButton(R.string.confirm_dialog_button_yes, new DialogInterface.OnClickListener(){
+                    //                                    @Override
+                    //                                    public void onClick(DialogInterface dialog1, int which1){
+                    //                                        deletePage(pageId, act);
+                    //                                    }})
+                    //                                .show();
+                                        }
+                                    })
+                .setPositiveButton(R.string.edit_page_button_update, new DialogInterface.OnClickListener()
+                                    {   @Override
+                                        public void onClick(DialogInterface dialog, int which)
+                                        {
+                                            // save
+                                            final int pageId =  mDbFolder.getPageId(tabPos, true);
+                                            final int pageTableId =  mDbFolder.getPageTableId(tabPos, true);
+
+                                            int tabStyle = mDbFolder.getPageStyle(tabPos, true);
+                                            mDbFolder.updatePage(pageId,
+                                                                 editText1.getText().toString(),
+                                                                 pageTableId,
+                                                                 tabStyle,
+                                                                 true);
+
+                                            FolderUi.startTabsHostRun();
+                                        }
+                                    })
+                .setIcon(android.R.drawable.ic_menu_edit);
+
+        AlertDialog d1 = builder.create();
+        d1.show();
+        // android.R.id.button1 for positive: save
+        ((Button)d1.findViewById(android.R.id.button1))
+                .setCompoundDrawablesWithIntrinsicBounds(android.R.drawable.ic_menu_save, 0, 0, 0);
+
+        // android.R.id.button2 for negative: color
+        ((Button)d1.findViewById(android.R.id.button2))
+                .setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_menu_close_clear_cancel, 0, 0, 0);
+
+        // android.R.id.button3 for neutral: delete
+        ((Button)d1.findViewById(android.R.id.button3))
+                .setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_delete, 0, 0, 0);
     }
 }
