@@ -18,6 +18,7 @@ package com.cw.litenote.tabs;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -41,6 +42,7 @@ import com.cw.litenote.main.MainAct;
 import com.cw.litenote.operation.audio.AudioManager;
 import com.cw.litenote.operation.audio.AudioPlayer_page;
 import com.cw.litenote.page.Page;
+import com.cw.litenote.page.PageUi;
 import com.cw.litenote.util.ColorSet;
 import com.cw.litenote.util.Util;
 import com.cw.litenote.util.audio.UtilAudio;
@@ -203,13 +205,16 @@ public class TabsHost extends AppCompatDialogFragment implements TabLayout.OnTab
         // call onCreateOptionsMenu
         MainAct.mAct.invalidateOptionsMenu();
 
-        // set long click listener
-        setLongClickListener();
-
+        // set text color
         mTabLayout.setTabTextColors(
                 ContextCompat.getColor(getActivity(),R.color.colorGray), //normal
                 ContextCompat.getColor(getActivity(),R.color.colorWhite) //selected
         );
+
+        // set long click listener
+        setLongClickListener();
+
+
     }
 
     @Override
@@ -363,6 +368,8 @@ public class TabsHost extends AppCompatDialogFragment implements TabLayout.OnTab
      */
     void setLongClickListener()
     {
+        System.out.println("TabsHost / _setLongClickListener");
+
         //https://stackoverflow.com/questions/33367245/add-onlongclicklistener-on-android-support-tablayout-tablayout-tab
         // on long click listener
         LinearLayout tabStrip = (LinearLayout) mTabLayout.getChildAt(0);
@@ -407,46 +414,46 @@ public class TabsHost extends AppCompatDialogFragment implements TabLayout.OnTab
                                         {/*cancel*/}
                                     })
                 .setNeutralButton(R.string.edit_page_button_delete, new DialogInterface.OnClickListener()
-                                    {   @Override
-                                        public void onClick(DialogInterface dialog, int which)
-                                        {
-                                            // delete
-                                            Util util = new Util(act);
-                                            util.vibrate();
+                    {   @Override
+                        public void onClick(DialogInterface dialog, int which)
+                        {
+                            // delete
+                            Util util = new Util(act);
+                            util.vibrate();
 
-                    //                        AlertDialog.Builder builder1 = new AlertDialog.Builder(mTabsHost.getContext());
-                    //                        builder1.setTitle(R.string.confirm_dialog_title)
-                    //                                .setMessage(R.string.confirm_dialog_message_page)
-                    //                                .setNegativeButton(R.string.confirm_dialog_button_no, new DialogInterface.OnClickListener(){
-                    //                                    @Override
-                    //                                    public void onClick(DialogInterface dialog1, int which1){
-                    //                                        /*nothing to do*/}})
-                    //                                .setPositiveButton(R.string.confirm_dialog_button_yes, new DialogInterface.OnClickListener(){
-                    //                                    @Override
-                    //                                    public void onClick(DialogInterface dialog1, int which1){
-                    //                                        deletePage(pageId, act);
-                    //                                    }})
-                    //                                .show();
-                                        }
-                                    })
+                            AlertDialog.Builder builder1 = new AlertDialog.Builder(mTabLayout.getContext());
+                            builder1.setTitle(R.string.confirm_dialog_title)
+                                    .setMessage(R.string.confirm_dialog_message_page)
+                                    .setNegativeButton(R.string.confirm_dialog_button_no, new DialogInterface.OnClickListener(){
+                                        @Override
+                                        public void onClick(DialogInterface dialog1, int which1){
+                                            /*nothing to do*/}})
+                                    .setPositiveButton(R.string.confirm_dialog_button_yes, new DialogInterface.OnClickListener(){
+                                        @Override
+                                        public void onClick(DialogInterface dialog1, int which1){
+                                            deletePage(tabPos, act);
+                                        }})
+                                    .show();
+                        }
+                    })
                 .setPositiveButton(R.string.edit_page_button_update, new DialogInterface.OnClickListener()
-                                    {   @Override
-                                        public void onClick(DialogInterface dialog, int which)
-                                        {
-                                            // save
-                                            final int pageId =  mDbFolder.getPageId(tabPos, true);
-                                            final int pageTableId =  mDbFolder.getPageTableId(tabPos, true);
+                    {   @Override
+                        public void onClick(DialogInterface dialog, int which)
+                        {
+                            // save
+                            final int pageId =  mDbFolder.getPageId(tabPos, true);
+                            final int pageTableId =  mDbFolder.getPageTableId(tabPos, true);
 
-                                            int tabStyle = mDbFolder.getPageStyle(tabPos, true);
-                                            mDbFolder.updatePage(pageId,
-                                                                 editText1.getText().toString(),
-                                                                 pageTableId,
-                                                                 tabStyle,
-                                                                 true);
+                            int tabStyle = mDbFolder.getPageStyle(tabPos, true);
+                            mDbFolder.updatePage(pageId,
+                                                 editText1.getText().toString(),
+                                                 pageTableId,
+                                                 tabStyle,
+                                                 true);
 
-                                            FolderUi.startTabsHostRun();
-                                        }
-                                    })
+                            FolderUi.startTabsHostRun();
+                        }
+                    })
                 .setIcon(android.R.drawable.ic_menu_edit);
 
         AlertDialog d1 = builder.create();
@@ -463,4 +470,111 @@ public class TabsHost extends AppCompatDialogFragment implements TabLayout.OnTab
         ((Button)d1.findViewById(android.R.id.button3))
                 .setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_delete, 0, 0, 0);
     }
+
+    /**
+     * delete page
+     *
+     */
+    public static  void deletePage(int tabPos, final FragmentActivity activity)
+    {
+
+        final DB_folder mDbFolder = mTabsPagerAdapter.dbFolder;
+        int pageId =  mDbFolder.getPageId(tabPos, true);
+        mDbFolder.open();
+        // check if only one page left
+        int pagesCount = mDbFolder.getPagesCount(false);
+        int mFirstPos_PageId = 0;
+        Cursor mPageCursor = mDbFolder.getPageCursor();
+        if(mPageCursor.isFirst())
+            mFirstPos_PageId = pageId;
+
+        if(pagesCount > 0)
+        {
+            //if current page is the first page and will be delete,
+            //try to get next existence of note page
+            System.out.println("TabsHost / deletePage / tabPos = " + tabPos);
+            System.out.println("TabsHost / deletePage / mFirstPos_PageId = " + mFirstPos_PageId);
+            if(pageId == mFirstPos_PageId)
+            {
+                int cGetNextExistIndex = PageUi.getFocus_pagePos() +1;
+                boolean bGotNext = false;
+                while(!bGotNext){
+                    try{
+                        mFirstPos_PageId =  mDbFolder.getPageId(cGetNextExistIndex, false);
+                        bGotNext = true;
+                    }catch(Exception e){
+                        bGotNext = false;
+                        cGetNextExistIndex++;}}
+            }
+
+            //change to first existing page
+            int newFirstPageTblId = 0;
+            for(int i=0 ; i<pagesCount; i++)
+            {
+                if(	mDbFolder.getPageId(i, false)== mFirstPos_PageId)
+                {
+                    newFirstPageTblId =  mDbFolder.getPageTableId(i, false);
+                    System.out.println("TabsHost / deletePage / newFirstPageTblId = " + newFirstPageTblId);
+                }
+            }
+            System.out.println("TabsHost / deletePage / --- after delete / newFirstPageTblId = " + newFirstPageTblId);
+            Pref.setPref_focusView_page_tableId(activity, newFirstPageTblId);
+        }
+//		else
+//		{
+//             Toast.makeText(activity, R.string.toast_keep_one_page , Toast.LENGTH_SHORT).show();
+//             return;
+//		}
+        mDbFolder.close();
+
+        //todo TBD
+        // set scroll X
+//        int scrollX = 0; //over the last scroll X
+//        SharedPreferences mPref_FinalPageViewed = activity.getSharedPreferences("focus_view", 0);
+//        Pref.setPref_focusView_scrollX_byFolderTableId(activity, scrollX );
+
+
+        // get page table Id for dropping
+        int pageTableId = mDbFolder.getPageTableId(tabPos, true);
+        System.out.println("TabsHost / _deletePage / pageTableId =  " + pageTableId);
+
+        // delete tab name
+        mDbFolder.dropPageTable(pageTableId,true);
+        mDbFolder.deletePage(DB_folder.getFocusFolder_tableName(),pageId,true);
+//        mPagesCount--;
+
+        // After Delete page, update highlight tab
+        if(PageUi.getFocus_pagePos() < MainAct.mPlaying_pagePos)
+        {
+            MainAct.mPlaying_pagePos--;
+        }
+        else if((PageUi.getFocus_pagePos() == MainAct.mPlaying_pagePos) &&
+                (MainAct.mPlaying_folderPos == FolderUi.getFocus_folderPos()))
+        {
+            if(AudioManager.mMediaPlayer != null)
+            {
+                AudioManager.stopAudioPlayer();
+                AudioManager.mAudioPos = 0;
+                AudioManager.setPlayerState(AudioManager.PLAYER_AT_STOP);
+            }
+        }
+
+        // update change after deleting tab
+        FolderUi.startTabsHostRun();
+
+        //todo TBD
+        // Note: _onTabChanged will reset scroll X to another value,
+        // so we need to add the following to set scroll X again
+//        mHorScrollView.post(new Runnable()
+//        {
+//            @Override
+//            public void run() {
+//                mHorScrollView.scrollTo(0, 0);
+//                Pref.setPref_focusView_scrollX_byFolderTableId(activity, 0 );
+//            }
+//        });
+    }
+
+
+
 }
