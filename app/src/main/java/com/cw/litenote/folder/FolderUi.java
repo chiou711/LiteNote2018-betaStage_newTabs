@@ -626,12 +626,12 @@ public class FolderUi
 
             int pagesCount = db_folder.getPagesCount(true);
 
-            for(int pagePos=0; pagePos<pagesCount; pagePos++)
+            for(int tabPos=0; tabPos<pagesCount; tabPos++)
             {
-                PageUi.setFocus_pagePos(pagePos);
-                int pageId = db_folder.getPageId(pagePos, true);
-                int pageTableId = db_folder.getPageTableId(pagePos, true);
-                String pageTitle = db_folder.getPageTitle(pagePos, true);
+                TabsHost.setFocus_tabPos(tabPos);
+                int pageId = db_folder.getPageId(tabPos, true);
+                int pageTableId = db_folder.getPageTableId(tabPos, true);
+                String pageTitle = db_folder.getPageTitle(tabPos, true);
                 System.out.println("   --- page Id = " + pageId);
                 System.out.println("   --- page table Id = " + pageTableId);
                 System.out.println("   --- page title = " + pageTitle);

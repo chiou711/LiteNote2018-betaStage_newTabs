@@ -164,7 +164,7 @@ public class Note extends FragmentActivity
 
 		DB_folder dbFolder = new DB_folder(act,Pref.getPref_focusView_folder_tableId(act));
 
-		mStyle = dbFolder.getPageStyle(PageUi.getFocus_pagePos(), true);
+		mStyle = dbFolder.getPageStyle(TabsHost.getFocus_tabPos(), true);
 
 		if(mDb_page != null) {
 			mNoteId = mDb_page.getNoteId(NoteUi.getFocus_notePos(), true);

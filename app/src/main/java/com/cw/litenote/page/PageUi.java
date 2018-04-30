@@ -37,18 +37,6 @@ public class PageUi
 {
 	public PageUi(){}
 
-    // set getter/setter for focus page position
-    public static int mFocus_pagePos;
-
-    public static int getFocus_pagePos() {
-        return mFocus_pagePos;
-    }
-
-    public static void setFocus_pagePos(int pos) {
-        mFocus_pagePos = pos;
-    }
-
-
     /*
 	 * Change Page Color
 	 *
@@ -82,7 +70,7 @@ public class PageUi
 		// set current selection
 		for(int i=0;i< Util.getStyleCount();i++)
 		{
-			if(Util.getCurrentPageStyle(TabsHost.mFocusTabPos) == i)
+			if(Util.getCurrentPageStyle(TabsHost.getFocus_tabPos()) == i)
 			{
 				RadioButton button = (RadioButton) RG_view.getChildAt(i);
 		    	if(i%2 == 0)
@@ -105,7 +93,7 @@ public class PageUi
 			public void onCheckedChanged(RadioGroup radioGroup, int id) {
 				DB_folder db = new DB_folder(MainAct.mAct,DB_folder.getFocusFolder_tableId());
 				int style = radioGroup.indexOfChild(radioGroup.findViewById(id));
-                int pos = TabsHost.mFocusTabPos;
+                int pos = TabsHost.getFocus_tabPos();
 				db.updatePage(db.getPageId(pos, true),
 							  db.getPageTitle(pos, true),
 							  db.getPageTableId(pos, true),
@@ -152,47 +140,27 @@ public class PageUi
 	    		Button mButton=(Button)dlg.findViewById(android.R.id.button3);
 		        mButton.setText(R.string.btn_Finish);
 		        mButton.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_menu_finish , 0, 0, 0);
+				DB_folder db = new DB_folder(act,Pref.getPref_focusView_folder_tableId(act));
+			   int focus_tabPos = 	TabsHost.getFocus_tabPos();
+                if(getTabPositionState() != LEFTMOST)
+	    	    {
+					Pref.setPref_focusView_page_tableId(act, db.getPageTableId(focus_tabPos, true));
+	    	    	swapPage(focus_tabPos,
+							focus_tabPos -1);
 
-//		        int[] leftMargin = {0,0};
-//		        if(getFocus_pagePos() == 0)
-//		        	TabsHost.mTabsHost.getTabWidget().getChildAt(0).getLocationInWindow(leftMargin);
-//		        else
-//		        	TabsHost.mTabsHost.getTabWidget().getChildAt(getFocus_pagePos() -1).getLocationInWindow(leftMargin);
-//
-//				int curTabWidth,nextTabWidth;
-//				curTabWidth = TabsHost.mTabsHost.getTabWidget().getChildAt(getFocus_pagePos()).getWidth();
-//				if(getFocus_pagePos() == 0)
-//					nextTabWidth = curTabWidth;
-//				else
-//					nextTabWidth = TabsHost.mTabsHost.getTabWidget().getChildAt(getFocus_pagePos() -1).getWidth();
-//
-//				// when leftmost tab margin over window border
-//	       		if(leftMargin[0] < 0) {
-//	       		    int scrollX = -(nextTabWidth + dividerWidth + screenWidth );
-//                    TabsHost.mHorScrollView.scrollTo(scrollX, 0);
-//                    //update final page currently viewed: scroll x
-//                    Pref.setPref_focusView_scrollX_byFolderTableId(act, scrollX );
-//                }
-//
-//                if(getTabPositionState() != LEFTMOST)
-//	    	    {
-//					Pref.setPref_focusView_page_tableId(act, TabsHost.mDbFolder.getPageTableId(getFocus_pagePos(), true));
-//	    	    	swapPage(getFocus_pagePos(),
-//                            getFocus_pagePos() -1);
-//
-//                    // shift left when audio playing
-//                    if(MainAct.mPlaying_folderPos == FolderUi.getFocus_folderPos()) {
-//                        // target is playing index
-//                        if (getFocus_pagePos() == MainAct.mPlaying_pagePos)
-//                            MainAct.mPlaying_pagePos--;
-//                        // target is at right side of playing index
-//                        else if ((getFocus_pagePos() - MainAct.mPlaying_pagePos) == 1)
-//                            MainAct.mPlaying_pagePos++;
-//                    }
-//                    FolderUi.startTabsHostRun();
-//                    setFocus_pagePos(getFocus_pagePos()-1);
-//                    updateButtonState(dlg);
-//	    	    }
+                    // shift left when audio playing
+                    if(MainAct.mPlaying_folderPos == FolderUi.getFocus_folderPos()) {
+                        // target is playing index
+                        if (focus_tabPos == MainAct.mPlaying_pagePos)
+                            MainAct.mPlaying_pagePos--;
+                        // target is at right side of playing index
+                        else if ((focus_tabPos - MainAct.mPlaying_pagePos) == 1)
+                            MainAct.mPlaying_pagePos++;
+                    }
+                    FolderUi.startTabsHostRun();
+                    TabsHost.setFocus_tabPos(focus_tabPos-1);
+                    updateButtonState(dlg);
+	    	    }
 	       }
 	    });
 
@@ -218,49 +186,23 @@ public class PageUi
 		        mButton.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_menu_finish , 0, 0, 0);
 
 			    DB_folder db = new DB_folder(act,Pref.getPref_focusView_folder_tableId(act));
-
-	    		int count = db.getPagesCount(true);
-
-				int[] rightMargin = {0,0};
-//				if(getFocus_pagePos() == (count-1))
-//					TabsHost.mTabsHost.getTabWidget().getChildAt(count-1).getLocationInWindow(rightMargin);
-//				else
-//					TabsHost.mTabsHost.getTabWidget().getChildAt(getFocus_pagePos() +1).getLocationInWindow(rightMargin);
-//
-//				int curTabWidth, nextTabWidth;
-//				curTabWidth = TabsHost.mTabsHost.getTabWidget().getChildAt(getFocus_pagePos()).getWidth();
-//
-//				if(getFocus_pagePos() == (count-1))
-//					nextTabWidth = curTabWidth;
-//				else
-//					nextTabWidth = TabsHost.mTabsHost.getTabWidget().getChildAt(getFocus_pagePos() +1).getWidth();
-//
-//	    		// when rightmost tab margin plus its tab width over screen border
-//	    		if( screenWidth < (rightMargin[0] + nextTabWidth) )
-//	    		{
-//                    int scrollX = nextTabWidth + dividerWidth + screenWidth;
-//                    TabsHost.mHorScrollView.scrollTo(scrollX, 0);
-//
-//                    //update final page currently viewed: scroll x
-//                    Pref.setPref_focusView_scrollX_byFolderTableId(act, scrollX );
-//                }
-
+				int focus_tabPos = 	TabsHost.getFocus_tabPos();
                 if(getTabPositionState() != RIGHTMOST)
 	   	    	{
-					Pref.setPref_focusView_page_tableId(act, db.getPageTableId(getFocus_pagePos(), true));
-					swapPage(getFocus_pagePos(), getFocus_pagePos() +1);
+					Pref.setPref_focusView_page_tableId(act, db.getPageTableId(focus_tabPos, true));
+					swapPage(focus_tabPos, focus_tabPos +1);
 
                     // shift right when audio playing
                     if(MainAct.mPlaying_folderPos == FolderUi.getFocus_folderPos()) {
                         // target is playing index
-                        if (getFocus_pagePos() == MainAct.mPlaying_pagePos)
+                        if (focus_tabPos== MainAct.mPlaying_pagePos)
                             MainAct.mPlaying_pagePos++;
                         // target is at left side of plying index
-                        else if ((MainAct.mPlaying_pagePos - getFocus_pagePos()) == 1)
+                        else if ((MainAct.mPlaying_pagePos - focus_tabPos) == 1)
                             MainAct.mPlaying_pagePos--;
                     }
                     FolderUi.startTabsHostRun();
-                    setFocus_pagePos(getFocus_pagePos()+1);
+					TabsHost.setFocus_tabPos(TabsHost.getFocus_tabPos()+1);
 					updateButtonState(dlg);
 	   	    	}
 	       }
@@ -275,7 +217,7 @@ public class PageUi
 
 	static int getTabPositionState()
 	{
-		int pos = getFocus_pagePos();
+		int pos = TabsHost.getFocus_tabPos();
 
 		DB_folder db = new DB_folder(MainAct.mAct,Pref.getPref_focusView_folder_tableId(MainAct.mAct));
 		int count = db.getPagesCount(true);
@@ -603,7 +545,7 @@ public class PageUi
 		for(int i = 0; i<dbFolder.getPagesCount(false); i++)
 		{
 			if(tableId == dbFolder.getPageTableId(i, false))
-				setFocus_pagePos(i);
+				TabsHost.setFocus_tabPos(i);
 			
 	    	if(	dbFolder.getPageId(i, false)== TabsHost.getFirstPos_pageId())
 	    		Pref.setPref_focusView_page_tableId(act, dbFolder.getPageTableId(i, false) );
@@ -614,7 +556,7 @@ public class PageUi
     public static boolean isAudioPlayingPage()
     {
 	    return ( (MainAct.mPlaying_pageTableId == TabsHost.mFocusPageTableId)&&//mNow_pageTableId) &&
-			     (MainAct.mPlaying_pagePos == getFocus_pagePos()) &&
+			     (MainAct.mPlaying_pagePos == TabsHost.getFocus_tabPos()) &&
 	     	     (MainAct.mPlaying_folderPos == FolderUi.getFocus_folderPos())  );
     }
 

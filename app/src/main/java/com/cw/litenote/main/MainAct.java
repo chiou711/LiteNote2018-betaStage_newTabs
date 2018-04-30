@@ -967,14 +967,14 @@ public class MainAct extends FragmentActivity implements OnBackStackChangedListe
                     TabsHost.audioPlayer_page.runAudioState();
 
                     // update audio play position
-                    TabsHost.audioPlayTabPos = TabsHost.mFocusTabPos;
+                    TabsHost.audioPlayTabPos = TabsHost.getFocus_tabPos();
                     TabsHost.mTabsPagerAdapter.notifyDataSetChanged();
 
                     UtilAudio.updateAudioPanel(TabsHost.audioUi_page.audioPanel_play_button,
                                                TabsHost.audioUi_page.audio_panel_title_textView);
 
                     // update playing page position
-                    mPlaying_pagePos = PageUi.getFocus_pagePos();
+                    mPlaying_pagePos = TabsHost.getFocus_tabPos();
 
                     // update playing page table Id
                     mPlaying_pageTableId = TabsHost.mFocusPageTableId;//mNow_pageTableId;

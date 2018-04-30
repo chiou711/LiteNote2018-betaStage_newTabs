@@ -7,7 +7,7 @@ import com.cw.litenote.folder.FolderUi;
 import com.cw.litenote.main.MainAct;
 import com.cw.litenote.operation.audio.AudioManager;
 import com.cw.litenote.R;
-import com.cw.litenote.page.PageUi;
+import com.cw.litenote.tabs.TabsHost;
 import com.cw.litenote.util.ColorSet;
 import com.cw.litenote.util.Util;
 
@@ -35,7 +35,7 @@ public class UtilAudio {
 		if( ( (AudioManager.mMediaPlayer != null) &&
               (AudioManager.getPlayerState() != AudioManager.PLAYER_AT_STOP) ) &&
 			(MainAct.mPlaying_folderPos == FolderUi.getFocus_folderPos()) &&
-			(PageUi.getFocus_pagePos() == MainAct.mPlaying_pagePos)                           )
+			(TabsHost.getFocus_tabPos() == MainAct.mPlaying_pagePos)                           )
 		{
             if(AudioManager.mMediaPlayer != null){
                 AudioManager.stopAudioPlayer();

@@ -382,7 +382,7 @@ public class Checked_notes_option {
         db_folder.close();
 
         // add * mark to current page
-        pageNames[TabsHost.mFocusTabPos] = pageNames[TabsHost.mFocusTabPos] + " *";
+        pageNames[TabsHost.getFocus_tabPos()] = pageNames[TabsHost.getFocus_tabPos()] + " *";
 
         AlertDialog.Builder builder = new AlertDialog.Builder(act);
         DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener()

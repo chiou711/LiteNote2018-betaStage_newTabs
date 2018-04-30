@@ -335,7 +335,7 @@ public class Util
 		mDbFolder = new DB_folder(MainAct.mAct, Pref.getPref_focusView_folder_tableId(MainAct.mAct));
 	    ListView listView = ((AlertDialog) dialogInterface).getListView();
 	    final ListAdapter originalAdapter = listView.getAdapter();
-	    final int style = Util.getCurrentPageStyle(TabsHost.mFocusTabPos);
+	    final int style = Util.getCurrentPageStyle(TabsHost.getFocus_tabPos());
         CheckedTextView textViewDefault = new CheckedTextView(mAct) ;
         defaultBgClr = textViewDefault.getDrawingCacheBackgroundColor();
         defaultTextClr = textViewDefault.getCurrentTextColor();

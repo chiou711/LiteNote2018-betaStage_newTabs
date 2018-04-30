@@ -164,7 +164,7 @@ public class Note_common {
                 		{
 	                		if(Uri.parse(pictureUriInDB).isAbsolute())
 	                		{
-	                			int style =  Util.getCurrentPageStyle(TabsHost.mFocusTabPos);
+	                			int style =  Util.getCurrentPageStyle(TabsHost.getFocus_tabPos());
 	                			new UtilImage_bitmapLoader(enlargedImage, pictureUriInDB, progressBarExpand,
 	                					(style % 2 == 1 ? UilCommon.optionsForRounded_light: UilCommon.optionsForRounded_dark), act);
 	                			bShowEnlargedImage = true;
@@ -200,7 +200,7 @@ public class Note_common {
 	{
         int focusFolder_tableId = Pref.getPref_focusView_folder_tableId(act);
         DB_folder db = new DB_folder(MainAct.mAct, focusFolder_tableId);
-		style = db.getPageStyle(PageUi.getFocus_pagePos(), true);
+		style = db.getPageStyle(TabsHost.getFocus_tabPos(), true);
 
 		LinearLayout block = (LinearLayout) act.findViewById(R.id.edit_title_block);
 		if(block != null)
@@ -387,7 +387,7 @@ public class Note_common {
 			// load bitmap to image view
 			if(!Util.isEmptyString(pictureUriInDB))
 			{
-				int style =  Util.getCurrentPageStyle(TabsHost.mFocusTabPos);
+				int style =  Util.getCurrentPageStyle(TabsHost.getFocus_tabPos());
 				new UtilImage_bitmapLoader(picImageView, pictureUriInDB, progressBar,
     					(style % 2 == 1 ? UilCommon.optionsForRounded_light: UilCommon.optionsForRounded_dark), act);
 			}

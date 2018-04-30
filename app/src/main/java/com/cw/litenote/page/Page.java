@@ -467,7 +467,7 @@ public class Page extends UilListViewBaseFragment
             View v = drag_listView.getChildAt(0);
             mFirstVisibleIndexTop = (v == null) ? 0 : v.getTop();
 
-            if( (PageUi.getFocus_pagePos() == MainAct.mPlaying_pagePos)&&
+            if( (TabsHost.getFocus_tabPos() == MainAct.mPlaying_pagePos)&&
                     (MainAct.mPlaying_folderPos == FolderUi.getFocus_folderPos()) &&
                     (AudioManager.getPlayerState() == AudioManager.PLAYER_AT_PLAY) &&
                     (drag_listView.getChildAt(0) != null)                    )
@@ -720,7 +720,7 @@ public class Page extends UilListViewBaseFragment
                                                TabsHost.audioUi_page.audio_panel_title_textView);
 
                     // update playing page position
-                    MainAct.mPlaying_pagePos = PageUi.getFocus_pagePos();
+                    MainAct.mPlaying_pagePos = TabsHost.getFocus_tabPos();
 
 					// update playing page table Id
 					MainAct.mPlaying_pageTableId = TabsHost.mFocusPageTableId;//mNow_pageTableId;

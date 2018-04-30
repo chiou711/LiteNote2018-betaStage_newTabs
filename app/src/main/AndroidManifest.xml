@@ -27,6 +27,7 @@
         android:theme="@style/AppTheme"
         >
 
+        <!-- android:theme="@style/Theme.AppCompat" -->
         <activity
             android:name=".main.MainAct"
             android:theme="@style/CustomTheme"

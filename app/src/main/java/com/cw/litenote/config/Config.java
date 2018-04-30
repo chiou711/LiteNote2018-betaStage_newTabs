@@ -5,7 +5,7 @@ import java.io.File;
 
 import com.cw.litenote.folder.FolderUi;
 import com.cw.litenote.operation.audio.AudioManager;
-import com.cw.litenote.page.PageUi;
+import com.cw.litenote.tabs.TabsHost;
 import com.cw.litenote.util.BaseBackPressedListener;
 import com.cw.litenote.main.MainAct;
 import com.cw.litenote.R;
@@ -492,7 +492,7 @@ public class Config extends Fragment
 //			TabsHost.setLastPos_pageId(0);
 			//reset tab Index to 0 
 			//fix: select tab over next import amount => clean all => import => export => error
-			PageUi.setFocus_pagePos(0);
+			TabsHost.setFocus_tabPos(0);
 			FolderUi.setFocus_folderPos(0);
 
 			dialog.dismiss();

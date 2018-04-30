@@ -167,17 +167,17 @@ public class TabsHost extends AppCompatDialogFragment implements TabLayout.OnTab
     public void onTabSelected(TabLayout.Tab tab) {
         System.out.println("TabsHost / _onTabSelected: " + tab.getPosition());
 
-        mFocusTabPos = tab.getPosition();
+        setFocus_tabPos(tab.getPosition());
 
         // keep focus view page table Id
-        int pageTableId = mTabsPagerAdapter.dbFolder.getPageTableId(mFocusTabPos, true);
+        int pageTableId = mTabsPagerAdapter.dbFolder.getPageTableId(getFocus_tabPos(), true);
         Pref.setPref_focusView_page_tableId(MainAct.mAct, pageTableId);
 
         // current page table Id
         mFocusPageTableId = pageTableId;
 
         // refresh list view of selected page
-        Page page = mTabsPagerAdapter.fragmentList.get(mFocusTabPos);
+        Page page = mTabsPagerAdapter.fragmentList.get(getFocus_tabPos());
         if( (tab.getPosition() == audioPlayTabPos) && (page != null) && (page.mItemAdapter != null) )
         {
             DragSortListView listView = page.drag_listView;
@@ -200,7 +200,7 @@ public class TabsHost extends AppCompatDialogFragment implements TabLayout.OnTab
             tab.setIcon(null);
 
         // set pager item
-        mViewPager.setCurrentItem(mFocusTabPos);
+        mViewPager.setCurrentItem(getFocus_tabPos());
 
         // call onCreateOptionsMenu
         MainAct.mAct.invalidateOptionsMenu();
@@ -235,7 +235,7 @@ public class TabsHost extends AppCompatDialogFragment implements TabLayout.OnTab
     public void onResume() {
         super.onResume();
         // default
-        mFocusTabPos = 0;
+        setFocus_tabPos(0);
 
         // restore focus view page
         int pageCount = mTabsPagerAdapter.dbFolder.getPagesCount(true);
@@ -244,13 +244,13 @@ public class TabsHost extends AppCompatDialogFragment implements TabLayout.OnTab
             int pageTableId = mTabsPagerAdapter.dbFolder.getPageTableId(i, true);
 
             if(pageTableId == Pref.getPref_focusView_page_tableId(getActivity())) {
-                mFocusTabPos = i;
+                setFocus_tabPos(i);
                 mFocusPageTableId = pageTableId;
             }
         }
-        mViewPager.setCurrentItem(mFocusTabPos);
+        mViewPager.setCurrentItem(getFocus_tabPos());
 
-        System.out.println("TabsHost / _onResume / mFocusTabPos = " + mFocusTabPos);
+        System.out.println("TabsHost / _onResume / _getFocus_tabPos = " + getFocus_tabPos());
 
         // set audio icon after Key Protect
         if ( (MainAct.mPlaying_folderPos == FolderUi.getFocus_folderPos()) &&
@@ -281,7 +281,7 @@ public class TabsHost extends AppCompatDialogFragment implements TabLayout.OnTab
         super.onPause();
         System.out.println("TabsHost / _onPause");
 
-        store_listView_vScroll(mTabsPagerAdapter.fragmentList.get(mFocusTabPos).drag_listView);
+        store_listView_vScroll(mTabsPagerAdapter.fragmentList.get(getFocus_tabPos()).drag_listView);
 
         //  Remove fragments
         if( mTabsPagerAdapter.fragmentList != null) {
@@ -339,14 +339,14 @@ public class TabsHost extends AppCompatDialogFragment implements TabLayout.OnTab
 
     public static void reloadCurrentPage()
     {
-        int pagePos = mFocusTabPos;
+        int pagePos = getFocus_tabPos();
         mViewPager.setAdapter(mTabsPagerAdapter);
         mViewPager.setCurrentItem(pagePos);
     }
 
     public static Page getCurrentPage()
     {
-        return mTabsPagerAdapter.fragmentList.get(mFocusTabPos);
+        return mTabsPagerAdapter.fragmentList.get(getFocus_tabPos());
     }
 
     public static int getCurrentPageTableId()
@@ -496,7 +496,7 @@ public class TabsHost extends AppCompatDialogFragment implements TabLayout.OnTab
             System.out.println("TabsHost / deletePage / mFirstPos_PageId = " + mFirstPos_PageId);
             if(pageId == mFirstPos_PageId)
             {
-                int cGetNextExistIndex = PageUi.getFocus_pagePos() +1;
+                int cGetNextExistIndex = getFocus_tabPos() +1;
                 boolean bGotNext = false;
                 while(!bGotNext){
                     try{
@@ -544,11 +544,11 @@ public class TabsHost extends AppCompatDialogFragment implements TabLayout.OnTab
 //        mPagesCount--;
 
         // After Delete page, update highlight tab
-        if(PageUi.getFocus_pagePos() < MainAct.mPlaying_pagePos)
+        if(getFocus_tabPos() < MainAct.mPlaying_pagePos)
         {
             MainAct.mPlaying_pagePos--;
         }
-        else if((PageUi.getFocus_pagePos() == MainAct.mPlaying_pagePos) &&
+        else if((getFocus_tabPos() == MainAct.mPlaying_pagePos) &&
                 (MainAct.mPlaying_folderPos == FolderUi.getFocus_folderPos()))
         {
             if(AudioManager.mMediaPlayer != null)
@@ -576,5 +576,21 @@ public class TabsHost extends AppCompatDialogFragment implements TabLayout.OnTab
     }
 
 
+    /**
+     * Get focus tab position
+    */
+    public static int getFocus_tabPos()
+    {
+        return mFocusTabPos;
+    }
+
+    /**
+     * Set focus tab position
+     * @param pos
+     */
+    public static void setFocus_tabPos(int pos)
+    {
+        mFocusTabPos = pos;
+    }
 
 }
