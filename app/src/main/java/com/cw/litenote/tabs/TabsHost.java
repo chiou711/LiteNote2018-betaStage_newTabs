@@ -42,12 +42,13 @@ import com.cw.litenote.main.MainAct;
 import com.cw.litenote.operation.audio.AudioManager;
 import com.cw.litenote.operation.audio.AudioPlayer_page;
 import com.cw.litenote.page.Page;
-import com.cw.litenote.page.PageUi;
 import com.cw.litenote.util.ColorSet;
 import com.cw.litenote.util.Util;
 import com.cw.litenote.util.audio.UtilAudio;
 import com.cw.litenote.util.preferences.Pref;
 import com.mobeta.android.dslv.DragSortListView;
+
+import java.util.ArrayList;
 
 
 public class TabsHost extends AppCompatDialogFragment implements TabLayout.OnTabSelectedListener
@@ -213,8 +214,6 @@ public class TabsHost extends AppCompatDialogFragment implements TabLayout.OnTab
 
         // set long click listener
         setLongClickListener();
-
-
     }
 
     @Override
@@ -253,11 +252,14 @@ public class TabsHost extends AppCompatDialogFragment implements TabLayout.OnTab
         System.out.println("TabsHost / _onResume / _getFocus_tabPos = " + getFocus_tabPos());
 
         // set audio icon after Key Protect
-        if ( (MainAct.mPlaying_folderPos == FolderUi.getFocus_folderPos()) &&
-             (AudioManager.getPlayerState() != AudioManager.PLAYER_AT_STOP)   )
-            mTabLayout.getTabAt(audioPlayTabPos).setIcon(R.drawable.ic_audio);
-        else
-            mTabLayout.getTabAt(audioPlayTabPos).setIcon(null);
+        TabLayout.Tab tab =  mTabLayout.getTabAt(audioPlayTabPos);
+        if(tab != null) {
+            if ((MainAct.mPlaying_folderPos == FolderUi.getFocus_folderPos()) &&
+                    (AudioManager.getPlayerState() != AudioManager.PLAYER_AT_STOP))
+               tab.setIcon(R.drawable.ic_audio);
+            else
+               tab.setIcon(null);
+        }
 
         // for incoming phone call case or after Key Protect
         if( (audioUi_page != null) &&
@@ -281,12 +283,17 @@ public class TabsHost extends AppCompatDialogFragment implements TabLayout.OnTab
         super.onPause();
         System.out.println("TabsHost / _onPause");
 
-        store_listView_vScroll(mTabsPagerAdapter.fragmentList.get(getFocus_tabPos()).drag_listView);
-
         //  Remove fragments
-        if( mTabsPagerAdapter.fragmentList != null) {
-            for (int i = 0; i < mTabsPagerAdapter.fragmentList.size(); i++) {
-                getActivity().getSupportFragmentManager().beginTransaction().remove(mTabsPagerAdapter.fragmentList.get(i)).commit();
+        ArrayList<Page> fragmentList = mTabsPagerAdapter.fragmentList;
+        if( (fragmentList != null) &&
+            (fragmentList.size() >0) )
+        {
+            DragSortListView listView = fragmentList.get(getFocus_tabPos()).drag_listView;
+            if(listView != null)
+                store_listView_vScroll(listView);
+
+            for (int i = 0; i < fragmentList.size(); i++) {
+                getActivity().getSupportFragmentManager().beginTransaction().remove(fragmentList.get(i)).commit();
             }
         }
     }

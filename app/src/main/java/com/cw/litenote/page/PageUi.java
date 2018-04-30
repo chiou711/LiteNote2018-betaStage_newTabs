@@ -478,6 +478,8 @@ public class PageUi
 				}
 			});
 		}
+
+		MainAct.mAct.invalidateOptionsMenu();
 	}
 
 	/* 
@@ -525,6 +527,9 @@ public class PageUi
 		// update highlight tab
 		if(MainAct.mPlaying_folderPos == FolderUi.getFocus_folderPos())
 			MainAct.mPlaying_pagePos++;
+
+		MainAct.mAct.invalidateOptionsMenu();
+		TabsHost.setFocus_tabPos(0);
 	}
 	
 	
