@@ -142,7 +142,7 @@ public class Export_toSDCardFragment extends Fragment {
 		// pages name
 		String pagesName="";
 		for(int i = 0; i< mList_selPage.mListStrArr.size(); i++) {
-			if(mList_selPage.mCheckedArr.get(i) == true) {
+			if(mList_selPage.mCheckedTabs.get(i) == true) {
 				if(Util.isEmptyString(pagesName))
 					pagesName = mList_selPage.mListStrArr.get(i);//first title
 				else
@@ -227,7 +227,7 @@ public class Export_toSDCardFragment extends Fragment {
 		protected Void doInBackground(Void... params) {
 			Util util = new Util(getActivity());
 			util.exportToSdCard(mStrSDCardFileName, // attachment name
-								mList_selPage.mCheckedArr); // checked page array
+								mList_selPage.mCheckedTabs); // checked page array
 			return null;
 		}
 		

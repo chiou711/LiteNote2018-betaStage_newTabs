@@ -201,7 +201,7 @@ public class MailPagesFragment extends Fragment{
                 // pages name
                 String pagesName="";
                 for(int i = 0; i< list_selPage.mListStrArr.size(); i++) {
-                    if(list_selPage.mCheckedArr.get(i) == true) {
+                    if(list_selPage.mCheckedTabs.get(i) == true) {
                         pagesName = pagesName.concat(list_selPage.mListStrArr.get(i) + "_");
                     }
                 }
@@ -224,7 +224,7 @@ public class MailPagesFragment extends Fragment{
 		        {
 		            // XML file
                     mEMailBodyString = util.exportToSdCard(attachmentFileName[0], // attachment name
-                                                            list_selPage.mCheckedArr);// checked page array
+                                                           list_selPage.mCheckedTabs);// checked page array
                     mEMailBodyString = util.trimXMLtag(mEMailBodyString);
 
                     // TXT file

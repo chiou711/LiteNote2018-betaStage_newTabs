@@ -154,7 +154,7 @@ public class DeletePages extends Fragment{
         mDbFolder.open();
         for(int i = 0; i< list_selPage.count; i++)
         {
-            if (list_selPage.mCheckedArr.get(i))
+            if (list_selPage.mCheckedTabs.get(i))
             {
                 int pageTableId = mDbFolder.getPageTableId(i, false);
                 mDbFolder.dropPageTable(pageTableId,false);

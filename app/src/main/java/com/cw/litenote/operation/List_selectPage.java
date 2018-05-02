@@ -32,7 +32,7 @@ public class List_selectPage
     CheckedTextView mCheckTvSelAll;
     ListView mListView;
     public List<String> mListStrArr; // list view string array
-    public List<Boolean> mCheckedArr; // checked list view items array
+    public List<Boolean> mCheckedTabs; // checked list view items array
     DB_drawer dB_drawer;
     DB_folder mDb_folder;
     public int count;
@@ -90,7 +90,7 @@ public class List_selectPage
         for(int i = 0; i< count; i++)
         {
             CheckedTextView chkTV = (CheckedTextView) mListView.findViewById(R.id.checkTV);
-            mCheckedArr.set(i, enAll);
+            mCheckedTabs.set(i, enAll);
             mListStrArr.set(i, mDb_folder.getPageTitle(i,false));
 
             int style = mDb_folder.getPageStyle(i, false);
@@ -129,8 +129,8 @@ public class List_selectPage
                 System.out.println("List_selectPage / _showPageList / _onItemClick / position = " + position);
                 CheckedTextView chkTV = (CheckedTextView) vw.findViewById(R.id.checkTV);
                 chkTV.setChecked(!chkTV.isChecked());
-                mCheckedArr.set(position, chkTV.isChecked());
-                if(mCheckedArr.get(position) == true)
+                mCheckedTabs.set(position, chkTV.isChecked());
+                if(mCheckedTabs.get(position) == true)
                     mChkNum++;
                 else
                     mChkNum--;
@@ -154,7 +154,7 @@ public class List_selectPage
         });
 
         // set list string array
-        mCheckedArr = new ArrayList<Boolean>();
+        mCheckedTabs = new ArrayList<Boolean>();
         mListStrArr = new ArrayList<String>();
 
         // DB
@@ -168,7 +168,7 @@ public class List_selectPage
             // list string array: init
             mListStrArr.add(mDb_folder.getPageTitle(i,false));
             // checked mark array: init
-            mCheckedArr.add(false);
+            mCheckedTabs.add(false);
         }
         mDb_folder.close();
 
@@ -200,7 +200,7 @@ public class List_selectPage
 
         public Object getItem(int position)
         {
-            return mCheckedArr.get(position);
+            return mCheckedTabs.get(position);
         }
 
         public long getItemId(int position)
@@ -229,7 +229,7 @@ public class List_selectPage
             else
                 chkTV.setText( " " + mList.get(position).toString());
 
-            chkTV.setChecked(mCheckedArr.get(position));
+            chkTV.setChecked(mCheckedTabs.get(position));
 
             // set for contrast
             if( chkTV.isChecked())

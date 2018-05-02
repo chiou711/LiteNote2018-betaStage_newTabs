@@ -103,7 +103,6 @@ public class Util
 	private Activity mAct;
 	private String mEMailString;
     private static DB_folder mDbFolder;
-	private static DB_page mDbPage;
     public static String NEW_LINE = "\r" + System.getProperty("line.separator");
 
 	private static int STYLE_DEFAULT = 1;
@@ -150,15 +149,13 @@ public class Util
 	}
 	
 	// export to SD card: for checked pages
-	public String exportToSdCard(String filename, List<Boolean> checkedArr)
+	public String exportToSdCard(String filename, List<Boolean> checkedTabs)
 	{   
 		//first row text
 		String data ="";
+
 		//get data from DB
-		if(checkedArr == null)
-			data = queryDB(data,null);// all pages
-		else
-			data = queryDB(data,checkedArr);
+		data = queryDB(data,checkedTabs);
 		
 		// sent data
 		data = addXmlTag(data);
@@ -220,7 +217,7 @@ public class Util
      * Query current data base
      *
      */
-    private String queryDB(String data, List<Boolean> checkedArr)
+    private String queryDB(String data, List<Boolean> checkedTabs)
     {
     	String curData = data;
     	
@@ -229,27 +226,11 @@ public class Util
     	mDbFolder = new DB_folder(mContext, folderTableId);
 
     	// page
-		mDbPage = new DB_page(mContext,TabsHost.getCurrentPageTableId());
-
-    	int tabCount = mDbFolder.getPagesCount(true);
+    	int tabCount = checkedTabs.size();
     	for(int i=0;i<tabCount;i++)
     	{
-    		// null: all pages
-        	if((checkedArr == null ) || ( checkedArr.get(i)  ))
-    		{
-	        	// set Sent string Id
-				List<Long> noteIdArray = new ArrayList<>();
-				DB_page.setFocusPage_tableId(mDbFolder.getPageTableId(i,true));
-				
-				mDbPage.open();
-				int count = mDbPage.getNotesCount(false);
-	    		for(int k=0; k<count; k++)
-	    		{
-    				noteIdArray.add(k, mDbPage.getNoteId(k,false));
-	    		}
-	    		mDbPage.close();
-	    		curData = curData.concat(getStringWithXmlTag(noteIdArray));
-    		}
+            if(checkedTabs.get(i))
+				curData = curData.concat(getStringWithXmlTag(i, ID_FOR_TABS));
     	}
     	return curData;
     	
@@ -487,100 +468,129 @@ public class Util
 		return ColorSet.mBG_ColorArray.length;
 	}
 
-//	static String strTitleEdit;
-	
-	// get Send String with XML tag
-	public static String getStringWithXmlTag(List<Long> noteIdArray)
+    private static int ID_FOR_TABS = -1;
+    public static int ID_FOR_NOTES = -2;
+    /**
+     * Get string with XML tags
+     * @param tabPos tab position
+     * @param noteId: ID_FOR_TABS for checked tabs(pages), ID_FOR_NOTES for checked notes
+     * @return string with tags
+     */
+	public static String getStringWithXmlTag(int tabPos,long noteId)
 	{
-        String PAGE_TAG_B = "<page>";
-        String PAGE_NAME_TAG_B = "<page_name>";
-        String PAGE_NAME_TAG_E = "</page_name>";
-        String NOTE_ITEM_TAG_B = "<note>";
-        String NOTE_ITEM_TAG_E = "</note>";
-        String TITLE_TAG_B = "<title>";
-        String TITLE_TAG_E = "</title>";
-        String BODY_TAG_B = "<body>";
-        String BODY_TAG_E = "</body>";
-        String PICTURE_TAG_B = "<picture>";
-        String PICTURE_TAG_E = "</picture>";
-        String AUDIO_TAG_B = "<audio>";
-        String AUDIO_TAG_E = "</audio>";
-        String LINK_TAG_B = "<link>";
-        String LINK_TAG_E = "</link>";
-        String PAGE_TAG_E = "</page>";
-        
-        String sentString = NEW_LINE;
+		String PAGE_TAG_B = "<page>";
+		String PAGE_NAME_TAG_B = "<page_name>";
+		String PAGE_NAME_TAG_E = "</page_name>";
+		String NOTE_ITEM_TAG_B = "<note>";
+		String NOTE_ITEM_TAG_E = "</note>";
+		String TITLE_TAG_B = "<title>";
+		String TITLE_TAG_E = "</title>";
+		String BODY_TAG_B = "<body>";
+		String BODY_TAG_E = "</body>";
+		String PICTURE_TAG_B = "<picture>";
+		String PICTURE_TAG_E = "</picture>";
+		String AUDIO_TAG_B = "<audio>";
+		String AUDIO_TAG_E = "</audio>";
+		String LINK_TAG_B = "<link>";
+		String LINK_TAG_E = "</link>";
+		String PAGE_TAG_E = "</page>";
 
-    	// when page has page name only, no notes
-    	if(noteIdArray.size() == 0)
-    	{
-        	sentString = sentString.concat(NEW_LINE + PAGE_TAG_B );
-	        sentString = sentString.concat(NEW_LINE + PAGE_NAME_TAG_B + mDbFolder.getCurrentPageTitle() + PAGE_NAME_TAG_E);
-	    	sentString = sentString.concat(NEW_LINE + NOTE_ITEM_TAG_B);
-	    	sentString = sentString.concat(NEW_LINE + TITLE_TAG_B + TITLE_TAG_E);
-	    	sentString = sentString.concat(NEW_LINE + BODY_TAG_B +  BODY_TAG_E);
-	    	sentString = sentString.concat(NEW_LINE + PICTURE_TAG_B + PICTURE_TAG_E);
-	    	sentString = sentString.concat(NEW_LINE + AUDIO_TAG_B + AUDIO_TAG_E);
-	    	sentString = sentString.concat(NEW_LINE + LINK_TAG_B + LINK_TAG_E);
-	    	sentString = sentString.concat(NEW_LINE + NOTE_ITEM_TAG_E);
-	    	sentString = sentString.concat(NEW_LINE + PAGE_TAG_E );
-    		sentString = sentString.concat(NEW_LINE);
-    	}
-    	else
-    	{
-	        for(int i=0;i< noteIdArray.size();i++)
-	        {
-				String strTitleEdit;
-				DB_page db_page = new DB_page(MainAct.mAct,TabsHost.getCurrentPageTableId());
-                db_page.open();
-		    	Cursor cursorNote = db_page.queryNote(noteIdArray.get(i));
-		        strTitleEdit = cursorNote.getString(
-		        		cursorNote.getColumnIndexOrThrow(DB_page.KEY_NOTE_TITLE));
-		        strTitleEdit = replaceEscapeCharacter(strTitleEdit);
-		        
-		        String strBodyEdit = cursorNote.getString(
-		        		cursorNote.getColumnIndexOrThrow(DB_page.KEY_NOTE_BODY));
-		        strBodyEdit = replaceEscapeCharacter(strBodyEdit);
+		String sentString = NEW_LINE;
 
-		        String strPictureUriStr = cursorNote.getString(
-		        		cursorNote.getColumnIndexOrThrow(DB_page.KEY_NOTE_PICTURE_URI));
-		        strPictureUriStr = replaceEscapeCharacter(strPictureUriStr);
+		int pageTableId = TabsHost.mTabsPagerAdapter.getItem(tabPos).page_tableId;
+		List<Long> noteIdArray = new ArrayList<>();
 
-		        String strAudioUriStr = cursorNote.getString(
-		        		cursorNote.getColumnIndexOrThrow(DB_page.KEY_NOTE_AUDIO_URI));
-		        strAudioUriStr = replaceEscapeCharacter(strAudioUriStr);
+		DB_page dbPage = new DB_page(MainAct.mAct, pageTableId);
+        dbPage.open();
 
-		        String strLinkUriStr = cursorNote.getString(
-		        		cursorNote.getColumnIndexOrThrow(DB_page.KEY_NOTE_LINK_URI));
+        int count = dbPage.getNotesCount(false);
 
-		        strLinkUriStr = replaceEscapeCharacter(strLinkUriStr);
-		        
-		        int mark = cursorNote.getInt(cursorNote.getColumnIndexOrThrow(DB_page.KEY_NOTE_MARKING));
-		        String srtMark = (mark == 1)? "[s]":"[n]";
-                db_page.close();
+		if(noteId == ID_FOR_TABS)
+		{
+			for (int i = 0; i < count; i++)
+                noteIdArray.add(i, dbPage.getNoteId(i, false));
+		}
+        else if(noteId == ID_FOR_NOTES)
+        {
+            // for checked notes
+            int j=0;
+            for (int i = 0; i < count; i++)
+            {
+                if(dbPage.getNoteMarking(i,false) == 1) {
+                    noteIdArray.add(j, dbPage.getNoteId(i, false));
+                    j++;
+                }
+            }
+        }
+		else
+			noteIdArray.add(0, noteId);//only one for View note case
 
-                if(i==0)
-		        {
-                    DB_folder db_folder = new DB_folder(MainAct.mAct, Pref.getPref_focusView_folder_tableId(MainAct.mAct));
-                    sentString = sentString.concat(NEW_LINE + PAGE_TAG_B );
-		        	sentString = sentString.concat(NEW_LINE + PAGE_NAME_TAG_B + db_folder.getCurrentPageTitle() + PAGE_NAME_TAG_E );
-		        }
-		        
-		        sentString = sentString.concat(NEW_LINE + NOTE_ITEM_TAG_B);
-	        	sentString = sentString.concat(NEW_LINE + TITLE_TAG_B + srtMark + strTitleEdit + TITLE_TAG_E);
-				sentString = sentString.concat(NEW_LINE + BODY_TAG_B + strBodyEdit + BODY_TAG_E);
-				sentString = sentString.concat(NEW_LINE + PICTURE_TAG_B + strPictureUriStr + PICTURE_TAG_E);
-				sentString = sentString.concat(NEW_LINE + AUDIO_TAG_B + strAudioUriStr + AUDIO_TAG_E);
-				sentString = sentString.concat(NEW_LINE + LINK_TAG_B + strLinkUriStr + LINK_TAG_E);
+        dbPage.close();
+
+		// when page has page name only, no notes
+		if(noteIdArray.size() == 0)
+		{
+			sentString = sentString.concat(NEW_LINE + PAGE_TAG_B );
+			sentString = sentString.concat(NEW_LINE + PAGE_NAME_TAG_B + mDbFolder.getCurrentPageTitle() + PAGE_NAME_TAG_E);
+			sentString = sentString.concat(NEW_LINE + NOTE_ITEM_TAG_B);
+			sentString = sentString.concat(NEW_LINE + TITLE_TAG_B + TITLE_TAG_E);
+			sentString = sentString.concat(NEW_LINE + BODY_TAG_B +  BODY_TAG_E);
+			sentString = sentString.concat(NEW_LINE + PICTURE_TAG_B + PICTURE_TAG_E);
+			sentString = sentString.concat(NEW_LINE + AUDIO_TAG_B + AUDIO_TAG_E);
+			sentString = sentString.concat(NEW_LINE + LINK_TAG_B + LINK_TAG_E);
+			sentString = sentString.concat(NEW_LINE + NOTE_ITEM_TAG_E);
+			sentString = sentString.concat(NEW_LINE + PAGE_TAG_E );
+			sentString = sentString.concat(NEW_LINE);
+		}
+		else
+		{
+			for(int i=0;i< noteIdArray.size();i++)
+			{
+				dbPage.open();
+				Cursor cursorNote = dbPage.queryNote(noteIdArray.get(i));
+                String title = cursorNote.getString(cursorNote.getColumnIndexOrThrow(DB_page.KEY_NOTE_TITLE));
+				title = replaceEscapeCharacter(title);
+
+				String body = cursorNote.getString(cursorNote.getColumnIndexOrThrow(DB_page.KEY_NOTE_BODY));
+				body = replaceEscapeCharacter(body);
+
+				String picUrl = cursorNote.getString(cursorNote.getColumnIndexOrThrow(DB_page.KEY_NOTE_PICTURE_URI));
+				picUrl = replaceEscapeCharacter(picUrl);
+
+				String audioUrl = cursorNote.getString(cursorNote.getColumnIndexOrThrow(DB_page.KEY_NOTE_AUDIO_URI));
+				audioUrl = replaceEscapeCharacter(audioUrl);
+
+				String linkUrl = cursorNote.getString(cursorNote.getColumnIndexOrThrow(DB_page.KEY_NOTE_LINK_URI));
+
+				linkUrl = replaceEscapeCharacter(linkUrl);
+
+				int mark = cursorNote.getInt(cursorNote.getColumnIndexOrThrow(DB_page.KEY_NOTE_MARKING));
+				String srtMark = (mark == 1)? "[s]":"[n]";
+				dbPage.close();
+
+				if(i==0)
+				{
+					DB_folder db_folder = new DB_folder(MainAct.mAct, Pref.getPref_focusView_folder_tableId(MainAct.mAct));
+					sentString = sentString.concat(NEW_LINE + PAGE_TAG_B );
+					sentString = sentString.concat(NEW_LINE + PAGE_NAME_TAG_B + db_folder.getCurrentPageTitle() + PAGE_NAME_TAG_E );
+				}
+
+				sentString = sentString.concat(NEW_LINE + NOTE_ITEM_TAG_B);
+				sentString = sentString.concat(NEW_LINE + TITLE_TAG_B + srtMark + title + TITLE_TAG_E);
+				sentString = sentString.concat(NEW_LINE + BODY_TAG_B + body + BODY_TAG_E);
+				sentString = sentString.concat(NEW_LINE + PICTURE_TAG_B + picUrl + PICTURE_TAG_E);
+				sentString = sentString.concat(NEW_LINE + AUDIO_TAG_B + audioUrl + AUDIO_TAG_E);
+				sentString = sentString.concat(NEW_LINE + LINK_TAG_B + linkUrl + LINK_TAG_E);
 				sentString = sentString.concat(NEW_LINE + NOTE_ITEM_TAG_E);
-		        sentString = sentString.concat(NEW_LINE);
-		    	if(i==noteIdArray.size()-1)
-		        	sentString = sentString.concat(NEW_LINE +  PAGE_TAG_E);
+				sentString = sentString.concat(NEW_LINE);
+				if(i==noteIdArray.size()-1)
+					sentString = sentString.concat(NEW_LINE +  PAGE_TAG_E);
 
-	        }
-    	}
-    	return sentString;
+			}
+		}
+		return sentString;
 	}
+
 
     // replace special character (e.q. amp sign) for avoiding XML paring exception 
 	//      &   &amp;

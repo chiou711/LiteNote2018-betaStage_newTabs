@@ -238,7 +238,6 @@ public class Checked_notes_option {
                     {
                         if(mDb_page.getNoteMarking(i,false) == 1)
                         {
-                            noteIdArray.add(j, mDb_page.getNoteId(i,false));
                             j++;
 
                             String picFile = mDb_page.getNotePictureUri_byId(mDb_page.getNoteId(i,false),false,false);
@@ -249,7 +248,7 @@ public class Checked_notes_option {
                     mDb_page.close();
 
                     // message
-                    String sentString = Util.getStringWithXmlTag(noteIdArray);
+                    String sentString = Util.getStringWithXmlTag(TabsHost.getFocus_tabPos(),Util.ID_FOR_NOTES);
                     sentString = Util.addXmlTag(sentString);
 
                     // picture array

@@ -119,10 +119,7 @@ public class View_note_option {
             case ID_OPTION_MAIL:
             {
 				// set Sent string Id
-				List<Long> noteIdArray = new ArrayList<>();
-				noteIdArray.add(0, noteId);
-
-				String sentString = Util.getStringWithXmlTag(noteIdArray);
+				String sentString = Util.getStringWithXmlTag(TabsHost.getFocus_tabPos(),noteId);
 				sentString = Util.addXmlTag(sentString);
 
                 DB_page dB_page = new DB_page(act, TabsHost.getCurrentPageTableId());
