@@ -41,7 +41,6 @@ public class MailPagesFragment extends Fragment{
 	CheckedTextView mCheckTvSelAll;
 	Button btnSelPageOK;
     ListView mListView;
-	String mSentString;
 	List_selectPage list_selPage;
 	public static View rootView;
 
@@ -198,24 +197,39 @@ public class MailPagesFragment extends Fragment{
 	        {
 	    	    Bundle extras = getActivity().getIntent().getExtras();
 
-                // pages name
-                String pagesName="";
-                for(int i = 0; i< list_selPage.mListStrArr.size(); i++) {
-                    if(list_selPage.mCheckedTabs.get(i) == true) {
-                        pagesName = pagesName.concat(list_selPage.mListStrArr.get(i) + "_");
-                    }
-                }
-                
+				// pages name
+				String pagesName="";
+				int countChecked=0;
+				for(int i = 0; i< list_selPage.mListStrArr.size(); i++) {
+					if(list_selPage.mCheckedTabs.get(i))
+					{
+						countChecked++;
+						if(Util.isEmptyString(pagesName))
+							pagesName = list_selPage.mListStrArr.get(i);//first title
+						else
+							pagesName = pagesName.concat("_" + list_selPage.mListStrArr.get(i) );
+					}
+				}
+
+				// default file name: with tab title
+				String defaultFileName;
+				if((list_selPage.isCheckAll) ||
+				   (list_selPage.mListStrArr.size() == countChecked) )
+					defaultFileName = list_selPage.mFolderTitle + ".xml";
+				else
+					defaultFileName = pagesName + ".xml";
+
 				// save to SD card
 				attachmentFileName[0] = Util.getStorageDirName(getActivity()) + "_SEND_" + // file name
-                                                            pagesName +
-		        							                Util.getCurrentTimeString() + // time
-		        							                ".xml"; // extension name
+										defaultFileName +
+										Util.getCurrentTimeString() + // time
+										".xml"; // extension name
 
 				attachmentFileName[1] = Util.getStorageDirName(getActivity()) + "_SEND_" + // file name
-						pagesName +
-						Util.getCurrentTimeString() + // time
-						".txt"; // extension name
+										defaultFileName +
+										Util.getCurrentTimeString() + // time
+										".txt"; // extension name
+
 				Util util = new Util(getActivity());
 
 				// for page selection

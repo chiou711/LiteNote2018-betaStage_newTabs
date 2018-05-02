@@ -141,8 +141,11 @@ public class Export_toSDCardFragment extends Fragment {
 
 		// pages name
 		String pagesName="";
+		int countChecked=0;
 		for(int i = 0; i< mList_selPage.mListStrArr.size(); i++) {
-			if(mList_selPage.mCheckedTabs.get(i) == true) {
+			if(mList_selPage.mCheckedTabs.get(i))
+			{
+				countChecked++;
 				if(Util.isEmptyString(pagesName))
 					pagesName = mList_selPage.mListStrArr.get(i);//first title
 				else
@@ -151,7 +154,8 @@ public class Export_toSDCardFragment extends Fragment {
 		}
 
 		// default file name: with tab title
-		if(mList_selPage.isCheckAll)
+		if((mList_selPage.isCheckAll) ||
+		   (mList_selPage.mListStrArr.size() == countChecked) )
 			mDefaultFileName = mList_selPage.mFolderTitle + ".xml";
 		else
 			mDefaultFileName = pagesName + ".xml";

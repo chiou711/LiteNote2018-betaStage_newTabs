@@ -60,7 +60,7 @@ public class List_selectPage
                 boolean currentCheck = ((CheckedTextView)checkSelAll).isChecked();
                 ((CheckedTextView)checkSelAll).setChecked(!currentCheck);
 
-                if(((CheckedTextView)checkSelAll).isChecked())
+                if( ((CheckedTextView)checkSelAll).isChecked() )
                 {
                     isCheckAll = true;
                     selectAllPages(true);
@@ -142,14 +142,17 @@ public class List_selectPage
 
                 // set for contrast
                 int mStyle = mDb_folder.getPageStyle(position, true);
-                if( chkTV.isChecked())
-                    chkTV.setCompoundDrawablesWithIntrinsicBounds(mStyle%2 == 1 ?
-                    R.drawable.btn_check_on_holo_light:
-                    R.drawable.btn_check_on_holo_dark,0,0,0);
-                else
-                    chkTV.setCompoundDrawablesWithIntrinsicBounds(mStyle%2 == 1 ?
-                    R.drawable.btn_check_off_holo_light:
-                    R.drawable.btn_check_off_holo_dark,0,0,0);
+                if( chkTV.isChecked()) {
+                    chkTV.setCompoundDrawablesWithIntrinsicBounds(mStyle % 2 == 1 ?
+                            R.drawable.btn_check_on_holo_light :
+                            R.drawable.btn_check_on_holo_dark, 0, 0, 0);
+                }
+                else {
+                    chkTV.setCompoundDrawablesWithIntrinsicBounds(mStyle % 2 == 1 ?
+                            R.drawable.btn_check_off_holo_light :
+                            R.drawable.btn_check_off_holo_dark, 0, 0, 0);
+                    isCheckAll = false;
+                }
             }
         });
 
