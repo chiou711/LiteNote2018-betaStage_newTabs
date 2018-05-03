@@ -174,25 +174,35 @@ public class DeleteFolders extends Fragment{
             dbDrawer.open();
             for (int i = 0; i < list_selFolder.count; i++) {
                 int folderTableId = dbDrawer.getFolderTableId(i, false);
-                System.out.println("DeleteFolders / _setOnClickListener / drawer DB check / folderTableId = " + folderTableId);
+                System.out.println("DeleteFolders / folderTableId = " + folderTableId);
 
                 int folderId = (int) dbDrawer.getFolderId(i, false);
-                System.out.println("DeleteFolders / _setOnClickListener / drawer DB check / folderId = " + folderId);
+                System.out.println("DeleteFolders / folderId = " + folderId);
             }
             dbDrawer.close();
         }
 
-        dbDrawer.open();
         for(int i = 0; i< list_selFolder.count; i++)
         {
             if(list_selFolder.mCheckedArr.get(i))
             {
-                int folderTableId = dbDrawer.getFolderTableId(i,false);
-                dbDrawer.dropFolderTable(folderTableId,false);
+                // get folder table id
+                int folderTableId = dbDrawer.getFolderTableId(i,true);
 
-                int folderId = (int)dbDrawer.getFolderId(i,false);
-                // delete folder row
-                dbDrawer.deleteFolderId(folderId,false);
+                // 1) delete related page tables
+                DB_folder dbFolder = new DB_folder(act, folderTableId);
+                int pgsCnt = dbFolder.getPagesCount(true);
+                for (int j = 0; j < pgsCnt; j++) {
+                    int pageTableId = dbFolder.getPageTableId(j, true);
+                    dbFolder.dropPageTable(folderTableId, pageTableId);
+                }
+
+                // 2) delete folder table
+                dbDrawer.dropFolderTable(folderTableId,true);
+
+                // 3) delete folder Id
+                int folderId = (int)dbDrawer.getFolderId(i,true);
+                dbDrawer.deleteFolderId(folderId,true);
 
                 // change focus
                 FolderUi.setFocus_folderPos(0);
@@ -200,13 +210,14 @@ public class DeleteFolders extends Fragment{
         }
 
         // check if only one folder left
-        int foldersCnt = dbDrawer.getFoldersCount(false);
+        int foldersCnt = dbDrawer.getFoldersCount(true);
 
+        // set focus folder table Id
+        dbDrawer.open();
         if(foldersCnt > 0)
         {
             int newFirstFolderTblId=0;
             int i=0;
-            dbDrawer.open();
             Cursor folderCursor = dbDrawer.getFolderCursor();
             while(i < foldersCnt)
             {
@@ -219,7 +230,6 @@ public class DeleteFolders extends Fragment{
         }
         else if(foldersCnt ==0)
             Pref.setPref_focusView_folder_tableId(act, 1);
-
         dbDrawer.close();
 
         // set scroll X

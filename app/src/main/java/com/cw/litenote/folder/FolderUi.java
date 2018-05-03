@@ -258,7 +258,7 @@ public class FolderUi
         // get folder Id
         int folderId = (int) db_drawer.getFolderId(position,true);
 
-        // 2) delete folder table Id
+        // 2) delete folder table
         db_drawer.dropFolderTable(folderTableId,true);
 
         // 3) delete folder Id in drawer table
