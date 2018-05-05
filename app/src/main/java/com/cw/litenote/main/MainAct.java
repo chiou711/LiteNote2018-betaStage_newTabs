@@ -62,17 +62,21 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentManager.OnBackStackChangedListener;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.GravityCompat;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import static android.os.Build.VERSION_CODES.O;
 
-public class MainAct extends FragmentActivity implements OnBackStackChangedListener
+public class MainAct extends AppCompatActivity implements OnBackStackChangedListener
 {
     public static CharSequence mFolderTitle;
     public static CharSequence mAppTitle;
@@ -87,11 +91,12 @@ public class MainAct extends FragmentActivity implements OnBackStackChangedListe
 	public static FragmentManager fragmentManager;
 	public static FragmentManager.OnBackStackChangedListener mOnBackStackChangedListener;
 	public static int mLastOkTabId = 1;
-	static SharedPreferences mPref_show_note_attribute;
+	public static SharedPreferences mPref_show_note_attribute;
 	OnBackPressedListener onBackPressedListener;
     public Drawer drawer;
-	public Folder mFolder;
+	public static Folder mFolder;
     public static MainUi mMainUi;
+    private Toolbar mToolbar;
 
 	// Main Act onCreate
     @Override
@@ -220,17 +225,32 @@ public class MainAct extends FragmentActivity implements OnBackStackChangedListe
 	        }
             dB_drawer.close();
 
+            mToolbar = (Toolbar) findViewById(R.id.toolbar);
+            if (mToolbar != null) {
+                setSupportActionBar(mToolbar);
+            }
+
+            if (mToolbar != null) {
+                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+                mToolbar.setNavigationIcon(R.drawable.ic_drawer);
+                mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Drawer.drawerLayout.openDrawer(GravityCompat.START);
+                    }
+                });
+            }
+	        // enable ActionBar app icon to behave as action to toggle nav drawer
+//	        getActionBar().setDisplayHomeAsUpEnabled(true);
+//	        getActionBar().setHomeButtonEnabled(true);
+//			getActionBar().setBackgroundDrawable(new ColorDrawable(ColorSet.getBarColor(mAct)));
+
             // new drawer
             drawer = new Drawer(mAct);
             drawer.initDrawer();
 
             // new folder
             mFolder = new Folder(mAct);
-
-	        // enable ActionBar app icon to behave as action to toggle nav drawer
-	        getActionBar().setDisplayHomeAsUpEnabled(true);
-	        getActionBar().setHomeButtonEnabled(true);
-			getActionBar().setBackgroundDrawable(new ColorDrawable(ColorSet.getBarColor(mAct)));
 
 	        mContext = getBaseContext();
 
@@ -473,8 +493,8 @@ public class MainAct extends FragmentActivity implements OnBackStackChangedListe
         if(backStackEntryCount == 1) // fragment
         {
             System.out.println("MainAct / _onBackStackChanged / fragment");
-            getActionBar().setDisplayShowHomeEnabled(false);
-            getActionBar().setDisplayHomeAsUpEnabled(true);
+//            getActionBar().setDisplayShowHomeEnabled(false);
+//            getActionBar().setDisplayHomeAsUpEnabled(true);
             drawer.drawerToggle.setDrawerIndicatorEnabled(false);
         }
         else if(backStackEntryCount == 0) // init
@@ -485,7 +505,7 @@ public class MainAct extends FragmentActivity implements OnBackStackChangedListe
                 mFolder.adapter.notifyDataSetChanged();
 
             System.out.println("MainAct / _onBackStackChanged / init");
-            initActionBar(mMenu, drawer);
+//            initActionBar(mMenu, drawer);
             setTitle(mFolderTitle);
             invalidateOptionsMenu();
         }
@@ -801,7 +821,7 @@ public class MainAct extends FragmentActivity implements OnBackStackChangedListe
      *
 	 ******************************/
 	public static SlideshowInfo slideshowInfo;
-	static FragmentTransaction mFragmentTransaction;
+	public static FragmentTransaction mFragmentTransaction;
 	public static int mPlaying_pageTableId;
 	public static int mPlaying_pagePos;
 	public static int mPlaying_folderPos;

@@ -1,16 +1,20 @@
 package com.cw.litenote.drawer;
 
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.cw.litenote.R;
 import com.cw.litenote.db.DB_drawer;
 import com.cw.litenote.folder.FolderUi;
 import com.cw.litenote.main.MainAct;
+import com.cw.litenote.operation.delete.DeleteFolders;
 import com.mobeta.android.dslv.DragSortListView;
 
 /**
@@ -19,14 +23,86 @@ import com.mobeta.android.dslv.DragSortListView;
 public class Drawer {
 
 
-    public DrawerLayout drawerLayout;
+    public static DrawerLayout drawerLayout;
     private FragmentActivity act;
     public ActionBarDrawerToggle drawerToggle;
+    public static NavigationView mNavigationView;
     DragSortListView listView;
+
 
     public Drawer(FragmentActivity activity)
     {
         drawerLayout = (DrawerLayout) activity.findViewById(R.id.drawer_layout);
+
+//        relativeLayout = activity.findViewById(R.id.nav_rel_layout);
+        mNavigationView = (NavigationView) activity.findViewById(R.id.nav_view);
+
+        mNavigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(MenuItem menuItem) {
+
+                menuItem.setChecked(true);
+                switch (menuItem.getItemId()) {
+                    case R.id.ADD_NEW_FOLDER:
+                        FolderUi.renewFirstAndLast_folderId();
+                        FolderUi.addNewFolder(MainAct.mAct, FolderUi.mLastExist_folderTableId +1, MainAct.mFolder.getAdapter());
+                        return true;
+
+                    case R.id.ENABLE_FOLDER_DRAG_AND_DROP:
+                        if(MainAct.mPref_show_note_attribute.getString("KEY_ENABLE_FOLDER_DRAGGABLE", "no")
+                                .equalsIgnoreCase("yes"))
+                        {
+                            MainAct.mPref_show_note_attribute.edit().putString("KEY_ENABLE_FOLDER_DRAGGABLE","no")
+                                    .apply();
+                            DragSortListView listView = (DragSortListView) act.findViewById(R.id.left_drawer);
+                            listView.setDragEnabled(false);
+                            Toast.makeText(act,act.getResources().getString(R.string.drag_folder)+
+                                            ": " +
+                                            act.getResources().getString(R.string.set_disable),
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                        else
+                        {
+                            MainAct.mPref_show_note_attribute.edit().putString("KEY_ENABLE_FOLDER_DRAGGABLE","yes")
+                                    .apply();
+                            DragSortListView listView = (DragSortListView) act.findViewById(R.id.left_drawer);
+                            listView.setDragEnabled(true);
+                            Toast.makeText(act,act.getResources().getString(R.string.drag_folder) +
+                                            ": " +
+                                           act.getResources().getString(R.string.set_enable),
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                        MainAct.mFolder.getAdapter().notifyDataSetChanged();
+                        act.invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+                        return true;
+
+                    case R.id.DELETE_FOLDERS:
+                        MainAct.mMenu.setGroupVisible(R.id.group_folders, false);
+
+                        DB_drawer dB_drawer = new DB_drawer(act);
+                        if(dB_drawer.getFoldersCount(true)>0)
+                        {
+                            closeDrawer();
+                            MainAct.mMenu.setGroupVisible(R.id.group_notes, false); //hide the menu
+                            DeleteFolders delFoldersFragment = new DeleteFolders();
+                            MainAct.mFragmentTransaction = MainAct.fragmentManager.beginTransaction();
+                            MainAct.mFragmentTransaction.setCustomAnimations(R.anim.fragment_slide_in_left, R.anim.fragment_slide_out_left, R.anim.fragment_slide_in_right, R.anim.fragment_slide_out_right);
+                            MainAct.mFragmentTransaction.replace(R.id.content_frame, delFoldersFragment).addToBackStack("delete_folders").commit();
+                        }
+                        else
+                        {
+                            Toast.makeText(act, R.string.config_export_none_toast, Toast.LENGTH_SHORT).show();
+                        }
+                        return true;
+
+                    default:
+                        return true;
+                }
+            }
+        });
+
+
+
         act = activity;
         listView = (DragSortListView) act.findViewById(R.id.left_drawer);
         // ActionBarDrawerToggle ties together the the proper interactions
@@ -46,8 +122,7 @@ public class Drawer {
                         act.invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
 
                         if(listView.getCount() >0) {
-                            act.getActionBar().setTitle(MainAct.mAppTitle);
-
+//                            act.getActionBar().setTitle(MainAct.mAppTitle);
                             // will call Folder_adapter _getView to update audio playing high light
                             listView.invalidateViews();
                         }
@@ -56,7 +131,6 @@ public class Drawer {
                     public void onDrawerClosed(View view)
                     {
                         System.out.println("Drawer / _onDrawerClosed / FolderUi.getFocus_folderPos() = " + FolderUi.getFocus_folderPos());
-
                         act.findViewById(R.id.content_frame).setVisibility(View.VISIBLE);
 
                         FragmentManager fragmentManager = act.getSupportFragmentManager();
@@ -69,7 +143,7 @@ public class Drawer {
                             {
                                 int pos = listView.getCheckedItemPosition();
                                 MainAct.mFolderTitle = dB_drawer.getFolderTitle(pos,true);
-                                act.getActionBar().setTitle(MainAct.mFolderTitle);
+//                                act.getActionBar().setTitle(MainAct.mFolderTitle);
 
                                 //todo TBD
                                 // add for deleting folder condition
@@ -92,12 +166,12 @@ public class Drawer {
 
     public void closeDrawer()
     {
-        drawerLayout.closeDrawer(listView);
+        drawerLayout.closeDrawer(mNavigationView);
     }
 
 
     public boolean isDrawerOpen()
     {
-        return drawerLayout.isDrawerOpen(listView);
+        return drawerLayout.isDrawerOpen(mNavigationView);
     }
 }

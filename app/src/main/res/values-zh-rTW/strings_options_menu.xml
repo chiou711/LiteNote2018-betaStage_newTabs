@@ -19,7 +19,7 @@
     <string name="rearrange_page_right">向右</string>
     <string name="edit_page_color_title">設定顏色:</string>
     <string name="settings">設定</string>
-    <string name="add_new_drawer">新增文件夾</string>
+    <string name="add_new_folder">新增文件夾</string>
     <string name="gallery">圖庫</string>
     <string name="gallery_toast_no_file">還沒有文件，請您先建立一個</string>
     <string name="drag_note">拖放記事</string>

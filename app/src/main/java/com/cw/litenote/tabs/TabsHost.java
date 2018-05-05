@@ -132,19 +132,21 @@ public class TabsHost extends AppCompatDialogFragment implements TabLayout.OnTab
     {
         lastPageTableId = 0;
         int pageCount = adapter.dbFolder.getPagesCount(true);
-        System.out.println("TabsHost / _addPages / pageCount = " + pageCount);
-        for(int i=0;i<pageCount;i++)
-        {
-            int pageTableId = adapter.dbFolder.getPageTableId(i, true);
+        System.out.println("TabsHost / _addPages / pagesCount = " + pageCount);
 
-            if(i==0)
-                setFirstPos_pageId(adapter.dbFolder.getPageId(i,true));
+        if(pageCount > 0) {
+            for (int i = 0; i < pageCount; i++) {
+                int pageTableId = adapter.dbFolder.getPageTableId(i, true);
 
-            if(pageTableId > lastPageTableId)
-                lastPageTableId = pageTableId;
+                if (i == 0)
+                    setFirstPos_pageId(adapter.dbFolder.getPageId(i, true));
 
-            System.out.println("TabsHost / _addPages / page_tableId = " + pageTableId);
-            adapter.addFragment(new Page(i,pageTableId));
+                if (pageTableId > lastPageTableId)
+                    lastPageTableId = pageTableId;
+
+                System.out.println("TabsHost / _addPages / page_tableId = " + pageTableId);
+                adapter.addFragment(new Page(i, pageTableId));
+            }
         }
     }
 

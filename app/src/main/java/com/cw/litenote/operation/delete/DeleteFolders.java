@@ -55,7 +55,7 @@ public class DeleteFolders extends Fragment{
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		rootView = inflater.inflate(R.layout.select_page_list, container, false);
         act = getActivity();
-		act.getActionBar().setBackgroundDrawable(new ColorDrawable(ColorSet.getBarColor(act)));
+//		act.getActionBar().setBackgroundDrawable(new ColorDrawable(ColorSet.getBarColor(act)));
 
 		// title
 		title = (TextView) rootView.findViewById(R.id.select_list_title);
@@ -169,7 +169,7 @@ public class DeleteFolders extends Fragment{
         DB_drawer dbDrawer = new DB_drawer(act);
 
         // drawer DB check
-        boolean doDB_check = false;
+        boolean doDB_check = true;
         if(doDB_check) {
             dbDrawer.open();
             for (int i = 0; i < list_selFolder.count; i++) {
@@ -182,12 +182,13 @@ public class DeleteFolders extends Fragment{
             dbDrawer.close();
         }
 
+        dbDrawer.open();
         for(int i = 0; i< list_selFolder.count; i++)
         {
             if(list_selFolder.mCheckedArr.get(i))
             {
                 // get folder table id
-                int folderTableId = dbDrawer.getFolderTableId(i,true);
+                int folderTableId = dbDrawer.getFolderTableId(i,false);
 
                 // 1) delete related page tables
                 DB_folder dbFolder = new DB_folder(act, folderTableId);
@@ -198,16 +199,17 @@ public class DeleteFolders extends Fragment{
                 }
 
                 // 2) delete folder table
-                dbDrawer.dropFolderTable(folderTableId,true);
+                dbDrawer.dropFolderTable(folderTableId,false);
 
                 // 3) delete folder Id
-                int folderId = (int)dbDrawer.getFolderId(i,true);
-                dbDrawer.deleteFolderId(folderId,true);
+                int folderId = (int)dbDrawer.getFolderId(i,false);
+                dbDrawer.deleteFolderId(folderId,false);
 
                 // change focus
                 FolderUi.setFocus_folderPos(0);
             }
         }
+        dbDrawer.close();
 
         // check if only one folder left
         int foldersCnt = dbDrawer.getFoldersCount(true);

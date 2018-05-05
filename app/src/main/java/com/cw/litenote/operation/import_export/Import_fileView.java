@@ -53,7 +53,7 @@ public class Import_fileView extends Fragment
 		mTitleViewText = (TextView) rootView.findViewById(R.id.view_title);
 		mBodyViewText = (TextView) rootView.findViewById(R.id.view_body);
 
-		getActivity().getActionBar().setDisplayShowHomeEnabled(false);
+//		getActivity().getActionBar().setDisplayShowHomeEnabled(false);
 
 
         Import_fileView_asyncTask task = null;

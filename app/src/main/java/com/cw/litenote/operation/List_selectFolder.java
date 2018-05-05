@@ -98,7 +98,7 @@ public class List_selectFolder
 
     // show list for Select
     public int mChkNum;
-    void showFolderList(View root)
+    private void showFolderList(View root)
     {
         mChkNum = 0;
         // set list view
@@ -140,11 +140,11 @@ public class List_selectFolder
         mCheckedArr = new ArrayList<>();
 
         dB_drawer.open();
-        count = dB_drawer.getFoldersCount(true);
+        count = dB_drawer.getFoldersCount(false);
         for(int i = 0; i< count; i++)
         {
             // list string array: init
-            mListStrArr.add(dB_drawer.getFolderTitle(i,true));
+            mListStrArr.add(dB_drawer.getFolderTitle(i,false));
             // checked mark array: init
             mCheckedArr.add(false);
         }
@@ -164,7 +164,7 @@ public class List_selectFolder
         private List<String> mList;
         private LayoutInflater inflater = null;
 
-        public ListAdapter(Activity a, List<String> list)
+        ListAdapter(Activity a, List<String> list)
         {
             activity = a;
             mList = list;

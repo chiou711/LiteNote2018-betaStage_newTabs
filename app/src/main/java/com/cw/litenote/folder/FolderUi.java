@@ -22,6 +22,7 @@ import android.widget.TextView;
 
 import com.cw.litenote.R;
 import com.cw.litenote.db.DB_page;
+import com.cw.litenote.drawer.Drawer;
 import com.cw.litenote.operation.audio.AudioManager;
 import com.cw.litenote.operation.import_export.Import_fileView;
 import com.cw.litenote.db.DB_drawer;
@@ -484,6 +485,7 @@ public class FolderUi
         	{
         		setFocus_folderPos(i);
                 DragSortListView listView = (DragSortListView) act.findViewById(R.id.left_drawer);
+
 				listView.setItemChecked(getFocus_folderPos(), true);
         	}
     	}
@@ -499,11 +501,12 @@ public class FolderUi
 
 		// update selected item and title, then close the drawer
         DragSortListView listView = (DragSortListView) act.findViewById(R.id.left_drawer);
+
 		listView.setItemChecked(position, true);
 
         // will call Drawer / _onDrawerClosed
         DrawerLayout drawerLayout = (DrawerLayout) act.findViewById(R.id.drawer_layout);
-        drawerLayout.closeDrawer(listView);
+        drawerLayout.closeDrawer(Drawer.mNavigationView);
 
 		if(Define.HAS_PREFERRED_TABLES)
 		{

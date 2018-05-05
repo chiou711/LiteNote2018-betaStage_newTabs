@@ -44,7 +44,7 @@ public class Export_toSDCardFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
 		rootView = inflater.inflate(R.layout.select_page_list, container, false);
-		getActivity().getActionBar().setBackgroundDrawable(new ColorDrawable(ColorSet.getBarColor(getActivity())));
+//		getActivity().getActionBar().setBackgroundDrawable(new ColorDrawable(ColorSet.getBarColor(getActivity())));
 		mSelPageDlg = rootView.findViewById(R.id.selectPageDlg);
 		mProgressBar = rootView.findViewById(R.id.progressBar);
 

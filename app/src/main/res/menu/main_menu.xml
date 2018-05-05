@@ -207,7 +207,7 @@
             android:id="@+id/ADD_NEW_FOLDER"
             android:orderInCategory="0"
             android:showAsAction="never"
-            android:title="@string/add_new_drawer"
+            android:title="@string/add_new_folder"
             android:icon="@drawable/ic_menu_add_new_page"/>
         <item
             android:id="@+id/ENABLE_FOLDER_DRAG_AND_DROP"
