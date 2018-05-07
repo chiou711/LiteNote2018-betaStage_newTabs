@@ -225,21 +225,8 @@ public class MainAct extends AppCompatActivity implements OnBackStackChangedList
 	        }
             dB_drawer.close();
 
-            mToolbar = (Toolbar) findViewById(R.id.toolbar);
-            if (mToolbar != null) {
-                setSupportActionBar(mToolbar);
-            }
+            initActionBar();
 
-            if (mToolbar != null) {
-                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-                mToolbar.setNavigationIcon(R.drawable.ic_drawer);
-                mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Drawer.drawerLayout.openDrawer(GravityCompat.START);
-                    }
-                });
-            }
 	        // enable ActionBar app icon to behave as action to toggle nav drawer
 //	        getActionBar().setDisplayHomeAsUpEnabled(true);
 //	        getActionBar().setHomeButtonEnabled(true);
@@ -306,13 +293,38 @@ public class MainAct extends AppCompatActivity implements OnBackStackChangedList
     /**
      * initialize action bar
      */
-    void initActionBar(Menu mMenu,Drawer drawer)
+//    void initActionBar(Menu mMenu,Drawer drawer)
+//    {
+//        mMenu.setGroupVisible(R.id.group_notes, true);
+//        getActionBar().setDisplayShowHomeEnabled(true);
+//        getActionBar().setDisplayHomeAsUpEnabled(true);
+//        drawer.drawerToggle.setDrawerIndicatorEnabled(true);
+//    }
+
+    void initActionBar()
     {
-        mMenu.setGroupVisible(R.id.group_notes, true);
-        getActionBar().setDisplayShowHomeEnabled(true);
-        getActionBar().setDisplayHomeAsUpEnabled(true);
-        drawer.drawerToggle.setDrawerIndicatorEnabled(true);
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        if (mToolbar != null) {
+            setSupportActionBar(mToolbar);
+            mToolbar.setNavigationIcon(R.drawable.ic_drawer);
+            mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Drawer.drawerLayout.openDrawer(GravityCompat.START);
+                }
+            });
+        }
     }
+
+    void initActionBar_home()
+    {
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        if (mToolbar != null)
+            mToolbar.setNavigationIcon(null); //R.drawable.ic_drawer
+        setSupportActionBar(mToolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+
 
     /*********************************************************************************
      *
@@ -495,6 +507,9 @@ public class MainAct extends AppCompatActivity implements OnBackStackChangedList
             System.out.println("MainAct / _onBackStackChanged / fragment");
 //            getActionBar().setDisplayShowHomeEnabled(false);
 //            getActionBar().setDisplayHomeAsUpEnabled(true);
+
+            initActionBar_home();
+
             drawer.drawerToggle.setDrawerIndicatorEnabled(false);
         }
         else if(backStackEntryCount == 0) // init
@@ -505,7 +520,9 @@ public class MainAct extends AppCompatActivity implements OnBackStackChangedList
                 mFolder.adapter.notifyDataSetChanged();
 
             System.out.println("MainAct / _onBackStackChanged / init");
-//            initActionBar(mMenu, drawer);
+
+            initActionBar();
+
             setTitle(mFolderTitle);
             invalidateOptionsMenu();
         }
@@ -866,7 +883,9 @@ public class MainAct extends AppCompatActivity implements OnBackStackChangedList
                 else
                 {
                     fragmentManager.popBackStack();
-                    initActionBar(mMenu, drawer);
+
+                    initActionBar();
+
                     mFolderTitle = dB_drawer.getFolderTitle(FolderUi.getFocus_folderPos(),true);
                     setTitle(mFolderTitle);
                     drawer.closeDrawer();
