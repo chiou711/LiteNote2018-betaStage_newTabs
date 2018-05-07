@@ -183,8 +183,7 @@ public class PageAdapter extends SimpleDragSortCursorAdapter // DragSortCursorAd
 			holder.progressBar = (ProgressBar) convertView.findViewById(R.id.thumb_progress);
 			holder.textTitle = (TextView) convertView.findViewById(R.id.row_title);
 //			holder.rowDivider = convertView.findViewById(R.id.row_divider);
-			holder.textBodyBlock = convertView.findViewById(R.id.row_body);
-			holder.textBody = (TextView) convertView.findViewById(R.id.row_body_text_view);
+			holder.textBody = (TextView) convertView.findViewById(R.id.row_body);
 			holder.textTime = (TextView) convertView.findViewById(R.id.row_time);
 			convertView.setTag(holder);
 
@@ -196,7 +195,7 @@ public class PageAdapter extends SimpleDragSortCursorAdapter // DragSortCursorAd
 		}
 
         // on note view
-        convertView.findViewById(R.id.row_text).setOnClickListener(new View.OnClickListener() {
+        convertView.findViewById(R.id.row_title).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 TabsHost.getCurrentPage().currPlayPosition = position;
@@ -548,7 +547,8 @@ public class PageAdapter extends SimpleDragSortCursorAdapter // DragSortCursorAd
 	  	else
 	  	{
 //			holder.rowDivider.setVisibility(View.INVISIBLE);
-	  		holder.textBodyBlock.setVisibility(View.INVISIBLE);
+            holder.textBody.setVisibility(View.GONE);
+            holder.textTime.setVisibility(View.GONE);
 	  	}
 
 

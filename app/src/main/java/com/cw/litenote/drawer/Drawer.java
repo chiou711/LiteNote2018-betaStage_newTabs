@@ -77,7 +77,6 @@ public class Drawer {
                         return true;
 
                     case R.id.DELETE_FOLDERS:
-                        MainAct.mMenu.setGroupVisible(R.id.group_folders, false);
 
                         DB_drawer dB_drawer = new DB_drawer(act);
                         if(dB_drawer.getFoldersCount(true)>0)
