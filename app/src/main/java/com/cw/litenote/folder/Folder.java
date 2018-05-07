@@ -30,7 +30,7 @@ public class Folder
     public Folder(FragmentActivity act)
     {
         this.act = act;
-        listView = (DragSortListView) act.findViewById(R.id.left_drawer);
+        listView = (DragSortListView) act.findViewById(R.id.drawer_listview);
         dB_drawer = new DB_drawer(act);
         folderAdapter = initFolder();
     }

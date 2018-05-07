@@ -51,23 +51,24 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:fitsSystemWindows="false"
-        app:menu="@menu/drawer_menu" >
+        app:headerLayout="@layout/drawer_header"
+        app:menu="@menu/drawer_menu"
+        >
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="400dp"
+        android:layout_gravity="bottom"
         android:orientation="vertical">
-    <include layout="@layout/drawer_header" />
 
     <com.mobeta.android.dslv.DragSortListView
-        android:id="@+id/left_drawer"
+        android:id="@+id/drawer_listview"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_height="match_parent"
         android:choiceMode="singleChoice"
         android:divider="@android:color/transparent"
         android:dividerHeight="0dp"
-        android:background="#111"/>
+        android:background="#777"/>
     </LinearLayout>
 
     </android.support.design.widget.NavigationView>

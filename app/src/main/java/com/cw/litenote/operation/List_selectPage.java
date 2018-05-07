@@ -45,7 +45,7 @@ public class List_selectPage
         mAct = act;
 
         dB_drawer = new DB_drawer(act);
-        DragSortListView listView = (DragSortListView) act.findViewById(R.id.left_drawer);
+        DragSortListView listView = (DragSortListView) act.findViewById(R.id.drawer_listview);
         int pos = listView.getCheckedItemPosition();
         mFolderTitle = dB_drawer.getFolderTitle(pos,true);
 

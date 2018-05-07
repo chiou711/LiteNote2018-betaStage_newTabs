@@ -28,7 +28,6 @@ import com.cw.litenote.operation.import_export.Import_fileView;
 import com.cw.litenote.db.DB_drawer;
 import com.cw.litenote.db.DB_folder;
 import com.cw.litenote.main.MainAct;
-import com.cw.litenote.page.PageUi;
 import com.cw.litenote.define.Define;
 import com.cw.litenote.tabs.TabsHost;
 import com.cw.litenote.util.TouchableEditText;
@@ -287,7 +286,7 @@ public class FolderUi
 //		System.out.println("FolderUi / MainAct.mFocus_folderPos = " + MainAct.mFocus_folderPos);
 
         // set new focus position
-        DragSortListView listView = (DragSortListView) act.findViewById(R.id.left_drawer);
+        DragSortListView listView = (DragSortListView) act.findViewById(R.id.drawer_listview);
         listView.setItemChecked(getFocus_folderPos(), true);
 
         if (foldersCount > 0) {
@@ -484,7 +483,7 @@ public class FolderUi
         	if(	db_drawer.getFolderTableId(i,true)== iLastView_folderTableId)
         	{
         		setFocus_folderPos(i);
-                DragSortListView listView = (DragSortListView) act.findViewById(R.id.left_drawer);
+                DragSortListView listView = (DragSortListView) act.findViewById(R.id.drawer_listview);
 
 				listView.setItemChecked(getFocus_folderPos(), true);
         	}
@@ -500,7 +499,7 @@ public class FolderUi
     	MainAct.mFolderTitle = dB_drawer.getFolderTitle(position,true);
 
 		// update selected item and title, then close the drawer
-        DragSortListView listView = (DragSortListView) act.findViewById(R.id.left_drawer);
+        DragSortListView listView = (DragSortListView) act.findViewById(R.id.drawer_listview);
 
 		listView.setItemChecked(position, true);
 

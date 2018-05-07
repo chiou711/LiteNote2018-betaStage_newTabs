@@ -54,7 +54,7 @@ public class Drawer {
                         {
                             MainAct.mPref_show_note_attribute.edit().putString("KEY_ENABLE_FOLDER_DRAGGABLE","no")
                                     .apply();
-                            DragSortListView listView = (DragSortListView) act.findViewById(R.id.left_drawer);
+                            DragSortListView listView = (DragSortListView) act.findViewById(R.id.drawer_listview);
                             listView.setDragEnabled(false);
                             Toast.makeText(act,act.getResources().getString(R.string.drag_folder)+
                                             ": " +
@@ -65,7 +65,7 @@ public class Drawer {
                         {
                             MainAct.mPref_show_note_attribute.edit().putString("KEY_ENABLE_FOLDER_DRAGGABLE","yes")
                                     .apply();
-                            DragSortListView listView = (DragSortListView) act.findViewById(R.id.left_drawer);
+                            DragSortListView listView = (DragSortListView) act.findViewById(R.id.drawer_listview);
                             listView.setDragEnabled(true);
                             Toast.makeText(act,act.getResources().getString(R.string.drag_folder) +
                                             ": " +
@@ -103,7 +103,7 @@ public class Drawer {
 
 
         act = activity;
-        listView = (DragSortListView) act.findViewById(R.id.left_drawer);
+        listView = (DragSortListView) act.findViewById(R.id.drawer_listview);
         // ActionBarDrawerToggle ties together the the proper interactions
         // between the sliding drawer and the action bar app icon
         drawerToggle =new ActionBarDrawerToggle(act,                  /* host Activity */
