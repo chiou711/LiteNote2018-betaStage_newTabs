@@ -490,11 +490,17 @@ public class MainAct extends AppCompatActivity implements OnBackStackChangedList
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
             }
-            else
+            else {
                 onBackPressedListener.doBack();
+            }
         }
         else
-            super.onBackPressed();
+        {
+            if(drawer.isDrawerOpen())
+                drawer.closeDrawer();
+            else
+                super.onBackPressed();
+        }
     }
 
     @Override

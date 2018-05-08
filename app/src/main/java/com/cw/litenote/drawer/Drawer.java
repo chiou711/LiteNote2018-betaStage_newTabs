@@ -117,7 +117,7 @@ public class Drawer {
                     {
                         System.out.println("Drawer / _onDrawerOpened ");
 
-                        act.findViewById(R.id.content_frame).setVisibility(View.INVISIBLE);
+//                        act.findViewById(R.id.content_frame).setVisibility(View.INVISIBLE);
                         act.invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
 
                         if(listView.getCount() >0) {
@@ -130,7 +130,7 @@ public class Drawer {
                     public void onDrawerClosed(View view)
                     {
                         System.out.println("Drawer / _onDrawerClosed / FolderUi.getFocus_folderPos() = " + FolderUi.getFocus_folderPos());
-                        act.findViewById(R.id.content_frame).setVisibility(View.VISIBLE);
+//                        act.findViewById(R.id.content_frame).setVisibility(View.VISIBLE);
 
                         FragmentManager fragmentManager = act.getSupportFragmentManager();
                         if(fragmentManager.getBackStackEntryCount() ==0 )
@@ -149,8 +149,8 @@ public class Drawer {
 //                                if (TabsHost.mTabsHost == null)
 //                                    FolderUi.selectFolder(act,FolderUi.getFocus_folderPos());
                             }
-                            else
-                                act.findViewById(R.id.content_frame).setVisibility(View.INVISIBLE);
+//                            else
+//                                act.findViewById(R.id.content_frame).setVisibility(View.INVISIBLE);
                         }
                     }
                };
