@@ -16,6 +16,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
 import android.widget.Toast;
 
@@ -183,11 +184,11 @@ public class Note_addAudio extends FragmentActivity {
 						// get file name
 						File file = new File("file://".concat(realPath));
 						String fileName = file.getName();
-						
+
 						// get directory
 						String dirStr = realPath.replace(fileName, "");
 						File dir = new File(dirStr);
-						
+
 						// get Urls array
 						String[] urlsArray = Util.getUrlsByFiles(dir.listFiles(), Util.AUDIO);
 						if(urlsArray == null)
@@ -201,49 +202,60 @@ public class Note_addAudio extends FragmentActivity {
 							Toast.makeText(this, R.string.add_new_start, Toast.LENGTH_SHORT).show();
 						}
 
-						int i= 1;
-						int total=0;
-						
-						for(int cnt = 0; cnt < urlsArray.length; cnt++)
-						{
-							if(!Util.isEmptyString(urlsArray[cnt]))
-								total++;
-						}
-						
-						// note: the order add insert items depends on file manager 
-						for(String urlStr:urlsArray)
-						{
-							System.out.println("urlStr = " + urlStr);
-				  		    noteId = null; // set null for Insert
-				  		    if(!Util.isEmptyString(urlStr))
-							{
-								// insert
-								// set marking to 1 for default
-								dB.insertNote("", "", urlStr, "", "", "", 1, (long) 0);// add new note, get return row Id
-							}
-//				  		    noteId = note_common.insertAudioToDB(urlStr);
-				        	selectedAudioUri = urlStr;
+//                        Handler handler = new Handler();
+//                        Runnable showDialogRun = new Runnable()
+//                        {
+//                            @Override
+//                            public void run() {
 
-//							if( (note_common.getCount() > 0) &&
-							if( (dB.getNotesCount(true) > 0) &&
-	  		        			option.equalsIgnoreCase("directory_to_top") )
-				        	{
-				        		Page.swap(Page.mDb_page);
-				        		//update playing focus
-								AudioManager.mAudioPos++;
-				        	}
-				    		
-				        	// avoid showing empty toast
-				        	if(!Util.isEmptyString(urlStr))
-				        	{
-				                String audioName = Util.getDisplayNameByUriString(urlStr, Note_addAudio.this);
-				                audioName = i + "/" + total + ": " + audioName;
-				        		Util.showSavedFileToast(audioName,this);	
-				        	}
-				        	i++;
-						}
-						// show Stop
-						Toast.makeText(this,R.string.add_new_stop,Toast.LENGTH_SHORT).show();
+                                int i= 1;
+                                int total=0;
+
+                                for(int cnt = 0; cnt < urlsArray.length; cnt++)
+                                {
+                                    if(!Util.isEmptyString(urlsArray[cnt]))
+                                        total++;
+                                }
+
+                                // note: the order add insert items depends on file manager
+                                for(String urlStr:urlsArray)
+                                {
+                                    System.out.println("urlStr = " + urlStr);
+                                    noteId = null; // set null for Insert
+                                    if(!Util.isEmptyString(urlStr))
+                                    {
+                                        // insert
+                                        // set marking to 1 for default
+                                        dB.insertNote("", "", urlStr, "", "", "", 1, (long) 0);// add new note, get return row Id
+                                    }
+                                    selectedAudioUri = urlStr;
+
+                                    if( (dB.getNotesCount(true) > 0) &&
+                                            option.equalsIgnoreCase("directory_to_top") )
+                                    {
+                                        Page.swap(Page.mDb_page);
+                                        //update playing focus
+                                        AudioManager.mAudioPos++;
+                                    }
+
+                                    // avoid showing empty toast
+                                    if(!Util.isEmptyString(urlStr))
+                                    {
+                                        String audioName = Util.getDisplayNameByUriString(urlStr, Note_addAudio.this);
+                                        audioName = i + "/" + total + ": " + audioName;
+
+                                        // add limitation
+                                        Util.showSavedFileToast(audioName, Note_addAudio.this);
+                                    }
+                                    i++;
+                                }
+
+                                // show Stop
+                                Toast.makeText(Note_addAudio.this,R.string.add_new_stop,Toast.LENGTH_SHORT).show();
+//                            }
+//                        };
+
+//                        handler.post(showDialogRun);
 					}
 					else
 					{

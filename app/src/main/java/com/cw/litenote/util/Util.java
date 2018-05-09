@@ -71,6 +71,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Environment;
+import android.os.Handler;
 import android.os.Vibrator;
 import android.provider.MediaStore;
 import android.support.v4.app.FragmentActivity;
@@ -1018,10 +1019,19 @@ public class Util
 	// show saved file name
 	public static void showSavedFileToast(String string,Activity act)
 	{
-		Toast.makeText(act,
+		final Toast toast = Toast.makeText(act,
 						string,
-						Toast.LENGTH_SHORT)
-						.show();
+						Toast.LENGTH_SHORT);
+
+        toast.show();
+
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                toast.cancel();
+            }
+        }, 2000);
 	}
 
 	static public boolean isLandscapeOrientation(Activity act)
