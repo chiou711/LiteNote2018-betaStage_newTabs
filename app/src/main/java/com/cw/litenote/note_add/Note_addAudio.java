@@ -17,17 +17,18 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class Note_addAudio extends FragmentActivity { 
 
     Long noteId;
     String selectedAudioUri;
-//    Note_common note_common;
     boolean enSaveDb = true;
 	String audioUriInDB;
 	private DB_page dB;
     boolean bUseSelectedFile;
+    TextView progress;
 
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,13 +92,14 @@ public class Note_addAudio extends FragmentActivity {
         enSaveDb = false;
         finish();
     }
-    
+
 	public void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent)
 	{
 //		System.out.println("Note_addAudio / onActivityResult");
 		if (resultCode == Activity.RESULT_OK)
 		{
             setContentView(R.layout.note_add_prepare);
+            progress = findViewById(R.id.add_audio_progress);//must add this, otherwise text view is not updated
 
 			// for audio
 			if(requestCode == Util.CHOOSER_SET_AUDIO)
@@ -239,9 +241,8 @@ public class Note_addAudio extends FragmentActivity {
                             {
                                 String audioName = Util.getDisplayNameByUriString(urlStr, Note_addAudio.this);
                                 audioName = i + "/" + total + ": " + audioName;
-
-                                // add limitation
-                                Util.showSavedFileToast(audioName, Note_addAudio.this);
+//                                Util.showSavedFileToast(audioName, Note_addAudio.this);
+                                progress.append("\r\n"+audioName);
                             }
                             i++;
                         }

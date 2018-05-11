@@ -14,6 +14,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.widget.TextView;
 import android.widget.Toast;
 
 /*
@@ -24,6 +25,7 @@ public class Note_addReadyVideo extends Activity {
 
     Long rowId;
     Note_common note_common;
+    TextView progress;
 
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,7 +89,9 @@ public class Note_addReadyVideo extends Activity {
 		System.out.println("Note_addReadyVideo / onActivityResult");
 		if (resultCode == Activity.RESULT_OK)
 		{
-			
+            setContentView(R.layout.note_add_prepare);
+            progress = findViewById(R.id.add_audio_progress);//must add this, otherwise text view is not updated
+
 			// for ready picture
 			if(requestCode == Util.CHOOSER_SET_PICTURE)
 			{
@@ -158,7 +162,12 @@ public class Note_addReadyVideo extends Activity {
 							Toast.makeText(this,"No file is found",Toast.LENGTH_SHORT).show();
 							finish();
 						}
-						
+                        else
+                        {
+                            // show Start
+                            Toast.makeText(this, R.string.add_new_start, Toast.LENGTH_SHORT).show();
+                        }
+
 						int i= 1;
 						int total=0;
 						
@@ -185,12 +194,16 @@ public class Note_addReadyVideo extends Activity {
 				        	// avoid showing empty toast
 				        	if(!Util.isEmptyString(urlStr))
 				        	{
-				                String name = Util.getDisplayNameByUriString(urlStr, this);
+				                String name = Util.getDisplayNameByUriString(urlStr, Note_addReadyVideo.this);
 				                name = i + "/" + total + ": " + name;
-				        		Util.showSavedFileToast(name,this);	
+//				        		Util.showSavedFileToast(name,this);
+                                progress.append("\r\n"+name);
 				        	}
 				        	i++;
 						}
+
+                        // show Stop
+                        Toast.makeText(this,R.string.add_new_stop,Toast.LENGTH_SHORT).show();
 					}
 					else
 					{

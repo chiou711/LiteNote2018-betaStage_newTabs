@@ -14,6 +14,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.widget.TextView;
 import android.widget.Toast;
 
 /*
@@ -24,6 +25,7 @@ public class Note_addReadyImage extends FragmentActivity {
 
     Long rowId;
     Note_common note_common;
+    TextView progress;
 
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,8 +89,11 @@ public class Note_addReadyImage extends FragmentActivity {
 		System.out.println("Note_addReadyPicture / onActivityResult");
 		if (resultCode == Activity.RESULT_OK)
 		{
+            setContentView(R.layout.note_add_prepare);
+            progress = findViewById(R.id.add_audio_progress);//must add this, otherwise text view is not updated
 
-			// for ready picture
+
+            // for ready picture
 			if(requestCode == Util.CHOOSER_SET_PICTURE)
             {
 				Uri selectedUri = imageReturnedIntent.getData();
@@ -142,6 +147,11 @@ public class Note_addReadyImage extends FragmentActivity {
 							Toast.makeText(this,"No file is found",Toast.LENGTH_SHORT).show();
 							finish();
 						}
+						else
+						{
+							// show Start
+							Toast.makeText(this, R.string.add_new_start, Toast.LENGTH_SHORT).show();
+						}
 
 						int i= 1;
 						int total=0;
@@ -155,7 +165,7 @@ public class Note_addReadyImage extends FragmentActivity {
 						// note: the order add insert items depends on file manager
 						for(String urlStr:urlsArray)
 						{
-							System.out.println("urlStr = " + urlStr);
+//							System.out.println("urlStr = " + urlStr);
 				  		    rowId = null; // set null for Insert
 				  		    if(!Util.isEmptyString(urlStr))
 				  		    	rowId = note_common.savePictureStateInDB(rowId,true,urlStr, "", "", "");
@@ -169,12 +179,16 @@ public class Note_addReadyImage extends FragmentActivity {
 				        	// avoid showing empty toast
 				        	if(!Util.isEmptyString(urlStr))
 				        	{
-				                String name = Util.getDisplayNameByUriString(urlStr, this);
+				                String name = Util.getDisplayNameByUriString(urlStr, Note_addReadyImage.this);
 				                name = i + "/" + total + ": " + name;
-				        		Util.showSavedFileToast(name,this);
+//				        		Util.showSavedFileToast(name,this);
+                                progress.append("\r\n"+name);
 				        	}
 				        	i++;
 						}
+
+						// show Stop
+						Toast.makeText(this,R.string.add_new_stop,Toast.LENGTH_SHORT).show();
 					}
 					else
 					{
