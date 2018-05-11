@@ -30,7 +30,8 @@ public class Note_addReadyImage extends FragmentActivity {
         super.onCreate(savedInstanceState);
         
         System.out.println("Note_addReadyPicture / onCreate");
-		
+
+		setContentView(R.layout.note_add_prepare);
         note_common = new Note_common(this);
 	
         // get row Id from saved instance
@@ -184,7 +185,9 @@ public class Note_addReadyImage extends FragmentActivity {
 					}
 				}
 				
-				addPicture();
+//				addPicture();
+				finish();
+
 			}
 		} 
 		else if (resultCode == RESULT_CANCELED)

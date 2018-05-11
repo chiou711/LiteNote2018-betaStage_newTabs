@@ -736,15 +736,15 @@ public class Util
 					}
 					catch(Exception e)
 					{
-						
+
 					}
 					audio_title = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE);
 					audio_artist = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST);
 					display_name = audio_title + " / " + audio_artist;
 				}
-				
-				// add for video with mkv format 
-				if(Util.isEmptyString(audio_title) && 
+
+				// add for video with mkv format
+				if(Util.isEmptyString(audio_title) &&
 				   Util.isEmptyString(audio_artist)   )
 				{
 					display_name = uri.getLastPathSegment();
@@ -1007,7 +1007,7 @@ public class Util
 		            {
 //		            	path[i] = "file:///" + file.getPath();
 		            	path[i] = "file://" + file.getAbsolutePath();
-		            	System.out.println("path[i] = " + path[i]);
+//		            	System.out.println("Util / _getUrlsByFiles / path[i] = " + path[i]);
 		            	i++;
 		            }
 	            }
@@ -1160,7 +1160,7 @@ public class Util
 		        Spannable saf_span = new SpannableString(" (CLOUD)");
 		        saf_span.setSpan(new ForegroundColorSpan(android.graphics.Color.RED), 0, saf_span.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 		        CharSequence newSafLabel = TextUtils.concat(ri.loadLabel(pkgMgr), saf_span);
-	        	System.out.println("SAF label " + i + " = " + newSafLabel );
+//	        	System.out.println("Util / _chooseMediaIntentByType / SAF label " + i + " = " + newSafLabel );
 //				extraIntentsSaf[i] = new LabeledIntent(intentSaf, packageName, newSafLabel, ri.icon);
 
 				intentList.add(new LabeledIntent(intentSaf,packageName,newSafLabel,ri.icon));

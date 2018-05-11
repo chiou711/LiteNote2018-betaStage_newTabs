@@ -153,6 +153,7 @@ public class Add_note_option {
         dlgAddNew = builder1.create();
         dlgAddNew.show();
     }
+
     private static AlertDialog dlgAddNew;
 
     private static void startAddNoteActivity(FragmentActivity act,int option)

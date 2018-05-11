@@ -16,7 +16,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
 import android.widget.Toast;
 
@@ -29,14 +28,14 @@ public class Note_addAudio extends FragmentActivity {
 	String audioUriInDB;
 	private DB_page dB;
     boolean bUseSelectedFile;
-	
+
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        
+
+        setContentView(R.layout.note_add_prepare);
         System.out.println("Note_addAudio / onCreate");
-        
-//        note_common = new Note_common(this);
+
         audioUriInDB = "";
         selectedAudioUri = "";
         bUseSelectedFile = false;
@@ -93,21 +92,24 @@ public class Note_addAudio extends FragmentActivity {
         finish();
     }
     
-	protected void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent) 
+	public void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent)
 	{
-		System.out.println("Note_addAudio / onActivityResult");
+//		System.out.println("Note_addAudio / onActivityResult");
 		if (resultCode == Activity.RESULT_OK)
 		{
+            setContentView(R.layout.note_add_prepare);
+
 			// for audio
 			if(requestCode == Util.CHOOSER_SET_AUDIO)
 			{
 				Uri selectedUri = imageReturnedIntent.getData();
 				System.out.println("Note_addAudio / onActivityResult / selectedUri = " + selectedUri);
-				
+
+                int takeFlags= -1;
 				// SAF support, take persistent Uri permission
 				if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
 				{
-			    	int takeFlags = imageReturnedIntent.getFlags()
+			    	takeFlags = imageReturnedIntent.getFlags()
 			                & (Intent.FLAG_GRANT_READ_URI_PERMISSION
 			                | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
 
@@ -120,28 +122,28 @@ public class Note_addAudio extends FragmentActivity {
 			    		getContentResolver().takePersistableUriPermission(selectedUri, takeFlags);
 			    	}
 				}
-				
+
 				String scheme = selectedUri.getScheme();
 				// check option of Add new audio
 				String option = getIntent().getExtras().getString("EXTRA_ADD_EXIST", "single_to_bottom");
-     			
+
 				// add single file
-				if((option.equalsIgnoreCase("single_to_top") || 
-           		    option.equalsIgnoreCase("single_to_bottom") ) && 
+				if((option.equalsIgnoreCase("single_to_top") ||
+           		    option.equalsIgnoreCase("single_to_bottom") ) &&
            		   (scheme.equalsIgnoreCase("file") ||
  					scheme.equalsIgnoreCase("content"))              )
 				{
 					String uriStr = selectedUri.toString();
-					
+
 					// check if content scheme points to local file
 					if(scheme.equalsIgnoreCase("content"))
 					{
 						String realPath = Util.getLocalRealPathByUri(this, selectedUri);
-						
+
 						if(realPath != null)
 							uriStr = "file://".concat(realPath);
 					}
-					
+
 		  		    noteId = null; // set null for Insert
 //		        	noteId = note_common.insertAudioToDB(uriStr);
 
@@ -162,22 +164,22 @@ public class Note_addAudio extends FragmentActivity {
 		        		//update playing focus
 						AudioManager.mAudioPos++;
 		        	}
-		        	
-		        	if(!Util.isEmptyString(uriStr))	
+
+		        	if(!Util.isEmptyString(uriStr))
 		        	{
 		                String audioName = Util.getDisplayNameByUriString(uriStr, Note_addAudio.this);
 		        		Util.showSavedFileToast(audioName,this);
 		        	}
 				}
 				// add multiple audio files in the selected file's directory
-				else if((option.equalsIgnoreCase("directory_to_top") || 
+				else if((option.equalsIgnoreCase("directory_to_top") ||
 						 option.equalsIgnoreCase("directory_to_bottom")) &&
 						 (scheme.equalsIgnoreCase("file") ||
 						  scheme.equalsIgnoreCase("content") )              )
 				{
 					// get file path and add prefix (file://)
 					String realPath = Util.getLocalRealPathByUri(this, selectedUri);
-					
+
 					// when scheme is content, it could be local or remote
 					if(realPath != null)
 					{
@@ -202,73 +204,63 @@ public class Note_addAudio extends FragmentActivity {
 							Toast.makeText(this, R.string.add_new_start, Toast.LENGTH_SHORT).show();
 						}
 
-//                        Handler handler = new Handler();
-//                        Runnable showDialogRun = new Runnable()
-//                        {
-//                            @Override
-//                            public void run() {
+                        int i= 1;
+                        int total=0;
 
-                                int i= 1;
-                                int total=0;
+                        for(int cnt = 0; cnt < urlsArray.length; cnt++)
+                        {
+                            if(!Util.isEmptyString(urlsArray[cnt]))
+                                total++;
+                        }
 
-                                for(int cnt = 0; cnt < urlsArray.length; cnt++)
-                                {
-                                    if(!Util.isEmptyString(urlsArray[cnt]))
-                                        total++;
-                                }
+                        // note: the order add insert items depends on file manager
+                        for(String urlStr:urlsArray)
+                        {
+//                            System.out.println("urlStr = " + urlStr);
+                            noteId = null; // set null for Insert
+                            if(!Util.isEmptyString(urlStr))
+                            {
+                                // insert
+                                // set marking to 1 for default
+                                dB.insertNote("", "", urlStr, "", "", "", 1, (long) 0);// add new note, get return row Id
+                            }
+                            selectedAudioUri = urlStr;
 
-                                // note: the order add insert items depends on file manager
-                                for(String urlStr:urlsArray)
-                                {
-                                    System.out.println("urlStr = " + urlStr);
-                                    noteId = null; // set null for Insert
-                                    if(!Util.isEmptyString(urlStr))
-                                    {
-                                        // insert
-                                        // set marking to 1 for default
-                                        dB.insertNote("", "", urlStr, "", "", "", 1, (long) 0);// add new note, get return row Id
-                                    }
-                                    selectedAudioUri = urlStr;
+                            if( (dB.getNotesCount(true) > 0) &&
+                                    option.equalsIgnoreCase("directory_to_top") )
+                            {
+                                Page.swap(Page.mDb_page);
+                                //update playing focus
+                                AudioManager.mAudioPos++;
+                            }
 
-                                    if( (dB.getNotesCount(true) > 0) &&
-                                            option.equalsIgnoreCase("directory_to_top") )
-                                    {
-                                        Page.swap(Page.mDb_page);
-                                        //update playing focus
-                                        AudioManager.mAudioPos++;
-                                    }
+                            // avoid showing empty toast
+                            if(!Util.isEmptyString(urlStr))
+                            {
+                                String audioName = Util.getDisplayNameByUriString(urlStr, Note_addAudio.this);
+                                audioName = i + "/" + total + ": " + audioName;
 
-                                    // avoid showing empty toast
-                                    if(!Util.isEmptyString(urlStr))
-                                    {
-                                        String audioName = Util.getDisplayNameByUriString(urlStr, Note_addAudio.this);
-                                        audioName = i + "/" + total + ": " + audioName;
+                                // add limitation
+                                Util.showSavedFileToast(audioName, Note_addAudio.this);
+                            }
+                            i++;
+                        }
 
-                                        // add limitation
-                                        Util.showSavedFileToast(audioName, Note_addAudio.this);
-                                    }
-                                    i++;
-                                }
-
-                                // show Stop
-                                Toast.makeText(Note_addAudio.this,R.string.add_new_stop,Toast.LENGTH_SHORT).show();
-//                            }
-//                        };
-
-//                        handler.post(showDialogRun);
+                        // show Stop
+                        Toast.makeText(Note_addAudio.this,R.string.add_new_stop,Toast.LENGTH_SHORT).show();
 					}
 					else
 					{
 						Toast.makeText(this,
 								R.string.add_new_file_error,
 								Toast.LENGTH_LONG)
-								.show();					
+								.show();
 					}
 				}
-				
-				// do again
-	        	chooseAudioMedia();	
-	        	
+
+				// open chooser again
+//	        	chooseAudioMedia();
+
 	        	// to avoid exception due to playing tab is different with focus tab
 	        	if(PageUi.isAudioPlayingPage())
 	        	{
@@ -276,8 +268,10 @@ public class Note_addAudio extends FragmentActivity {
 		        	//todo TBD
 //		        	Page.mItemAdapter.notifyDataSetChanged();
 	        	}
+
+	        	finish();
 			}
-		} 
+		}
 		else if (resultCode == RESULT_CANCELED)
 		{
 			Toast.makeText(Note_addAudio.this, R.string.note_cancel_add_new, Toast.LENGTH_LONG).show();
@@ -286,6 +280,7 @@ public class Note_addAudio extends FragmentActivity {
             return; // must add this
 		}
 	}
+
 
     void chooseAudioMedia()
     {

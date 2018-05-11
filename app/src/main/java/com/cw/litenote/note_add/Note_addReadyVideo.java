@@ -30,7 +30,8 @@ public class Note_addReadyVideo extends Activity {
         super.onCreate(savedInstanceState);
         
         System.out.println("Note_addOkVideo / onCreate");
-		
+
+		setContentView(R.layout.note_add_prepare);
         note_common = new Note_common(this);
 	
         // get row Id from saved instance
@@ -200,7 +201,8 @@ public class Note_addReadyVideo extends Activity {
 					}	
 				}
 				
-				addPicture();
+//				addPicture();
+				finish();
 			}
 		} 
 		else if (resultCode == RESULT_CANCELED)
