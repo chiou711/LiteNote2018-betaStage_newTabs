@@ -18,8 +18,8 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
@@ -37,7 +37,7 @@ public class NoteUi
     static int videoView_progress;
     private static int mPosition;
     private ViewPager pager;
-    private FragmentActivity act;
+    private AppCompatActivity act;
 
     public static int getNotesCnt() {
         return notesCnt;
@@ -64,7 +64,7 @@ public class NoteUi
 
 
     // constructor
-    public NoteUi(FragmentActivity activity, ViewPager viewPager, int position)
+    public NoteUi(AppCompatActivity activity, ViewPager viewPager, int position)
     {
 
         System.out.println("NoteUi / constructor");
@@ -198,8 +198,8 @@ public class NoteUi
      * @param linkUri
      * @param viewGroup
      */
-	private void setPictureView_listeners(final FragmentActivity act,final ViewPager pager,
-                                         final String strPicture, final String linkUri, ViewGroup viewGroup)
+	private void setPictureView_listeners(final AppCompatActivity act, final ViewPager pager,
+                                          final String strPicture, final String linkUri, ViewGroup viewGroup)
 	{
         System.out.println("NoteUi / setPictureView_listeners");
         Button picView_back_button = (Button) (viewGroup.findViewById(R.id.image_view_back));

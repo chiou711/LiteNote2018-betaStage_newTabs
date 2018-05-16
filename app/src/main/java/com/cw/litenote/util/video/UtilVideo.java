@@ -27,6 +27,7 @@ import android.os.Build;
 import android.provider.MediaStore;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.webkit.URLUtil;
@@ -64,7 +65,7 @@ public class UtilVideo
 		setVideoViewUI
 	*/
 
-	public static void initVideoView(ViewPager viewPager, final String strPicture, final FragmentActivity act, int position)
+	public static void initVideoView(ViewPager viewPager, final String strPicture, final AppCompatActivity act, int position)
     {
     	System.out.println("UtilVideo / _initVideoView / strPicture = " + strPicture);
 		mAct = act;

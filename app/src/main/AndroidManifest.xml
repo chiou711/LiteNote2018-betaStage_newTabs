@@ -59,6 +59,7 @@
         <activity android:name=".note_add.Note_addReadyVideo"/>
         <activity android:name=".note.Note_edit" />
         <activity android:name=".note.Note"
+                  android:theme="@style/MyTheme"
             	  android:configChanges="orientation|keyboard|keyboardHidden|screenSize|screenLayout|uiMode" />
         <!-- note: add orientation above, when doing Rotate, activity will not go through the following states: 
              onPause/onSaveInstanceState/onStop/onDestroy/

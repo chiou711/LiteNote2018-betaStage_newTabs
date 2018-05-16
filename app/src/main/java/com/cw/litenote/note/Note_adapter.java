@@ -26,8 +26,8 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.support.v13.app.FragmentStatePagerAdapter;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -51,12 +51,12 @@ class Note_adapter extends FragmentStatePagerAdapter
 {
 	static int mLastPosition;
 	private static LayoutInflater inflater;
-	private FragmentActivity act;
+	private AppCompatActivity act;
 	private static String mWebTitle;
 	private ViewPager pager;
 	DB_page db_page;
 
-    Note_adapter(ViewPager viewPager, FragmentActivity activity)
+    Note_adapter(ViewPager viewPager, AppCompatActivity activity)
     {
     	super(activity.getFragmentManager());
 		pager = viewPager;

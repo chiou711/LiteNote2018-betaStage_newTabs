@@ -12,6 +12,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.AppCompatActivity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -358,7 +359,7 @@ public class FolderUi
 	}
 
     private static SharedPreferences mPref_delete_warn;
-	static void editFolder(final FragmentActivity act, final int position,final SimpleDragSortCursorAdapter folderAdapter)
+	static void editFolder(final AppCompatActivity act, final int position, final SimpleDragSortCursorAdapter folderAdapter)
 	{
 		DB_drawer db = new DB_drawer(act);
 
@@ -416,7 +417,7 @@ public class FolderUi
                                            ,true);
 					// update
 					folderAdapter.notifyDataSetChanged();
-                    act.getActionBar().setTitle(editText.getText().toString());
+                    act.getSupportActionBar().setTitle(editText.getText().toString());
 
                 }
 	        })

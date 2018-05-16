@@ -6,7 +6,6 @@ import com.cw.litenote.db.DB_page;
 import com.cw.litenote.main.MainAct;
 import com.cw.litenote.operation.audio.AudioManager;
 import com.cw.litenote.page.Page;
-import com.cw.litenote.page.PageUi;
 import com.cw.litenote.tabs.TabsHost;
 import com.cw.litenote.util.CustomWebView;
 import com.cw.litenote.util.DeleteFileAlarmReceiver;
@@ -16,25 +15,22 @@ import com.cw.litenote.util.preferences.Pref;
 import com.cw.litenote.util.video.AsyncTaskVideoBitmapPager;
 import com.cw.litenote.util.video.UtilVideo;
 import com.cw.litenote.util.video.VideoPlayer;
-import com.cw.litenote.util.ColorSet;
 import com.cw.litenote.operation.mail.MailNotes;
 import com.cw.litenote.util.uil.UilCommon;
 import com.cw.litenote.util.Util;
 
 import android.R.color;
-import android.app.ActionBar;
-import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -45,7 +41,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class Note extends FragmentActivity
+public class Note extends AppCompatActivity //FragmentActivity
 {
     /**
      * The pager widget, which handles animation and allows swiping horizontally to access previous
@@ -75,7 +71,7 @@ public class Note extends FragmentActivity
 
 	public static String mAudioUriInDB;
 
-    public FragmentActivity act;
+    public AppCompatActivity act;
     public static int mPlayVideoPositionOfInstance;
     public Note_audio note_audio;
 
@@ -138,12 +134,11 @@ public class Note extends FragmentActivity
 		else
 			setContentView(R.layout.note_view_portrait);
 
-		ActionBar actionBar = getActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setTitle(R.string.view_note_title);
-            actionBar.setBackgroundDrawable(new ColorDrawable(ColorSet.getBarColor(this)));
-        }
+		Toolbar mToolbar = (Toolbar) findViewById(R.id.toolbar);
+		setSupportActionBar(mToolbar);
+		if (getSupportActionBar() != null) {
+			getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		}
 
 		mPref_show_note_attribute = getSharedPreferences("show_note_attribute", 0);
 
@@ -318,20 +313,20 @@ public class Note extends FragmentActivity
     *   - action bar: hide, show
     *   - full screen: full, not full
     */
-	public static void setOutline(Activity act)
+	public static void setOutline(AppCompatActivity act)
 	{
         // Set full screen or not, and action bar
 		if(isViewAllMode() || isTextMode())
 		{
 			Util.setFullScreen_noImmersive(act);
-            if(act.getActionBar() != null)
-			    act.getActionBar().show();
+            if(act.getSupportActionBar() != null)
+			    act.getSupportActionBar().show();
 		}
 		else if(isPictureMode())
 		{
 			Util.setFullScreen(act);
-            if(act.getActionBar() != null)
-    			act.getActionBar().hide();
+            if(act.getSupportActionBar() != null)
+    			act.getSupportActionBar().hide();
 		}
 
         // renew pager

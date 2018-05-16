@@ -1,11 +1,11 @@
 package com.cw.litenote.drawer;
 
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.ActionBarDrawerToggle;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
@@ -24,13 +24,13 @@ public class Drawer {
 
 
     public static DrawerLayout drawerLayout;
-    private FragmentActivity act;
+    private AppCompatActivity act;
     public ActionBarDrawerToggle drawerToggle;
     public static NavigationView mNavigationView;
     DragSortListView listView;
 
 
-    public Drawer(FragmentActivity activity)
+    public Drawer(AppCompatActivity activity)
     {
         drawerLayout = (DrawerLayout) activity.findViewById(R.id.drawer_layout);
 
@@ -108,7 +108,7 @@ public class Drawer {
         // between the sliding drawer and the action bar app icon
         drawerToggle =new ActionBarDrawerToggle(act,                  /* host Activity */
                                                 drawerLayout,         /* DrawerLayout object */
-                                                R.drawable.ic_drawer,  /* navigation drawer image to replace 'Up' caret */
+                                                MainAct.mToolbar,  /* tool bar */
                                                 R.string.drawer_open,  /* "open drawer" description for accessibility */
                                                 R.string.drawer_close  /* "close drawer" description for accessibility */
                                                 )
@@ -121,7 +121,6 @@ public class Drawer {
                         act.invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
 
                         if(listView.getCount() >0) {
-//                            act.getActionBar().setTitle(MainAct.mAppTitle);
                             // will call Folder_adapter _getView to update audio playing high light
                             listView.invalidateViews();
                         }
@@ -142,7 +141,9 @@ public class Drawer {
                             {
                                 int pos = listView.getCheckedItemPosition();
                                 MainAct.mFolderTitle = dB_drawer.getFolderTitle(pos,true);
-//                                act.getActionBar().setTitle(MainAct.mFolderTitle);
+
+                                if(act.getSupportActionBar() != null)
+                                    act.getSupportActionBar().setTitle(MainAct.mFolderTitle);
 
                                 //todo TBD
                                 // add for deleting folder condition

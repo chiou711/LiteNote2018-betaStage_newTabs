@@ -50,7 +50,6 @@ public class DeletePages extends Fragment{
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		rootView = inflater.inflate(R.layout.select_page_list, container, false);
         act = getActivity();
-//		act.getActionBar().setBackgroundDrawable(new ColorDrawable(ColorSet.getBarColor(act)));
 
         // title
         title = (TextView) rootView.findViewById(R.id.select_list_title);

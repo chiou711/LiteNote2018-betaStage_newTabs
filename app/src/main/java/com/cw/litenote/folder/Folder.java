@@ -4,6 +4,7 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
 
@@ -23,11 +24,11 @@ public class Folder
     public DragSortListView listView;
     public SimpleDragSortCursorAdapter adapter;
     DragSortController controller;
-    FragmentActivity act;
+    AppCompatActivity act;
     DB_drawer dB_drawer;
     SimpleDragSortCursorAdapter folderAdapter;
 
-    public Folder(FragmentActivity act)
+    public Folder(AppCompatActivity act)
     {
         this.act = act;
         listView = (DragSortListView) act.findViewById(R.id.drawer_listview);
@@ -194,9 +195,9 @@ public class Folder
     public static class FolderListener_longClick implements DragSortListView.OnItemLongClickListener
     {
 
-        FragmentActivity act;
+        AppCompatActivity act;
         SimpleDragSortCursorAdapter adapter;
-        FolderListener_longClick(FragmentActivity _act,SimpleDragSortCursorAdapter _adapter)
+        FolderListener_longClick(AppCompatActivity _act,SimpleDragSortCursorAdapter _adapter)
         {
             act = _act;
             adapter = _adapter;

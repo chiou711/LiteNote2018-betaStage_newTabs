@@ -87,7 +87,7 @@ public class MainAct extends AppCompatActivity implements OnBackStackChangedList
     public static List<String> mFolderTitles;
 	static NoisyAudioStreamReceiver noisyAudioStreamReceiver;
 	static IntentFilter intentFilter;
-    public static FragmentActivity mAct;//TODO static issue
+    public static AppCompatActivity mAct;//TODO static issue
 	public static FragmentManager fragmentManager;
 	public static FragmentManager.OnBackStackChangedListener mOnBackStackChangedListener;
 	public static int mLastOkTabId = 1;
@@ -96,7 +96,7 @@ public class MainAct extends AppCompatActivity implements OnBackStackChangedList
     public Drawer drawer;
 	public static Folder mFolder;
     public static MainUi mMainUi;
-    private Toolbar mToolbar;
+    public static Toolbar mToolbar;
 
 	// Main Act onCreate
     @Override
@@ -310,6 +310,7 @@ public class MainAct extends AppCompatActivity implements OnBackStackChangedList
             mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+
                     Drawer.drawerLayout.openDrawer(GravityCompat.START);
                 }
             });
@@ -412,7 +413,7 @@ public class MainAct extends AppCompatActivity implements OnBackStackChangedList
 		if(dB_drawer.getFoldersCount(true)>0) {
 			System.out.println("MainAct / _onResumeFragments / getFocus_folderPos() = " + FolderUi.getFocus_folderPos());
 			FolderUi.selectFolder(this,FolderUi.getFocus_folderPos());
-			setTitle(mFolderTitle);
+			getSupportActionBar().setTitle(mFolderTitle);
 		}
     }
 
@@ -706,7 +707,7 @@ public class MainAct extends AppCompatActivity implements OnBackStackChangedList
 
             if(foldersCnt>0)
             {
-                setTitle(mFolderTitle);
+                getSupportActionBar().setTitle(mFolderTitle);
 
                 // pages count
                 int pgsCnt = FolderUi.getFolder_pagesCount(this,FolderUi.getFocus_folderPos());
