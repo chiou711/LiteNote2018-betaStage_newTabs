@@ -317,13 +317,40 @@ public class MainAct extends AppCompatActivity implements OnBackStackChangedList
         }
     }
 
+    // set action bar for fragment
     void initActionBar_home()
     {
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        if (mToolbar != null)
-            mToolbar.setNavigationIcon(null); //R.drawable.ic_drawer
-        setSupportActionBar(mToolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        drawer.drawerToggle.setDrawerIndicatorEnabled(false);
+
+        if(getSupportActionBar() != null) {
+            getSupportActionBar().setTitle(R.string.app_name);
+            getSupportActionBar().setDisplayShowHomeEnabled(false);//false: no launcher icon
+        }
+
+        mToolbar.setNavigationIcon(R.drawable.ic_menu_back);
+        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                System.out.println("MainAct / _initActionBar_home / click to popBackStack");
+
+                // check if DB is empty
+                DB_drawer db_drawer = new DB_drawer(mAct);
+                int focusFolder_tableId = Pref.getPref_focusView_folder_tableId(mAct);
+                DB_folder db_folder = new DB_folder(mAct,focusFolder_tableId);
+                if((db_drawer.getFoldersCount(true) == 0) ||
+                   (db_folder.getPagesCount(true) == 0)      )
+                {
+                    finish();
+                    Intent intent  = new Intent(mAct,MainAct.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
+                }
+                else
+                    getSupportFragmentManager().popBackStack();
+            }
+        });
+
     }
 
 
@@ -512,12 +539,7 @@ public class MainAct extends AppCompatActivity implements OnBackStackChangedList
         if(backStackEntryCount == 1) // fragment
         {
             System.out.println("MainAct / _onBackStackChanged / fragment");
-//            getActionBar().setDisplayShowHomeEnabled(false);
-//            getActionBar().setDisplayHomeAsUpEnabled(true);
-
             initActionBar_home();
-
-            drawer.drawerToggle.setDrawerIndicatorEnabled(false);
         }
         else if(backStackEntryCount == 0) // init
         {
@@ -530,8 +552,14 @@ public class MainAct extends AppCompatActivity implements OnBackStackChangedList
 
             initActionBar();
 
-            setTitle(mFolderTitle);
-            invalidateOptionsMenu();
+            // new drawer
+            if(drawer != null)
+                drawer = null;
+
+            drawer = new Drawer(mAct);
+            drawer.initDrawer();
+
+            drawer.drawerToggle.syncState(); // make sure toggle icon state is correct
         }
     }
 
@@ -860,6 +888,7 @@ public class MainAct extends AppCompatActivity implements OnBackStackChangedList
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
+        //System.out.println("MainAct / _onOptionsItemSelected");
 		setMenuUiState(item.getItemId());
         DB_folder dB_folder = new DB_folder(this, Pref.getPref_focusView_folder_tableId(this));
         DB_page dB_page = new DB_page(this,TabsHost.getCurrentPageTableId());

@@ -34,7 +34,6 @@ public class Drawer {
     {
         drawerLayout = (DrawerLayout) activity.findViewById(R.id.drawer_layout);
 
-//        relativeLayout = activity.findViewById(R.id.nav_rel_layout);
         mNavigationView = (NavigationView) activity.findViewById(R.id.nav_view);
 
         mNavigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
@@ -117,7 +116,11 @@ public class Drawer {
                     {
                         System.out.println("Drawer / _onDrawerOpened ");
 
-//                        act.findViewById(R.id.content_frame).setVisibility(View.INVISIBLE);
+                        if(act.getSupportActionBar() != null) {
+                            act.getSupportActionBar().setTitle(R.string.app_name);
+                            MainAct.mToolbar.setLogo(R.drawable.ic_launcher);
+                        }
+
                         act.invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
 
                         if(listView.getCount() >0) {
@@ -129,7 +132,6 @@ public class Drawer {
                     public void onDrawerClosed(View view)
                     {
                         System.out.println("Drawer / _onDrawerClosed / FolderUi.getFocus_folderPos() = " + FolderUi.getFocus_folderPos());
-//                        act.findViewById(R.id.content_frame).setVisibility(View.VISIBLE);
 
                         FragmentManager fragmentManager = act.getSupportFragmentManager();
                         if(fragmentManager.getBackStackEntryCount() ==0 )
@@ -142,16 +144,11 @@ public class Drawer {
                                 int pos = listView.getCheckedItemPosition();
                                 MainAct.mFolderTitle = dB_drawer.getFolderTitle(pos,true);
 
-                                if(act.getSupportActionBar() != null)
+                                if(act.getSupportActionBar() != null) {
                                     act.getSupportActionBar().setTitle(MainAct.mFolderTitle);
-
-                                //todo TBD
-                                // add for deleting folder condition
-//                                if (TabsHost.mTabsHost == null)
-//                                    FolderUi.selectFolder(act,FolderUi.getFocus_folderPos());
+                                    MainAct.mToolbar.setLogo(null);
+                                }
                             }
-//                            else
-//                                act.findViewById(R.id.content_frame).setVisibility(View.INVISIBLE);
                         }
                     }
                };
@@ -161,7 +158,7 @@ public class Drawer {
     {
         // set a custom shadow that overlays the main content when the drawer opens
         drawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
-        drawerLayout.setDrawerListener(drawerToggle);
+        drawerLayout.addDrawerListener(drawerToggle);
     }
 
     public void closeDrawer()
