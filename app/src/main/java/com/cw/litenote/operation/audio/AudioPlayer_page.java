@@ -32,7 +32,6 @@ public class AudioPlayer_page
     private static AudioManager mAudioManager; // slide show being played
 	private static int mPlaybackTime; // time in miniSeconds from which media should play
 	private static int mAudio_tryTimes; // use to avoid useless looping in Continue mode
-    public static boolean willPlayNextAudio;
     private FragmentActivity act;
     private Async_audioUrlVerify mAudioUrlVerifyTask;
 	private AudioUi_page audioUi_page;
@@ -189,7 +188,6 @@ public class AudioPlayer_page
    						//create a MediaPlayer
    						AudioManager.mMediaPlayer = new MediaPlayer();
 	   					AudioManager.mMediaPlayer.reset();
-	   					willPlayNextAudio = true; // default: play next
 	   					AudioUi_page.mProgress = 0;
 
 
@@ -244,18 +242,6 @@ public class AudioPlayer_page
 	   		else if( (AudioManager.getCheckedAudio(AudioManager.mAudioPos) == 0 ) )// for non-audio item
 	   		{
 //	   			System.out.println("AudioPlayer_page / page_runnable / for non-audio item");
-	   			// get next index
-	   			if(willPlayNextAudio) {
-					AudioManager.mAudioPos++;
-					if( AudioManager.mAudioPos >= AudioManager.getNotesCount())
-						AudioManager.mAudioPos = 0; //back to first index
-				}
-	   			else {
-					AudioManager.mAudioPos--;
-					if( AudioManager.mAudioPos < 0)
-						AudioManager.mAudioPos = (AudioManager.getNotesCount()-1);
-				}
-	   			
 				nextAudio_player();
 
 				TabsHost.audioPlayer_page.scrollHighlightAudioItemToVisible(TabsHost.getCurrentPage().drag_listView);
@@ -503,7 +489,7 @@ public class AudioPlayer_page
      */
 	private void startNewAudio()
 	{
-        System.out.println("AudioPlayer_page / _startNewAudio");
+        System.out.println("AudioPlayer_page / _startNewAudio / AudioManager.mAudioPos = " + AudioManager.mAudioPos);
 
 		// remove call backs to make sure next toast will appear soon
 		if(mAudioHandler != null)

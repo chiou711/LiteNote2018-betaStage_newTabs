@@ -194,7 +194,6 @@ public class AudioUi_page {
             @Override
             public void onClick(View v)
             {
-                AudioPlayer_page.willPlayNextAudio = false;
 
                 do {
                     if(AudioManager.mAudioPos > 0)
@@ -217,7 +216,6 @@ public class AudioUi_page {
             @Override
             public void onClick(View v)
             {
-                AudioPlayer_page.willPlayNextAudio = true;
 
                 do
                 {
