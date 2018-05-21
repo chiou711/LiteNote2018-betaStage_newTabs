@@ -201,7 +201,7 @@ public class AudioUi_page {
                     else if( (AudioManager.mAudioPos == 0) &&
                              (AudioManager.getCheckedAudio(AudioManager.mAudioPos) == 0 ) )
                     {
-                        AudioManager.mAudioPos = AudioManager.getNotesCount()-1;
+                        AudioManager.mAudioPos = AudioManager.getPlayingPage_notesCount()-1;
                     }
                 }
                 while (AudioManager.getCheckedAudio(AudioManager.mAudioPos) == 0);//todo logic error if id=0 is non-audio
@@ -220,7 +220,7 @@ public class AudioUi_page {
                 do
                 {
                     AudioManager.mAudioPos++;
-                    if( AudioManager.mAudioPos >= AudioManager.getNotesCount())
+                    if( AudioManager.mAudioPos >= AudioManager.getPlayingPage_notesCount())
                         AudioManager.mAudioPos = 0; //back to first index
                 }
                 while (AudioManager.getCheckedAudio(AudioManager.mAudioPos) == 0);

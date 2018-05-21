@@ -753,7 +753,7 @@ public class MainAct extends AppCompatActivity implements OnBackStackChangedList
                     }
                     catch (Exception e)
                     {
-                        System.out.println(preStr + "dB_page.getNotesCount(false) error / 0 page ");
+                        System.out.println(preStr + "dB_page.getNotesCount() error");
                         notesCnt = 0;
                     }
                 }

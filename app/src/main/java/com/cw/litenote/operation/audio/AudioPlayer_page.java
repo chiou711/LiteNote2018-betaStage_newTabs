@@ -560,7 +560,7 @@ public class AudioPlayer_page
         // new audio index
         AudioManager.mAudioPos++;
 
-		if(AudioManager.mAudioPos >= AudioManager.getNotesCount())
+		if(AudioManager.mAudioPos >= AudioManager.getPlayingPage_notesCount())
             AudioManager.mAudioPos = 0; //back to first index
 
         // check try times,had tried or not tried yet, anyway the audio file is found

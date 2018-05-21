@@ -582,36 +582,36 @@ public class PageAdapter extends SimpleDragSortCursorAdapter // DragSortCursorAd
     public static int toggleNoteMarking(AppCompatActivity mAct, int position)
     {
         int marking = 0;
-		DB_page mDb_page = new DB_page(mAct,TabsHost.getCurrentPageTableId());
-        mDb_page.open();
-        int count = mDb_page.getNotesCount(false);
+		DB_page db_page = new DB_page(mAct,TabsHost.getCurrentPageTableId());
+        db_page.open();
+        int count = db_page.getNotesCount(false);
         if(position >= count) //end of list
         {
-            mDb_page.close();
+            db_page.close();
             return marking;
         }
 
-        String strNote = mDb_page.getNoteTitle(position,false);
-        String strPictureUri = mDb_page.getNotePictureUri(position,false);
-        String strAudioUri = mDb_page.getNoteAudioUri(position,false);
-        String strLinkUri = mDb_page.getNoteLinkUri(position,false);
-        String strNoteBody = mDb_page.getNoteBody(position,false);
-        Long idNote =  mDb_page.getNoteId(position,false);
+        String strNote = db_page.getNoteTitle(position,false);
+        String strPictureUri = db_page.getNotePictureUri(position,false);
+        String strAudioUri = db_page.getNoteAudioUri(position,false);
+        String strLinkUri = db_page.getNoteLinkUri(position,false);
+        String strNoteBody = db_page.getNoteBody(position,false);
+        Long idNote =  db_page.getNoteId(position,false);
 
         // toggle the marking
-        if(mDb_page.getNoteMarking(position,false) == 0)
+        if(db_page.getNoteMarking(position,false) == 0)
         {
-            mDb_page.updateNote(idNote, strNote, strPictureUri, strAudioUri, "", strLinkUri, strNoteBody, 1, 0, false);
+            db_page.updateNote(idNote, strNote, strPictureUri, strAudioUri, "", strLinkUri, strNoteBody, 1, 0, false);
             marking = 1;
         }
         else
         {
-            mDb_page.updateNote(idNote, strNote, strPictureUri, strAudioUri, "", strLinkUri, strNoteBody, 0, 0, false);
+            db_page.updateNote(idNote, strNote, strPictureUri, strAudioUri, "", strLinkUri, strNoteBody, 0, 0, false);
             marking = 0;
         }
-        mDb_page.close();
+        db_page.close();
 
-        System.out.println("PageAdapter / _toggleNoteMarking / position = " + position + ", marking = " + mDb_page.getNoteMarking(position,true));
+        System.out.println("PageAdapter / _toggleNoteMarking / position = " + position + ", marking = " + db_page.getNoteMarking(position,true));
         return  marking;
     }
 

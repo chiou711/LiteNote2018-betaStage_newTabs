@@ -157,10 +157,10 @@ public class AudioManager
 	 	db_page.close();
 	}
 
-	public static int getNotesCount()
+	public static int getPlayingPage_notesCount()
     {
-        DB_page db_page = new DB_page(MainAct.mAct, TabsHost.getCurrentPageTableId());
-
+        int playingPageTableId = TabsHost.mTabsPagerAdapter.getItem(TabsHost.audioPlayTabPos).page_tableId;
+        DB_page db_page = new DB_page(MainAct.mAct, playingPageTableId);
         return db_page.getNotesCount(true);
     }
 	
