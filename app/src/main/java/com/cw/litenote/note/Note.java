@@ -5,7 +5,7 @@ import com.cw.litenote.db.DB_folder;
 import com.cw.litenote.db.DB_page;
 import com.cw.litenote.main.MainAct;
 import com.cw.litenote.operation.audio.AudioManager;
-import com.cw.litenote.page.Page;
+import com.cw.litenote.page.PageAdapter;
 import com.cw.litenote.tabs.TabsHost;
 import com.cw.litenote.util.CustomWebView;
 import com.cw.litenote.util.DeleteFileAlarmReceiver;
@@ -558,7 +558,7 @@ public class Note extends AppCompatActivity //FragmentActivity
             	return true;
 
 			case R.id.VIEW_NOTE_CHECK:
-				int markingNow = Page.toggleNoteMarking(MainAct.mAct,NoteUi.getFocus_notePos());
+				int markingNow = PageAdapter.toggleNoteMarking(MainAct.mAct,NoteUi.getFocus_notePos());
 
 				// update marking
 				if(markingNow == 1)

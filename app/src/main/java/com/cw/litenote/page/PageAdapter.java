@@ -9,6 +9,7 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.text.TextUtils;
 import android.util.Log;
@@ -244,7 +245,7 @@ public class PageAdapter extends SimpleDragSortCursorAdapter // DragSortCursorAd
             @Override
             public void onClick(View v) {
 
-                System.out.println("PageAdapter / _getView / _onClick");
+                System.out.println("PageAdapter / _getView / imageCheck / _onClick");
                 // toggle marking
 				int markingNow = toggleNoteMarking(MainAct.mAct,position);
 
@@ -258,8 +259,10 @@ public class PageAdapter extends SimpleDragSortCursorAdapter // DragSortCursorAd
 				TabsHost.getCurrentPage().showFooter(MainAct.mAct);
 
                 // update audio info
-                if(PageUi.isAudioPlayingPage())
+                if(PageUi.isAudioPlayingPage()) {
+                    System.out.println("PageAdapter / _getView / imageCheck / is AudioPlayingPage");
                     AudioPlayer_page.prepareAudioInfo();
+                }
             }
         });
 
@@ -576,7 +579,7 @@ public class PageAdapter extends SimpleDragSortCursorAdapter // DragSortCursorAd
 	}
 
     // toggle mark of note
-    public static int toggleNoteMarking(FragmentActivity mAct,int position)
+    public static int toggleNoteMarking(AppCompatActivity mAct, int position)
     {
         int marking = 0;
 		DB_page mDb_page = new DB_page(mAct,TabsHost.getCurrentPageTableId());
@@ -608,7 +611,7 @@ public class PageAdapter extends SimpleDragSortCursorAdapter // DragSortCursorAd
         }
         mDb_page.close();
 
-        System.out.println("Page / _toggleNoteMarking / position = " + position + ", marking = " + mDb_page.getNoteMarking(position,true));
+        System.out.println("PageAdapter / _toggleNoteMarking / position = " + position + ", marking = " + mDb_page.getNoteMarking(position,true));
         return  marking;
     }
 

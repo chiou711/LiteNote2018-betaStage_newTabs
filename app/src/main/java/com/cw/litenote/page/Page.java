@@ -63,7 +63,6 @@ public class Page extends UilListViewBaseFragment
 	public SeekBar seekBarProgress;
 	ProgressBar mSpinner;
     public static int currPlayPosition;
-    static boolean en_dbg_msg = true;//true //false
 	public int page_tableId;
 	int page_pos;
 
@@ -79,17 +78,13 @@ public class Page extends UilListViewBaseFragment
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
-		if(en_dbg_msg)
-			System.out.println("Page / _onCreate / page_tableId = " + page_tableId);
+//		System.out.println("Page / _onCreate / page_tableId = " + page_tableId);
 	}
 
 	View rootView;
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		if(en_dbg_msg)
-			System.out.println("Page / _onCreateView / page_tableId = " + page_tableId);
-
+//		System.out.println("Page / _onCreateView / page_tableId = " + page_tableId);
 
         if(savedInstanceState == null)
             System.out.println("Page / _onCreateView / savedInstanceState = null");
@@ -192,8 +187,7 @@ public class Page extends UilListViewBaseFragment
 	public PageAdapter mItemAdapter;
 	public void fillData(FragmentActivity mAct,DragSortListView listView)
 	{
-		if(en_dbg_msg)
-			System.out.println("Page / _fillData / page_tableId = " + page_tableId);
+//		System.out.println("Page / _fillData / page_tableId = " + page_tableId);
 
     	/*
         // set background color of list view
@@ -395,13 +389,13 @@ public class Page extends UilListViewBaseFragment
 
     @Override
     public void onResume() {
-		if(en_dbg_msg)
-			System.out.println("Page / _onResume / page_tableId = " + page_tableId);
+		System.out.println("Page / _onResume / page_tableId = " + page_tableId);
 
         super.onResume();
 
         if( (AudioManager.getPlayerState() != AudioManager.PLAYER_AT_STOP) &&
-            (page_tableId == TabsHost.mFocusPageTableId) )
+            (page_tableId == TabsHost.getCurrentPageTableId()) &&
+            !PageUi.isAudioPlayingPage() )
         {
             TabsHost.resume_listView_vScroll(drag_listView);
         }
@@ -411,15 +405,13 @@ public class Page extends UilListViewBaseFragment
     @Override
     public void onPause() {
     	super.onPause();
-		if(en_dbg_msg)
-			System.out.println("Page / _onPause / page_tableId = " + page_tableId);
+//		System.out.println("Page / _onPause / page_tableId = " + page_tableId);
 	 }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
     	super.onSaveInstanceState(outState);
-		if(en_dbg_msg)
-			System.out.println(mClassName + " / onSaveInstanceState");
+//		System.out.println(mClassName + " / onSaveInstanceState");
     }
 
 //	@Override
@@ -616,52 +608,12 @@ public class Page extends UilListViewBaseFragment
 //        }
 //    };
 
-	// toggle mark of note
-	public static int toggleNoteMarking(FragmentActivity mAct,int position)
-	{
-		int marking = 0;
-		int pageTableId = TabsHost.mFocusPageTableId;
-        DB_page mDb_page = new DB_page(mAct, pageTableId);
-		mDb_page.open();
-		int count = mDb_page.getNotesCount(false);
-		if(position >= count) //end of list
-		{
-			mDb_page.close();
-			return marking;
-		}
-
-		String strNote = mDb_page.getNoteTitle(position,false);
-		String strPictureUri = mDb_page.getNotePictureUri(position,false);
-		String strAudioUri = mDb_page.getNoteAudioUri(position,false);
-		String strLinkUri = mDb_page.getNoteLinkUri(position,false);
-		String strNoteBody = mDb_page.getNoteBody(position,false);
-		Long idNote =  mDb_page.getNoteId(position,false);
-
-		// toggle the marking
-		if(mDb_page.getNoteMarking(position,false) == 0)
-		{
-			mDb_page.updateNote(idNote, strNote, strPictureUri, strAudioUri, "", strLinkUri, strNoteBody, 1, 0, false);
-			marking = 1;
-		}
-		else
-		{
-			mDb_page.updateNote(idNote, strNote, strPictureUri, strAudioUri, "", strLinkUri, strNoteBody, 0, 0, false);
-			marking = 0;
-		}
-		mDb_page.close();
-
-        System.out.println("Page / _toggleNoteMarking / position = " + position + ", marking = " + mDb_page.getNoteMarking(position,true));
-		return  marking;
-	}
-
-
     // list view listener: on audio
     public DragSortListView.AudioListener onAudio = new DragSortListView.AudioListener()
 	{   @Override
         public void audio(int position)
 		{
-			if(en_dbg_msg)
-				System.out.println("Page / _onAudio");
+//			System.out.println("Page / _onAudio");
 
 			AudioManager.setAudioPlayMode(AudioManager.PAGE_PLAY_MODE);
 
@@ -679,8 +631,7 @@ public class Page extends UilListViewBaseFragment
     		if( !Util.isEmptyString(uriString) && (marking == 1))
     			isAudioUri = true;
 
-			if(en_dbg_msg)
-				System.out.println("Page / _onAudio / isAudioUri = " + isAudioUri);
+//			System.out.println("Page / _onAudio / isAudioUri = " + isAudioUri);
 
             if(position < notesCount) // avoid footer error
 			{
@@ -723,7 +674,7 @@ public class Page extends UilListViewBaseFragment
                     MainAct.mPlaying_pagePos = TabsHost.getFocus_tabPos();
 
 					// update playing page table Id
-					MainAct.mPlaying_pageTableId = TabsHost.mFocusPageTableId;//mNow_pageTableId;
+					MainAct.mPlaying_pageTableId = TabsHost.getCurrentPageTableId();
 
 					// update playing folder position
 				    MainAct.mPlaying_folderPos = FolderUi.getFocus_folderPos();
@@ -733,6 +684,7 @@ public class Page extends UilListViewBaseFragment
 					MainAct.mPlaying_folderTableId = dB_drawer.getFolderTableId(MainAct.mPlaying_folderPos,true);
 				}
 			}
+
             // redraw list view item
 //                    int first = drag_listView.getFirstVisiblePosition();
 //                    int last = drag_listView.getLastVisiblePosition();
@@ -740,8 +692,8 @@ public class Page extends UilListViewBaseFragment
 //                        View view = drag_listView.getChildAt(i-first);
 //                        drag_listView.getAdapter().getView(i, view, drag_listView);
 //                    }
-
 //            mItemAdapter.notifyDataSetChanged();
+
             TabsHost.getPage_rowItemView(position);
 
         }
@@ -752,11 +704,9 @@ public class Page extends UilListViewBaseFragment
 	// set footer
     public void showFooter(FragmentActivity mAct)
     {
-		if(en_dbg_msg)
-			System.out.println("Page / _showFooter ");
+//		System.out.println("Page / _showFooter ");
 
 		// show footer
-//		mFooterMessage.setVisibility(View.VISIBLE);
         mFooterMessage.setTextColor(ColorSet.color_white);
         if(mFooterMessage != null) //add this for avoiding null exception when after e-Mail action
         {

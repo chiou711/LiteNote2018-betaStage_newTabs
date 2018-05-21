@@ -349,7 +349,7 @@ public class Util
 	            View view = originalAdapter.getView(position, convertView, parent);
 	            //set CheckedTextView in order to change button color
 	            CheckedTextView textView = (CheckedTextView)view;
-	            if(mDbFolder.getPageTableId(position,true) == TabsHost.mFocusPageTableId)
+	            if(mDbFolder.getPageTableId(position,true) == TabsHost.getCurrentPageTableId())
 	            {
 		            textView.setTypeface(null, Typeface.BOLD_ITALIC);
 		            textView.setBackgroundColor(ColorSet.mBG_ColorArray[style]);
@@ -1275,7 +1275,7 @@ public class Util
 	                videoId = groupIndex1;
 	        }
 	    }
-		System.out.println("Util / _getYoutubeId / video_id = " + videoId);
+//		System.out.println("Util / _getYoutubeId / video_id = " + videoId);
 
 	    return videoId;
 	}

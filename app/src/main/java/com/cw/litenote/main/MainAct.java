@@ -1052,7 +1052,7 @@ public class MainAct extends AppCompatActivity implements OnBackStackChangedList
                     mPlaying_pagePos = TabsHost.getFocus_tabPos();
 
                     // update playing page table Id
-                    mPlaying_pageTableId = TabsHost.mFocusPageTableId;//mNow_pageTableId;
+                    mPlaying_pageTableId = TabsHost.getCurrentPageTableId();
 
                     // update playing folder position
                     mPlaying_folderPos = FolderUi.getFocus_folderPos();

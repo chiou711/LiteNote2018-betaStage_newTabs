@@ -323,7 +323,7 @@ public class TabsHost extends AppCompatDialogFragment implements TabLayout.OnTab
         int mFirstVisibleIndex = Pref.getPref_focusView_list_view_first_visible_index(MainAct.mAct);
         int mFirstVisibleIndexTop = Pref.getPref_focusView_list_view_first_visible_index_top(MainAct.mAct);
 
-        System.out.println("TabsHost / _resume_scroll_listView / mFirstVisibleIndex = " + mFirstVisibleIndex +
+        System.out.println("TabsHost / _resume_listView_vScroll / mFirstVisibleIndex = " + mFirstVisibleIndex +
                 " , mFirstVisibleIndexTop = " + mFirstVisibleIndexTop);
 
         // restore index and top position
@@ -377,7 +377,7 @@ public class TabsHost extends AppCompatDialogFragment implements TabLayout.OnTab
      */
     void setLongClickListener()
     {
-        System.out.println("TabsHost / _setLongClickListener");
+//        System.out.println("TabsHost / _setLongClickListener");
 
         //https://stackoverflow.com/questions/33367245/add-onlongclicklistener-on-android-support-tablayout-tablayout-tab
         // on long click listener
