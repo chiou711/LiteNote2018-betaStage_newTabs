@@ -8,8 +8,7 @@
 		<com.mobeta.android.dslv.DragSortListView
 			android:id="@android:id/list"
 			android:layout_width="match_parent"
-			android:layout_height="0dip"
-			android:layout_weight="1"
+			android:layout_height="match_parent"
 			android:divider="@android:color/transparent"
 			android:dividerHeight="5dp"
 			android:layout_margin="5dp"
@@ -26,20 +25,5 @@
 			<!--android:visibility="gone"-->
 			<!--android:indeterminateDrawable="@drawable/spinner"-->
 			<!--/>-->
-
-		<View android:layout_width="match_parent" android:layout_height="2dip" android:background="#222222" />
-
-		<!-- footer page info -->
-		<TextView
-			android:id="@+id/footerText"
-			android:layout_width="match_parent"
-			android:layout_height="30dp"
-			android:gravity="center"
-			android:textAppearance="?android:attr/textAppearanceLarge"
-			android:textSize="12sp"
-			android:maxLines="1"
-			android:background="@drawable/bg_gray_border" />
-
-		<View android:layout_width="match_parent" android:layout_height="2dip" android:background="#222222" />
 
 </LinearLayout>

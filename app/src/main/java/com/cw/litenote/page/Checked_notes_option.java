@@ -319,7 +319,7 @@ public class Checked_notes_option {
 
         TabsHost.reloadCurrentPage();
 
-        TabsHost.getCurrentPage().showFooter(MainAct.mAct);
+        TabsHost.showFooter(MainAct.mAct);
     }
 
     /**
@@ -354,7 +354,7 @@ public class Checked_notes_option {
             AudioPlayer_page.prepareAudioInfo();
 
         TabsHost.reloadCurrentPage();
-        TabsHost.getCurrentPage().showFooter(MainAct.mAct);
+        TabsHost.showFooter(MainAct.mAct);
     }
 
 
@@ -422,13 +422,13 @@ public class Checked_notes_option {
                     mDb_page.close();
 
                     TabsHost.reloadCurrentPage();
-                    TabsHost.getCurrentPage().showFooter(MainAct.mAct);
+                    TabsHost.showFooter(MainAct.mAct);
                 }
                 else if(action == COPY_TO)
                 {
                     DB_page.setFocusPage_tableId(srcPageTableId);
                     TabsHost.reloadCurrentPage();
-                    TabsHost.getCurrentPage().showFooter(MainAct.mAct);
+                    TabsHost.showFooter(MainAct.mAct);
                 }
                 dialog.dismiss();
             }
@@ -495,7 +495,7 @@ public class Checked_notes_option {
                                     UtilAudio.stopAudioIfNeeded();
 
                                 TabsHost.reloadCurrentPage();
-                                TabsHost.getCurrentPage().showFooter(MainAct.mAct);
+                                TabsHost.showFooter(MainAct.mAct);
                             }
                         });
 

@@ -27,6 +27,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,9 +35,11 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.cw.litenote.R;
 import com.cw.litenote.db.DB_folder;
+import com.cw.litenote.db.DB_page;
 import com.cw.litenote.folder.FolderUi;
 import com.cw.litenote.main.MainAct;
 import com.cw.litenote.operation.audio.AudioManager;
@@ -121,6 +124,10 @@ public class TabsHost extends AppCompatDialogFragment implements TabLayout.OnTab
                 ContextCompat.getColor(getActivity(),R.color.colorGray), //normal
                 ContextCompat.getColor(getActivity(),R.color.colorWhite) //selected
         );
+
+        mFooterMessage = (TextView) rootView.findViewById(R.id.footerText);
+        mFooterMessage.setBackgroundColor(Color.BLUE);
+        mFooterMessage.setVisibility(View.VISIBLE);
 
         return rootView;
     }
@@ -216,6 +223,8 @@ public class TabsHost extends AppCompatDialogFragment implements TabLayout.OnTab
 
         // set long click listener
         setLongClickListener();
+
+        TabsHost.showFooter(MainAct.mAct);
     }
 
     @Override
@@ -584,6 +593,34 @@ public class TabsHost extends AppCompatDialogFragment implements TabLayout.OnTab
 //        });
     }
 
+    public static TextView mFooterMessage;
+
+    // set footer
+    public static void showFooter(AppCompatActivity mAct)
+    {
+//		System.out.println("TabsHost / _showFooter ");
+
+        // show footer
+        mFooterMessage.setTextColor(ColorSet.color_white);
+        if(mFooterMessage != null) //add this for avoiding null exception when after e-Mail action
+        {
+            mFooterMessage.setText(getFooterMessage(mAct));
+            mFooterMessage.setBackgroundColor(ColorSet.getBarColor(mAct));
+        }
+    }
+
+    // get footer message of list view
+    static String getFooterMessage(AppCompatActivity mAct)
+    {
+        DB_page mDb_page = new DB_page(mAct, mTabsPagerAdapter.getItem(getFocus_tabPos()).page_tableId);
+        return mAct.getResources().getText(R.string.footer_checked).toString() +
+                "/" +
+                mAct.getResources().getText(R.string.footer_total).toString() +
+                ": " +
+                mDb_page.getCheckedNotesCount() +
+                "/" +
+                mDb_page.getNotesCount(true);
+    }
 
     /**
      * Get focus tab position

@@ -33,6 +33,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.AsyncTaskLoader;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,7 +58,7 @@ public class Page extends UilListViewBaseFragment
 	public DragSortListView drag_listView;
 	DragSortController drag_controller;
     public static int mStyle = 0;
-	public FragmentActivity mAct;
+	public AppCompatActivity mAct;
 	String mClassName;
     public static int mHighlightPosition;
 	public SeekBar seekBarProgress;
@@ -93,7 +94,7 @@ public class Page extends UilListViewBaseFragment
 
         rootView = inflater.inflate(R.layout.page_view_portrait, container, false);
 
-		mAct = getActivity();
+		mAct = MainAct.mAct;
 		mClassName = getClass().getSimpleName();
         listView = (DragSortListView)rootView.findViewById(android.R.id.list);
 		drag_listView = listView;
@@ -101,9 +102,6 @@ public class Page extends UilListViewBaseFragment
 		if(Build.VERSION.SDK_INT >= 21)
 			drag_listView.setSelector(R.drawable.ripple);
 
-		mFooterMessage = (TextView) rootView.findViewById(R.id.footerText);
-        mFooterMessage.setBackgroundColor(Color.BLUE);
-        mFooterMessage.setVisibility(View.VISIBLE);
 //		mSpinner = (ProgressBar) rootView.findViewById(R.id.list1_progress);
 //		new SpinnerTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 //		new ProgressBarTask().execute();
@@ -185,7 +183,7 @@ public class Page extends UilListViewBaseFragment
 	 * fill data
 	 */
 	public PageAdapter mItemAdapter;
-	public void fillData(FragmentActivity mAct,DragSortListView listView)
+	public void fillData(AppCompatActivity mAct, DragSortListView listView)
 	{
 //		System.out.println("Page / _fillData / page_tableId = " + page_tableId);
 
@@ -228,7 +226,8 @@ public class Page extends UilListViewBaseFragment
         listView.setAudioListener(onAudio);
         listView.setOnScrollListener(onScroll);
 
-        showFooter(mAct);
+        //init
+        TabsHost.showFooter(mAct);
 	}
 
     // Open long clicked item of list view
@@ -252,7 +251,7 @@ public class Page extends UilListViewBaseFragment
 	    @Override
 	    protected void onPreExecute(){
 			drag_listView.setVisibility(View.GONE);
-			mFooterMessage.setVisibility(View.GONE);
+			TabsHost.mFooterMessage.setVisibility(View.GONE);
 			mSpinner.setVisibility(View.VISIBLE);
 	    }
 
@@ -265,7 +264,7 @@ public class Page extends UilListViewBaseFragment
 	    protected void onPostExecute(Void result) {
 	    	mSpinner.setVisibility(View.GONE);
 			drag_listView.setVisibility(View.VISIBLE);
-			mFooterMessage.setVisibility(View.VISIBLE);
+			TabsHost.mFooterMessage.setVisibility(View.VISIBLE);
 			if(!this.isCancelled())
 			{
 				this.cancel(true);
@@ -347,7 +346,7 @@ public class Page extends UilListViewBaseFragment
             TabsHost.reloadCurrentPage();
 
             // update footer
-			showFooter(mAct);
+			TabsHost.showFooter(mAct);
         }
     };
 
@@ -698,35 +697,6 @@ public class Page extends UilListViewBaseFragment
 
         }
 	};
-
-    TextView mFooterMessage;
-
-	// set footer
-    public void showFooter(FragmentActivity mAct)
-    {
-//		System.out.println("Page / _showFooter ");
-
-		// show footer
-        mFooterMessage.setTextColor(ColorSet.color_white);
-        if(mFooterMessage != null) //add this for avoiding null exception when after e-Mail action
-        {
-            mFooterMessage.setText(getFooterMessage(mAct));
-            mFooterMessage.setBackgroundColor(ColorSet.getBarColor(mAct));
-        }
-    }
-
-	// get footer message of list view
-    String getFooterMessage(FragmentActivity mAct)
-    {
-        DB_page mDb_page = new DB_page(mAct, page_tableId);
-        return mAct.getResources().getText(R.string.footer_checked).toString() +
-               "/" +
-               mAct.getResources().getText(R.string.footer_total).toString() +
-                  ": " +
-               mDb_page.getCheckedNotesCount() +
-                  "/" +
-               mDb_page.getNotesCount(true);
-    }
 
 	static public void swap(DB_page dB_page)
 	{

@@ -255,8 +255,7 @@ public class PageAdapter extends SimpleDragSortCursorAdapter // DragSortCursorAd
                 }
 
                 TabsHost.reloadCurrentPage();
-//				TabsHost.getPage_rowItemView(position); //??? use this will not update item view, what else?
-				TabsHost.getCurrentPage().showFooter(MainAct.mAct);
+				TabsHost.showFooter(MainAct.mAct);
 
                 // update audio info
                 if(PageUi.isAudioPlayingPage()) {
