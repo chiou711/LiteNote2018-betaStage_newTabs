@@ -69,16 +69,17 @@ public class TabsHost extends AppCompatDialogFragment implements TabLayout.OnTab
 
     public static AudioUi_page audioUi_page;
     public static AudioPlayer_page audioPlayer_page;
+    public static boolean isDoingMarking;
 
     public TabsHost()
     {
-        System.out.println("TabsHost / construct");
+//        System.out.println("TabsHost / construct");
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        System.out.println("TabsHost / _onCreate");
+//        System.out.println("TabsHost / _onCreate");
     }
 
     @Nullable
@@ -151,7 +152,7 @@ public class TabsHost extends AppCompatDialogFragment implements TabLayout.OnTab
                 if (pageTableId > lastPageTableId)
                     lastPageTableId = pageTableId;
 
-                System.out.println("TabsHost / _addPages / page_tableId = " + pageTableId);
+//                System.out.println("TabsHost / _addPages / page_tableId = " + pageTableId);
                 adapter.addFragment(new Page(i, pageTableId));
             }
         }
@@ -191,9 +192,11 @@ public class TabsHost extends AppCompatDialogFragment implements TabLayout.OnTab
         if( (tab.getPosition() == audioPlayTabPos) && (page != null) && (page.mItemAdapter != null) )
         {
             DragSortListView listView = page.drag_listView;
-            if( (listView != null) &&
-                (AudioManager.getPlayerState() != AudioManager.PLAYER_AT_STOP)  ) {
-                audioPlayer_page.scrollHighlightAudioItemToVisible(listView);
+            if( !isDoingMarking &&
+                (listView != null) &&
+                (AudioManager.getPlayerState() != AudioManager.PLAYER_AT_STOP)  )
+            {
+                audioPlayer_page.scrollHighlightAudioItemToVisible(listView);//todo Affected by toggle marking
             }
         }
 
@@ -225,6 +228,8 @@ public class TabsHost extends AppCompatDialogFragment implements TabLayout.OnTab
         setLongClickListener();
 
         TabsHost.showFooter(MainAct.mAct);
+
+        isDoingMarking = false;
     }
 
     @Override
@@ -287,6 +292,7 @@ public class TabsHost extends AppCompatDialogFragment implements TabLayout.OnTab
 
         // set long click listener
         setLongClickListener();
+
     }
 
     @Override
@@ -320,6 +326,7 @@ public class TabsHost extends AppCompatDialogFragment implements TabLayout.OnTab
         System.out.println("TabsHost / _store_listView_vScroll / mFirstVisibleIndex = " + mFirstVisibleIndex +
                 " , mFirstVisibleIndexTop = " + mFirstVisibleIndexTop);
 
+        //todo How to store each page scroll?
         // keep index and top position
         Pref.setPref_focusView_list_view_first_visible_index(MainAct.mAct, mFirstVisibleIndex);
         Pref.setPref_focusView_list_view_first_visible_index_top(MainAct.mAct, mFirstVisibleIndexTop);

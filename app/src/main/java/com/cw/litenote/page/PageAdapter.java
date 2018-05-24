@@ -40,6 +40,7 @@ import com.cw.litenote.util.image.UtilImage;
 import com.cw.litenote.util.image.UtilImage_bitmapLoader;
 import com.cw.litenote.util.uil.UilCommon;
 import com.cw.litenote.util.video.UtilVideo;
+import com.mobeta.android.dslv.DragSortListView;
 import com.mobeta.android.dslv.SimpleDragSortCursorAdapter;
 
 import static com.cw.litenote.db.DB_page.KEY_NOTE_AUDIO_URI;
@@ -75,7 +76,7 @@ public class PageAdapter extends SimpleDragSortCursorAdapter // DragSortCursorAd
 		else
 		    count = 0;
 
-        System.out.println("PageAdapter / _Page_new_adapter / count =" + count);
+//        System.out.println("PageAdapter / _Page_new_adapter / count =" + count);
 
         // add this for fixing java.lang.IllegalStateException: attempt to re-open an already-closed object
         mDb_page.open();
@@ -253,6 +254,11 @@ public class PageAdapter extends SimpleDragSortCursorAdapter // DragSortCursorAd
                 if(AudioManager.mAudioPos == position) {
                     UtilAudio.stopAudioIfNeeded();
                 }
+
+                //Toggle marking will resume page, so do Store v scroll
+				DragSortListView listView = TabsHost.mTabsPagerAdapter.fragmentList.get(TabsHost.getFocus_tabPos()).drag_listView;
+				TabsHost.store_listView_vScroll(listView);
+				TabsHost.isDoingMarking = true;
 
                 TabsHost.reloadCurrentPage();
 				TabsHost.showFooter(MainAct.mAct);

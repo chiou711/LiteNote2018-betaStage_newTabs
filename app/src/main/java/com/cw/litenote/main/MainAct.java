@@ -385,7 +385,7 @@ public class MainAct extends AppCompatActivity implements OnBackStackChangedList
     protected void onSaveInstanceState(Bundle outState)
     {
        super.onSaveInstanceState(outState);
-  	   System.out.println("MainAct / onSaveInstanceState / getFocus_folderPos() = " + FolderUi.getFocus_folderPos());
+//  	   System.out.println("MainAct / onSaveInstanceState / getFocus_folderPos() = " + FolderUi.getFocus_folderPos());
        outState.putInt("NowFolderPosition", FolderUi.getFocus_folderPos());
        outState.putInt("Playing_pageId", mPlaying_pagePos);
        outState.putInt("Playing_folderPos", mPlaying_folderPos);
@@ -417,20 +417,20 @@ public class MainAct extends AppCompatActivity implements OnBackStackChangedList
     @Override
     protected void onPause() {
     	super.onPause();
-    	System.out.println("MainAct / _onPause");
+//    	System.out.println("MainAct / _onPause");
     }
 
 	@Override
     protected void onResume()
     {
         super.onResume();
-    	System.out.println("MainAct / _onResume");
+//    	System.out.println("MainAct / _onResume");
     }
 
 
     @Override
     protected void onResumeFragments() {
-    	System.out.println("MainAct / _onResumeFragments ");
+//    	System.out.println("MainAct / _onResumeFragments ");
     	super.onResumeFragments();
 
 		// fix: home button failed after power off/on in Config fragment
@@ -702,7 +702,7 @@ public class MainAct extends AppCompatActivity implements OnBackStackChangedList
      ****************************************************/
     @Override
     public boolean onPrepareOptionsMenu(android.view.Menu menu) {
-        System.out.println("MainAct / _onPrepareOptionsMenu");
+//        System.out.println("MainAct / _onPrepareOptionsMenu");
 
         if((drawer == null) || (drawer.drawerLayout == null))
             return false;
@@ -740,11 +740,11 @@ public class MainAct extends AppCompatActivity implements OnBackStackChangedList
                 // pages count
                 int pgsCnt = FolderUi.getFolder_pagesCount(this,FolderUi.getFocus_folderPos());
                 String preStr = "MainAct / _onPrepareOptionsMenu / ";
-                System.out.println(preStr + "FolderUi.getFocus_folderPos() = " + FolderUi.getFocus_folderPos());
+//                System.out.println(preStr + "FolderUi.getFocus_folderPos() = " + FolderUi.getFocus_folderPos());
 
                 // notes count
                 int notesCnt = 0;
-                System.out.println(preStr + "DB_page.getFocusPage_tableId() = " + DB_page.getFocusPage_tableId());
+//                System.out.println(preStr + "DB_page.getFocusPage_tableId() = " + DB_page.getFocusPage_tableId());
 
                 DB_page dB_page = new DB_page(this,TabsHost.getCurrentPageTableId());
                 if(dB_page != null){

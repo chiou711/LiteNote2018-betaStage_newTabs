@@ -87,10 +87,10 @@ public class Page extends UilListViewBaseFragment
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 //		System.out.println("Page / _onCreateView / page_tableId = " + page_tableId);
 
-        if(savedInstanceState == null)
-            System.out.println("Page / _onCreateView / savedInstanceState = null");
-        else
-            System.out.println("Page / _onCreateView / savedInstanceState != null");
+//        if(savedInstanceState == null)
+//            System.out.println("Page / _onCreateView / savedInstanceState = null");
+//        else
+//            System.out.println("Page / _onCreateView / savedInstanceState != null");
 
         rootView = inflater.inflate(R.layout.page_view_portrait, container, false);
 
@@ -392,19 +392,16 @@ public class Page extends UilListViewBaseFragment
 
         super.onResume();
 
-        if( (AudioManager.getPlayerState() != AudioManager.PLAYER_AT_STOP) &&
-            (page_tableId == TabsHost.getCurrentPageTableId()) &&
-            !PageUi.isAudioPlayingPage() )
-        {
-            TabsHost.resume_listView_vScroll(drag_listView);
-        }
+		System.out.println("Page / _onResume / resume_listView_vScroll");
+        TabsHost.resume_listView_vScroll(drag_listView);
 
     }
 
     @Override
     public void onPause() {
     	super.onPause();
-//		System.out.println("Page / _onPause / page_tableId = " + page_tableId);
+//		TabsHost.store_listView_vScroll(drag_listView);
+		System.out.println("Page / _onPause / page_tableId = " + page_tableId);
 	 }
 
     @Override

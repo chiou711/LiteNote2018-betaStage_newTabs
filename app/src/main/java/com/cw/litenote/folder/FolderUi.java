@@ -552,13 +552,6 @@ public class FolderUi
 
         MainAct.mAct.invalidateOptionsMenu();
 
-        int pagesCount = getFolder_pagesCount(act,position);
-        System.out.println("FolderUi / _selectFolder / pagesCount = " + pagesCount);
-
-        //todo TBD
-//        if(pagesCount ==0)
-//            TabsHost.setLastPos_pageId(0);
-
 		// use Runnable to make sure only one folder background is seen
         mHandler = new Handler();
         mHandler.post(mTabsHostRun);
@@ -591,14 +584,14 @@ public class FolderUi
     public static int getFolder_pagesCount(FragmentActivity act,int folderPos)
     {
         DB_drawer dB_drawer = new DB_drawer(act);
-        System.out.println("FolderUi / _getFolder_pagesCount / folderPos = " + folderPos);
+//        System.out.println("FolderUi / _getFolder_pagesCount / folderPos = " + folderPos);
         int pagesCount;
         try {
             int focusFolder_tableId = dB_drawer.getFolderTableId(folderPos, true);
             DB_folder db_folder = new DB_folder(MainAct.mAct, focusFolder_tableId);
             db_folder.open();
             pagesCount = db_folder.getPagesCount(false);
-            System.out.println("FolderUi / _getFolder_pagesCount / pagesCount = " + pagesCount);
+//            System.out.println("FolderUi / _getFolder_pagesCount / pagesCount = " + pagesCount);
             db_folder.close();
         }
         catch (Exception e)
