@@ -9,17 +9,18 @@ import android.content.SharedPreferences;
  * Created by cw on 2017/10/11.
  */
 
-public class Pref {
-    // set page table id of focus view
+public class Pref
+{
+    // set folder table id of focus view
     public static void setPref_focusView_folder_tableId(Activity act, int folderTableId )
     {
-//		System.out.println("Util / _setPref_focusView_folder_tableId / folderTableId = " + folderTableId);
+//		System.out.println("Pref / _setPref_focusView_folder_tableId / folderTableId = " + folderTableId);
         SharedPreferences pref = act.getSharedPreferences("focus_view", 0);
         String keyName = "KEY_FOCUS_VIEW_FOLDER_TABLE_ID";
         pref.edit().putInt(keyName, folderTableId).apply();
     }
 
-    // get page table id of focus view
+    // get folder table id of focus view
     public static int getPref_focusView_folder_tableId(Context context)
     {
         SharedPreferences pref = context.getSharedPreferences("focus_view", 0);
@@ -82,7 +83,7 @@ public class Pref {
     // Set list view first visible Index of focus view
     public static void setPref_focusView_list_view_first_visible_index(Activity act, int index )
     {
-//		System.out.println("Util / _setPref_focusView_list_view_first_visible_index / index = " + index);
+//		System.out.println("Pref / _setPref_focusView_list_view_first_visible_index / index = " + index);
         SharedPreferences pref = act.getSharedPreferences("focus_view", 0);
         String keyName = "KEY_LIST_VIEW_FIRST_VISIBLE_INDEX";
         String location = getCurrentListViewLocation(act);
@@ -103,7 +104,7 @@ public class Pref {
     // Set list view first visible index Top of focus view
     public static void setPref_focusView_list_view_first_visible_index_top(Activity act, int top )
     {
-//        System.out.println("Util / _setPref_focusView_list_view_first_visible_index_top / top = " + top);
+//        System.out.println("Pref / _setPref_focusView_list_view_first_visible_index_top / top = " + top);
         SharedPreferences pref = act.getSharedPreferences("focus_view", 0);
         String keyName = "KEY_LIST_VIEW_FIRST_VISIBLE_INDEX_TOP";
         String location = getCurrentListViewLocation(act);

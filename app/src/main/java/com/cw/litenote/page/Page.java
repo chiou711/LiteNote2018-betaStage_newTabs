@@ -392,15 +392,16 @@ public class Page extends UilListViewBaseFragment
 
         super.onResume();
 
-		System.out.println("Page / _onResume / resume_listView_vScroll");
-        TabsHost.resume_listView_vScroll(drag_listView);
+        if(Pref.getPref_focusView_page_tableId(MainAct.mAct) == page_tableId) {
+            System.out.println("Page / _onResume / resume_listView_vScroll");
+            TabsHost.resume_listView_vScroll(drag_listView);
+        }
 
     }
 
     @Override
     public void onPause() {
     	super.onPause();
-//		TabsHost.store_listView_vScroll(drag_listView);
 		System.out.println("Page / _onPause / page_tableId = " + page_tableId);
 	 }
 

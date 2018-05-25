@@ -318,32 +318,31 @@ public class TabsHost extends AppCompatDialogFragment implements TabLayout.OnTab
     // store scroll of list view
     public static void store_listView_vScroll(DragSortListView listView)
     {
-//        DragSortListView listView = mTabsPagerAdapter.fragmentList.get(mFocusTabPos).drag_listView;
-        int mFirstVisibleIndex = listView.getFirstVisiblePosition();
+        int firstVisibleIndex = listView.getFirstVisiblePosition();
         View v = listView.getChildAt(0);
-        int mFirstVisibleIndexTop = (v == null) ? 0 : v.getTop();
+        int firstVisibleIndexTop = (v == null) ? 0 : v.getTop();
 
-        System.out.println("TabsHost / _store_listView_vScroll / mFirstVisibleIndex = " + mFirstVisibleIndex +
-                " , mFirstVisibleIndexTop = " + mFirstVisibleIndexTop);
+        System.out.println("TabsHost / _store_listView_vScroll / firstVisibleIndex = " + firstVisibleIndex +
+                                                          " , firstVisibleIndexTop = " + firstVisibleIndexTop);
 
         //todo How to store each page scroll?
         // keep index and top position
-        Pref.setPref_focusView_list_view_first_visible_index(MainAct.mAct, mFirstVisibleIndex);
-        Pref.setPref_focusView_list_view_first_visible_index_top(MainAct.mAct, mFirstVisibleIndexTop);
+        Pref.setPref_focusView_list_view_first_visible_index(MainAct.mAct, firstVisibleIndex);
+        Pref.setPref_focusView_list_view_first_visible_index_top(MainAct.mAct, firstVisibleIndexTop);
     }
 
     // resume scroll of list view
     public static void resume_listView_vScroll(DragSortListView listView)
     {
         // recover scroll Y
-        int mFirstVisibleIndex = Pref.getPref_focusView_list_view_first_visible_index(MainAct.mAct);
-        int mFirstVisibleIndexTop = Pref.getPref_focusView_list_view_first_visible_index_top(MainAct.mAct);
+        int firstVisibleIndex = Pref.getPref_focusView_list_view_first_visible_index(MainAct.mAct);
+        int firstVisibleIndexTop = Pref.getPref_focusView_list_view_first_visible_index_top(MainAct.mAct);
 
-        System.out.println("TabsHost / _resume_listView_vScroll / mFirstVisibleIndex = " + mFirstVisibleIndex +
-                " , mFirstVisibleIndexTop = " + mFirstVisibleIndexTop);
+        System.out.println("TabsHost / _resume_listView_vScroll / firstVisibleIndex = " + firstVisibleIndex +
+                                                           " , firstVisibleIndexTop = " + firstVisibleIndexTop);
 
         // restore index and top position
-        listView.setSelectionFromTop(mFirstVisibleIndex, mFirstVisibleIndexTop);
+        listView.setSelectionFromTop(firstVisibleIndex, firstVisibleIndexTop);
     }
 
     /**
