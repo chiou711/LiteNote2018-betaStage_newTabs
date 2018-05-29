@@ -13,9 +13,11 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
+import android.widget.Space;
 import android.widget.TextView;
 
 import com.cw.litenote.R;
@@ -110,6 +112,11 @@ public class PageUi
 
 	/**
 	 * shift page right or left
+     *
+	 * If style parent is Theme.AppCompat.Light.NoActionBar
+	 *      left to right order: NeutralButton (button 3), NegativeButton(button 2), PositiveButton(button 1)
+	 * If style parent is @android:style/Theme.Holo
+     *      left to right order: NegativeButton(button 2), NeutralButton(button 3), PositiveButton(button 1)
 	 *
 	 */
 	public static void shiftPage(final FragmentActivity act)
@@ -117,11 +124,24 @@ public class PageUi
 	    Builder builder = new Builder(act);
 	    builder.setTitle(R.string.rearrange_page_title)
 	      	   .setMessage(null)
-	           .setNegativeButton(R.string.rearrange_page_left, null)
-	           .setNeutralButton(R.string.edit_note_button_back, null)
+//				.setNegativeButton(R.string.rearrange_page_left, null)
+//				.setNeutralButton(R.string.edit_note_button_back, null)
+               .setNeutralButton(R.string.rearrange_page_left, null)
+			   .setNegativeButton(R.string.edit_note_button_back, null)
 	           .setPositiveButton(R.string.rearrange_page_right,null)
 	           .setIcon(R.drawable.ic_dragger_horizontal);
 	    final AlertDialog dlg = builder.create();
+
+        // set center for negative button
+        dlg.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface dialog) {
+                Button negativeButton = dlg.getButton(AlertDialog.BUTTON_NEUTRAL);
+                LinearLayout layoutView = (LinearLayout) negativeButton.getParent();
+                Space space= (Space) layoutView.getChildAt(1);
+                space.setVisibility(View.GONE);
+            }
+        });
 
 	    // disable dim background
 		dlg.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
@@ -132,12 +152,14 @@ public class PageUi
         final int screenWidth = UtilImage.getScreenWidth(act);
 
 		// Shift to left
-	    dlg.getButton(AlertDialog.BUTTON_NEGATIVE).setOnClickListener(new View.OnClickListener()
-	    {  @Override
-	       public void onClick(View v)
-	       {
+//		dlg.getButton(AlertDialog.BUTTON_NEGATIVE).setOnClickListener(new View.OnClickListener()
+		dlg.getButton(AlertDialog.BUTTON_NEUTRAL).setOnClickListener(new View.OnClickListener()
+	    {   @Override
+	        public void onClick(View v)
+	        {
 	    		//change to OK
-	    		Button mButton=(Button)dlg.findViewById(android.R.id.button3);
+//			    Button mButton=(Button)dlg.findViewById(android.R.id.button3);
+			    Button mButton=(Button)dlg.findViewById(android.R.id.button2);
 		        mButton.setText(R.string.btn_Finish);
 		        mButton.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_menu_finish , 0, 0, 0);
 				DB_folder db = new DB_folder(act,Pref.getPref_focusView_folder_tableId(act));
@@ -165,7 +187,8 @@ public class PageUi
 	    });
 
 	    // done
-	    dlg.getButton(AlertDialog.BUTTON_NEUTRAL).setOnClickListener(new View.OnClickListener()
+//		dlg.getButton(AlertDialog.BUTTON_NEUTRAL).setOnClickListener(new View.OnClickListener()
+		dlg.getButton(AlertDialog.BUTTON_NEGATIVE).setOnClickListener(new View.OnClickListener()
 	    {   @Override
 	       public void onClick(View v)
 	       {
@@ -175,13 +198,15 @@ public class PageUi
 
 	    // Shift to right
 	    dlg.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener()
-	    {  @Override
-	       public void onClick(View v)
-	       {
-	    		dlg.getButton(AlertDialog.BUTTON_NEGATIVE).setEnabled(false);
+	    {   @Override
+	        public void onClick(View v)
+	        {
+                // middle button text: change to OK
+//			    dlg.getButton(AlertDialog.BUTTON_NEGATIVE).setEnabled(false);
+//			    Button mButton=(Button)dlg.findViewById(android.R.id.button3);
+			    dlg.getButton(AlertDialog.BUTTON_NEUTRAL).setEnabled(false);
+			    Button mButton=(Button)dlg.findViewById(android.R.id.button2);
 
-	    		// middle button text: change to OK
-	    		Button mButton=(Button)dlg.findViewById(android.R.id.button3);
 		        mButton.setText(R.string.btn_Finish);
 		        mButton.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_menu_finish , 0, 0, 0);
 
@@ -211,7 +236,8 @@ public class PageUi
 
         updateButtonState(dlg);
 
-	    ((Button)dlg.findViewById(android.R.id.button3))
+//		((Button)dlg.findViewById(android.R.id.button3))
+		((Button)dlg.findViewById(android.R.id.button2))
 	              .setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_menu_close_clear_cancel, 0, 0, 0);
 	}
 
@@ -240,8 +266,11 @@ public class PageUi
                     .setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_menu_forward, 0, 0, 0);
 
             // android.R.id.button2 for negative: previous
-            dlg.getButton(AlertDialog.BUTTON_NEGATIVE).setEnabled(false);
-            ((Button)dlg.findViewById(android.R.id.button2))
+//			  dlg.getButton(AlertDialog.BUTTON_NEGATIVE).setEnabled(false);
+//            ((Button)dlg.findViewById(android.R.id.button2))
+            // android.R.id.button3 for neutral: previous
+			dlg.getButton(AlertDialog.BUTTON_NEUTRAL).setEnabled(false);
+            ((Button)dlg.findViewById(android.R.id.button3))
                     .setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
         }
         else if(getTabPositionState() == RIGHTMOST)
@@ -252,8 +281,11 @@ public class PageUi
                     .setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
 
             // android.R.id.button2 for negative: previous
-            dlg.getButton(AlertDialog.BUTTON_NEGATIVE).setEnabled(true);//avoid long time toast
-            ((Button)dlg.findViewById(android.R.id.button2))
+//			  dlg.getButton(AlertDialog.BUTTON_NEGATIVE).setEnabled(true);//avoid long time toast
+//            ((Button)dlg.findViewById(android.R.id.button2))
+            // android.R.id.button3 for neutral: previous
+			dlg.getButton(AlertDialog.BUTTON_NEUTRAL).setEnabled(true);//avoid long time toast
+            ((Button)dlg.findViewById(android.R.id.button3))
                     .setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_menu_back, 0, 0, 0);
 
         }
@@ -264,9 +296,12 @@ public class PageUi
             ((Button)dlg.findViewById(android.R.id.button1))
                     .setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_menu_forward, 0, 0, 0);
 
-            dlg.getButton(AlertDialog.BUTTON_NEGATIVE).setEnabled(true);
             // android.R.id.button2 for negative: previous
-            ((Button)dlg.findViewById(android.R.id.button2))
+//			  dlg.getButton(AlertDialog.BUTTON_NEGATIVE).setEnabled(true);
+//			  ((Button)dlg.findViewById(android.R.id.button2))
+            // android.R.id.button3 for neutral: previous
+			dlg.getButton(AlertDialog.BUTTON_NEUTRAL).setEnabled(true);
+			((Button)dlg.findViewById(android.R.id.button3))
                     .setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_menu_back, 0, 0, 0);
         }
     }
