@@ -174,7 +174,6 @@ public class TabsHost extends AppCompatDialogFragment implements TabLayout.OnTab
     {
         lastPageTableId = id;
     }
-
     @Override
     public void onTabSelected(TabLayout.Tab tab) {
         System.out.println("TabsHost / _onTabSelected: " + tab.getPosition());
@@ -208,10 +207,19 @@ public class TabsHost extends AppCompatDialogFragment implements TabLayout.OnTab
         // set tab audio icon when audio playing
         if ( (MainAct.mPlaying_folderPos == FolderUi.getFocus_folderPos()) &&
              (AudioManager.getPlayerState() != AudioManager.PLAYER_AT_STOP) &&
-                (tab.getPosition() == audioPlayTabPos) )
-            tab.setIcon(R.drawable.ic_audio);
+             (tab.getPosition() == audioPlayTabPos)                              )
+        {
+            if(tab.getCustomView() == null) {
+                LinearLayout tabLinearLayout = (LinearLayout) MainAct.mAct.getLayoutInflater().inflate(R.layout.tab_custom, null);
+                TextView title = (TextView) tabLinearLayout.findViewById(R.id.tabTitle);
+                title.setText(mTabsPagerAdapter.dbFolder.getPageTitle(tab.getPosition(), true));
+                title.setTextColor(MainAct.mAct.getResources().getColor(R.color.colorWhite));
+                title.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_audio, 0, 0, 0);
+                tab.setCustomView(title);
+            }
+        }
         else
-            tab.setIcon(null);
+            tab.setCustomView(null);
 
         // call onCreateOptionsMenu
         MainAct.mAct.invalidateOptionsMenu();
@@ -232,12 +240,6 @@ public class TabsHost extends AppCompatDialogFragment implements TabLayout.OnTab
 
     @Override
     public void onTabUnselected(TabLayout.Tab tab) {
-        if ( (MainAct.mPlaying_folderPos == FolderUi.getFocus_folderPos()) &&
-             (AudioManager.getPlayerState() != AudioManager.PLAYER_AT_STOP) &&
-             (tab.getPosition() == audioPlayTabPos) )
-            tab.setIcon(R.drawable.ic_audio);
-        else
-            tab.setIcon(null);
     }
 
     @Override
@@ -276,11 +278,21 @@ public class TabsHost extends AppCompatDialogFragment implements TabLayout.OnTab
         // set audio icon after Key Protect
         TabLayout.Tab tab =  mTabLayout.getTabAt(audioPlayTabPos);
         if(tab != null) {
-            if ((MainAct.mPlaying_folderPos == FolderUi.getFocus_folderPos()) &&
-                    (AudioManager.getPlayerState() != AudioManager.PLAYER_AT_STOP))
-               tab.setIcon(R.drawable.ic_audio);
+            if( (MainAct.mPlaying_folderPos == FolderUi.getFocus_folderPos()) &&
+                (AudioManager.getPlayerState() != AudioManager.PLAYER_AT_STOP)   )
+            {
+                if(tab.getCustomView() == null)
+                {
+                    LinearLayout tabLinearLayout = (LinearLayout) MainAct.mAct.getLayoutInflater().inflate(R.layout.tab_custom, null);
+                    TextView title = (TextView) tabLinearLayout.findViewById(R.id.tabTitle);
+                    title.setText(mTabsPagerAdapter.dbFolder.getPageTitle(tab.getPosition(), true));
+                    title.setTextColor(MainAct.mAct.getResources().getColor(R.color.colorWhite));
+                    title.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_audio, 0, 0, 0);
+                    tab.setCustomView(title);
+                }
+            }
             else
-               tab.setIcon(null);
+                tab.setCustomView(null);
         }
 
         // for incoming phone call case or after Key Protect
