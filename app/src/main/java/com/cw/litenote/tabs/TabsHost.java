@@ -21,6 +21,7 @@ import android.content.DialogInterface;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
@@ -212,9 +213,6 @@ public class TabsHost extends AppCompatDialogFragment implements TabLayout.OnTab
         else
             tab.setIcon(null);
 
-        // set pager item
-        mViewPager.setCurrentItem(getFocus_tabPos());
-
         // call onCreateOptionsMenu
         MainAct.mAct.invalidateOptionsMenu();
 
@@ -266,6 +264,14 @@ public class TabsHost extends AppCompatDialogFragment implements TabLayout.OnTab
         mViewPager.setCurrentItem(getFocus_tabPos());
 
         System.out.println("TabsHost / _onResume / _getFocus_tabPos = " + getFocus_tabPos());
+
+        // auto scroll to show focus tab
+        new Handler().postDelayed(
+                new Runnable() {
+                    @Override public void run() {
+                        mTabLayout.getTabAt(getFocus_tabPos()).select();
+                    }
+                }, 100);
 
         // set audio icon after Key Protect
         TabLayout.Tab tab =  mTabLayout.getTabAt(audioPlayTabPos);
@@ -325,7 +331,6 @@ public class TabsHost extends AppCompatDialogFragment implements TabLayout.OnTab
         System.out.println("TabsHost / _store_listView_vScroll / firstVisibleIndex = " + firstVisibleIndex +
                                                           " , firstVisibleIndexTop = " + firstVisibleIndexTop);
 
-        //todo How to store each page scroll?
         // keep index and top position
         Pref.setPref_focusView_list_view_first_visible_index(MainAct.mAct, firstVisibleIndex);
         Pref.setPref_focusView_list_view_first_visible_index_top(MainAct.mAct, firstVisibleIndexTop);
