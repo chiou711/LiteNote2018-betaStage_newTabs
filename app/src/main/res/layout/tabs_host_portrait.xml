@@ -43,7 +43,6 @@
             android:maxLines="1"
             android:background="@drawable/bg_gray_border" />
 
-        <View android:layout_width="match_parent" android:layout_height="2dip" android:background="#222222" />
         <include
             layout="@layout/page_view_portrait_audio_panel"
             />

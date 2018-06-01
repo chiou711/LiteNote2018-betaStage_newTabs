@@ -88,10 +88,13 @@ public class TabsHost extends AppCompatDialogFragment implements TabLayout.OnTab
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         System.out.println("TabsHost / _onCreateView");
 
-        View rootView = inflater.inflate(R.layout.tabs_host, container, false);
-        // tool bar
-//        Toolbar toolbar = (Toolbar) rootView.findViewById(R.id.tabanim_toolbar);
-//        rootView.setSupportActionBar(toolbar);
+        View rootView;
+
+        // set layout by orientation
+        if (Util.isLandscapeOrientation(MainAct.mAct))
+            rootView = inflater.inflate(R.layout.tabs_host_landscape, container, false);
+        else
+            rootView = inflater.inflate(R.layout.tabs_host_portrait, container, false);
 
         // view pager
         mViewPager = (ViewPager) rootView.findViewById(R.id.tabs_pager);

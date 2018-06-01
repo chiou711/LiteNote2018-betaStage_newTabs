@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/audio_panel"
-    android:layout_width="0dp"
-    android:layout_weight="1"
+    android:layout_width="250dp"
     android:layout_height="match_parent"
-    android:gravity="right"
+    android:gravity="end"
+    android:background="@drawable/bar"
     android:visibility="gone"
-    android:layout_margin="3dp"
+    android:layout_marginTop="50dp"
     android:orientation="vertical">
 
     <!-- footer audio title -->
@@ -14,6 +14,7 @@
     android:layout_width="match_parent"
     android:layout_height="0dp"
     android:layout_weight="1"
+    android:layout_margin="3dp"
     android:gravity="top"
     android:textAppearance="?android:attr/textAppearanceLarge"
     android:textSize="18sp"

@@ -73,7 +73,7 @@
 			<View android:layout_width="match_parent" android:layout_height="2dip" android:background="#222222" />	        
      	</LinearLayout>
 		<!-- footer audio control -->
-		<include layout = "@layout/page_view_landscape_audio_footer"/>
+		<include layout = "@layout/page_view_landscape_audio_panel"/>
        </LinearLayout> <!-- end: real tab content -->
     </LinearLayout> <!-- end: fragment tab host -->
 

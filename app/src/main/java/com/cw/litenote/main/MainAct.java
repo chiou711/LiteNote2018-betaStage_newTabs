@@ -495,6 +495,8 @@ public class MainAct extends AppCompatActivity implements OnBackStackChangedList
         drawer.drawerToggle.onConfigurationChanged(newConfig);
 
 		drawer.drawerToggle.syncState();
+
+        FolderUi.startTabsHostRun();
     }
 
     /**
