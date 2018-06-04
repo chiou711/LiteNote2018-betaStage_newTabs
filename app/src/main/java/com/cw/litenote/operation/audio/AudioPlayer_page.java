@@ -462,8 +462,15 @@ public class AudioPlayer_page
 					// scroll backwards
 					else if (firstVisible_note_pos < AudioManager.mAudioPos)
 					{
-						listView.scrollListBy(offset);
-//						System.out.println("-----scroll backwards (to bottom)" + offset);
+                        // for landscape: real item height could be larger than visible item height, so
+                        // scroll twice here in odder to do scroll successfully, otherwise scroll could fail
+					    if(Util.isLandscapeOrientation(MainAct.mAct)) {
+                            listView.scrollListBy(offset / 2);
+                            listView.scrollListBy(offset / 2);
+                        }
+                        else
+                            listView.scrollListBy(offset);
+						System.out.println("-----scroll backwards (to bottom) " + offset);
 					}
 
 //					System.out.println("---------------- firstVisible_note_pos = " + firstVisible_note_pos);
@@ -475,11 +482,11 @@ public class AudioPlayer_page
 						firstVisible_note_pos = listView.getFirstVisiblePosition();
 					}
 				}
-
-				// do v scroll
-                TabsHost.store_listView_vScroll(listView);
-                TabsHost.resume_listView_vScroll(listView);
 			}
+
+			// do v scroll
+			TabsHost.store_listView_vScroll(listView);
+			TabsHost.resume_listView_vScroll(listView);
 		}
 	}
 
