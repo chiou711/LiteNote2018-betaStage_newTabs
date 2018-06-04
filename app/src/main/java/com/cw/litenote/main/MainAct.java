@@ -196,7 +196,7 @@ public class MainAct extends AppCompatActivity implements OnBackStackChangedList
 		else
 		{
 			// check DB
-			final boolean ENABLE_DB_CHECK = true;//true;//false
+			final boolean ENABLE_DB_CHECK = false;//true;//false
 			if(ENABLE_DB_CHECK)
 			{
 		        // list all folder tables

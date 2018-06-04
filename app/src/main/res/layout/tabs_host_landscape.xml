@@ -51,7 +51,7 @@
 
     </LinearLayout>
     <include
-        layout="@layout/page_view_landscape_audio_panel"
+        layout="@layout/audio_panel_landscape"
         />
     </LinearLayout>
 </android.support.design.widget.CoordinatorLayout>

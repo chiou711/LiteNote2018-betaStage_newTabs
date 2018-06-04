@@ -11,9 +11,8 @@
 			android:layout_height="match_parent"
 			android:divider="@android:color/transparent"
 			android:dividerHeight="5dp"
-			android:layout_margin="5dp"
 			android:drawSelectorOnTop="true"
-			android:background="@color/background_tab_pressed"
+			android:background="@color/colorBlack"
 			android:minHeight="40dp" />
 
 		<!--<ProgressBar-->

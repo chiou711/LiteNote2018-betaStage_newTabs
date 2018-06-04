@@ -14,7 +14,6 @@ import com.cw.litenote.tabs.AudioUi_page;
 import com.cw.litenote.tabs.TabsHost;
 import com.cw.litenote.util.audio.UtilAudio;
 import com.cw.litenote.note.Note_edit;
-import com.cw.litenote.util.ColorSet;
 import com.cw.litenote.util.preferences.Pref;
 import com.cw.litenote.util.uil.UilCommon;
 import com.cw.litenote.util.uil.UilListViewBaseFragment;
@@ -43,7 +42,6 @@ import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.AbsListView;
 import android.widget.ProgressBar;
 import android.widget.SeekBar;
-import android.widget.TextView;
 
 
 public class Page extends UilListViewBaseFragment
@@ -92,7 +90,7 @@ public class Page extends UilListViewBaseFragment
 //        else
 //            System.out.println("Page / _onCreateView / savedInstanceState != null");
 
-        rootView = inflater.inflate(R.layout.page_view_portrait, container, false);
+        rootView = inflater.inflate(R.layout.page_view, container, false);
 
 		mAct = MainAct.mAct;
 		mClassName = getClass().getSimpleName();

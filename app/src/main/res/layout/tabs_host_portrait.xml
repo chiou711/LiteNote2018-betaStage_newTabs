@@ -44,7 +44,7 @@
             android:background="@drawable/bg_gray_border" />
 
         <include
-            layout="@layout/page_view_portrait_audio_panel"
+            layout="@layout/audio_panel_portrait"
             />
     </LinearLayout>
 </android.support.design.widget.CoordinatorLayout>
