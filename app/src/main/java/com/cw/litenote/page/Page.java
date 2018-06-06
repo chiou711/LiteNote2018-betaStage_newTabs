@@ -161,8 +161,6 @@ public class Page extends UilListViewBaseFragment
         fillData(mAct, drag_listView);
 		mItemAdapter.notifyDataSetChanged();
 
-//        AudioPlayer_page.scrollHighlightAudioItemToVisible(drag_listView);
-
 		return rootView;
 	}
 

@@ -5,11 +5,9 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.cw.litenote.R;
-import com.cw.litenote.note.Note;
 import com.cw.litenote.note.Note_audio;
 import com.cw.litenote.operation.audio.AudioManager;
-import com.cw.litenote.operation.audio.AudioPlayer_page;
-import com.cw.litenote.page.Page;
+import com.cw.litenote.tabs.TabsHost;
 
 // for earphone jack connection on/off
 public class NoisyAudioStreamReceiver extends BroadcastReceiver {
@@ -25,14 +23,12 @@ public class NoisyAudioStreamReceiver extends BroadcastReceiver {
 
                 AudioManager.setPlayerState(AudioManager.PLAYER_AT_PAUSE);
 
-                //todo TBD
                 //update audio panel button in Page view
-//                if(AudioManager.getAudioPlayMode() == AudioManager.PAGE_PLAY_MODE) {
-//                    UtilAudio.updateAudioPanel(Page.audioUi_page.audioPanel_play_button, Page.audioUi_page.audio_panel_title_textView);
-//
-//                    if (AudioManager.getPlayerState() != AudioManager.PLAYER_AT_STOP)
-//                        AudioPlayer_page.scrollHighlightAudioItemToVisible();
-//                }
+                if(AudioManager.getAudioPlayMode() == AudioManager.PAGE_PLAY_MODE)
+                {
+                    UtilAudio.updateAudioPanel(TabsHost.audioUi_page.audioPanel_play_button,
+                                               TabsHost.audioUi_page.audio_panel_title_textView);
+                }
 
 				//update audio play button in Note view
 				if( (Note_audio.mPager_audio_play_button != null) &&
