@@ -28,6 +28,7 @@ import com.cw.litenote.R;
 import com.cw.litenote.db.DB_page;
 import com.cw.litenote.main.MainAct;
 import com.cw.litenote.note.Note;
+import com.cw.litenote.note.Note_edit;
 import com.cw.litenote.operation.audio.AudioManager;
 import com.cw.litenote.operation.audio.AudioPlayer_page;
 import com.cw.litenote.tabs.TabsHost;
@@ -85,15 +86,15 @@ public class PageAdapter extends SimpleDragSortCursorAdapter // DragSortCursorAd
 	}
 
     private class ViewHolder {
-		ImageView imageCheck;
+		ImageView btnMarking;
 		TextView rowId;
 		View audioBlock;
-		ImageView imageAudio;
+		ImageView iconAudio;
 		TextView audioName;
 		TextView textTitle;
 		TextView textBody;
 		TextView textTime;
-		ImageView imageDragger;
+		ImageView btnDrag;
 		View thumbBlock;
 		ImageView thumbPicture;
 		ImageView thumbAudio;
@@ -172,14 +173,14 @@ public class PageAdapter extends SimpleDragSortCursorAdapter // DragSortCursorAd
 			holder = new ViewHolder();
 			holder.rowId= (TextView) convertView.findViewById(R.id.row_id);
 			holder.audioBlock = convertView.findViewById(R.id.audio_block);
-			holder.imageAudio = (ImageView) convertView.findViewById(R.id.img_audio);
+			holder.iconAudio = (ImageView) convertView.findViewById(R.id.img_audio);
 			holder.audioName = (TextView) convertView.findViewById(R.id.row_audio_name);
-			holder.imageCheck= (ImageView) convertView.findViewById(R.id.img_check);
+			holder.btnMarking = (ImageView) convertView.findViewById(R.id.btn_marking);
 			holder.thumbBlock = convertView.findViewById(R.id.row_thumb_nail);
 			holder.thumbPicture = (ImageView) convertView.findViewById(R.id.thumb_picture);
 			holder.thumbAudio = (ImageView) convertView.findViewById(R.id.thumb_audio);
 			holder.thumbWeb = (CustomWebView) convertView.findViewById(R.id.thumb_web);
-			holder.imageDragger = (ImageView) convertView.findViewById(R.id.img_dragger);
+			holder.btnDrag = (ImageView) convertView.findViewById(R.id.img_dragger);
 			holder.progressBar = (ProgressBar) convertView.findViewById(R.id.thumb_progress);
 			holder.textTitle = (TextView) convertView.findViewById(R.id.row_title);
 			holder.textBody = (TextView) convertView.findViewById(R.id.row_body);
@@ -192,8 +193,38 @@ public class PageAdapter extends SimpleDragSortCursorAdapter // DragSortCursorAd
 			holder = (ViewHolder) convertView.getTag();
 		}
 
-        // on note view
-        convertView.findViewById(R.id.row_title).setOnClickListener(new View.OnClickListener() {
+        // on mark
+        holder.btnMarking.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                System.out.println("PageAdapter / _getView / btnMarking / _onClick");
+                // toggle marking
+                int markingNow = toggleNoteMarking(MainAct.mAct,position);
+
+                // Stop if unmarked item is at playing state
+                if(AudioManager.mAudioPos == position) {
+                    UtilAudio.stopAudioIfNeeded();
+                }
+
+                //Toggle marking will resume page, so do Store v scroll
+                DragSortListView listView = TabsHost.mTabsPagerAdapter.fragmentList.get(TabsHost.getFocus_tabPos()).drag_listView;
+                TabsHost.store_listView_vScroll(listView);
+                TabsHost.isDoingMarking = true;
+
+                TabsHost.reloadCurrentPage();
+                TabsHost.showFooter(MainAct.mAct);
+
+                // update audio info
+                if(PageUi.isAudioPlayingPage()) {
+                    System.out.println("PageAdapter / _getView / btnMarking / is AudioPlayingPage");
+                    AudioPlayer_page.prepareAudioInfo();
+                }
+            }
+        });
+
+        // on view
+        convertView.findViewById(R.id.btn_view_note).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 TabsHost.getCurrentPage().currPlayPosition = position;
@@ -210,7 +241,25 @@ public class PageAdapter extends SimpleDragSortCursorAdapter // DragSortCursorAd
             }
         });
 
-        // on photo
+        // on edit
+        convertView.findViewById(R.id.btn_edit_note).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(mAct, Note_edit.class);
+                mDb_page = new DB_page(mAct, TabsHost.getCurrentPageTableId());
+                Long rowId = mDb_page.getNoteId(position,true);
+                i.putExtra("list_view_position", position);
+                i.putExtra(DB_page.KEY_NOTE_ID, rowId);
+                i.putExtra(DB_page.KEY_NOTE_TITLE, mDb_page.getNoteTitle_byId(rowId));
+                i.putExtra(DB_page.KEY_NOTE_PICTURE_URI , mDb_page.getNotePictureUri_byId(rowId));
+                i.putExtra(DB_page.KEY_NOTE_AUDIO_URI , mDb_page.getNoteAudioUri_byId(rowId));
+                i.putExtra(DB_page.KEY_NOTE_LINK_URI , mDb_page.getNoteLinkUri_byId(rowId));
+                i.putExtra(DB_page.KEY_NOTE_BODY, mDb_page.getNoteBody_byId(rowId));
+                i.putExtra(DB_page.KEY_NOTE_CREATED, mDb_page.getNoteCreatedTime_byId(rowId));
+                mAct.startActivity(i);            }
+        });
+
+        // on thumb nail
         convertView.findViewById(R.id.row_thumb_nail).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -237,35 +286,6 @@ public class PageAdapter extends SimpleDragSortCursorAdapter // DragSortCursorAd
             }
         });
 
-        // on mark
-        holder.imageCheck.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                System.out.println("PageAdapter / _getView / imageCheck / _onClick");
-                // toggle marking
-				int markingNow = toggleNoteMarking(MainAct.mAct,position);
-
-                // Stop if unmarked item is at playing state
-                if(AudioManager.mAudioPos == position) {
-                    UtilAudio.stopAudioIfNeeded();
-                }
-
-                //Toggle marking will resume page, so do Store v scroll
-				DragSortListView listView = TabsHost.mTabsPagerAdapter.fragmentList.get(TabsHost.getFocus_tabPos()).drag_listView;
-				TabsHost.store_listView_vScroll(listView);
-				TabsHost.isDoingMarking = true;
-
-                TabsHost.reloadCurrentPage();
-				TabsHost.showFooter(MainAct.mAct);
-
-                // update audio info
-                if(PageUi.isAudioPlayingPage()) {
-                    System.out.println("PageAdapter / _getView / imageCheck / is AudioPlayingPage");
-                    AudioPlayer_page.prepareAudioInfo();
-                }
-            }
-        });
 
 		// show row Id
 		holder.rowId.setText(String.valueOf(position+1));
@@ -352,8 +372,8 @@ public class PageAdapter extends SimpleDragSortCursorAdapter // DragSortCursorAd
 			holder.audioName.setTextColor(ColorSet.getHighlightColor(mAct));
 
 			// set icon
-			holder.imageAudio.setVisibility(View.VISIBLE);
-			holder.imageAudio.setImageResource(R.drawable.ic_audio);
+			holder.iconAudio.setVisibility(View.VISIBLE);
+			holder.iconAudio.setImageResource(R.drawable.ic_audio);
 
 			// set animation
 //			Animation animation = AnimationUtils.loadAnimation(mContext , R.anim.right_in);
@@ -370,17 +390,17 @@ public class PageAdapter extends SimpleDragSortCursorAdapter // DragSortCursorAd
 //			holder.audioName.setTypeface(Typeface.DEFAULT, Typeface.NORMAL);
 
 			// set icon
-			holder.imageAudio.setVisibility(View.VISIBLE);
+			holder.iconAudio.setVisibility(View.VISIBLE);
 			if(style % 2 == 0)
-				holder.imageAudio.setImageResource(R.drawable.ic_audio_off_white);
+				holder.iconAudio.setImageResource(R.drawable.ic_audio_off_white);
 			else
-				holder.imageAudio.setImageResource(R.drawable.ic_audio_off_black);
+				holder.iconAudio.setImageResource(R.drawable.ic_audio_off_black);
 		}
 
 		// audio icon and block
 		if(Util.isEmptyString(audioUri))
 		{
-			holder.imageAudio.setVisibility(View.INVISIBLE);
+			holder.iconAudio.setVisibility(View.INVISIBLE);
 			holder.audioBlock.setVisibility(View.INVISIBLE);
 		}
 
@@ -556,22 +576,22 @@ public class PageAdapter extends SimpleDragSortCursorAdapter // DragSortCursorAd
 	  	}
 
 
-	  	// dragger
+	  	// drag
 	  	if(pref_show_note_attribute.getString("KEY_ENABLE_DRAGGABLE", "no").equalsIgnoreCase("yes"))
-	  		holder.imageDragger.setVisibility(View.VISIBLE);
+	  		holder.btnDrag.setVisibility(View.VISIBLE);
 	  	else
-	  		holder.imageDragger.setVisibility(View.GONE);
+	  		holder.btnDrag.setVisibility(View.GONE);
 
 	  	// marking
         if(marking == 1)
         {
-			holder.imageCheck.setBackgroundResource(style % 2 == 1 ?
+			holder.btnMarking.setBackgroundResource(style % 2 == 1 ?
 					R.drawable.btn_check_on_holo_light :
 					R.drawable.btn_check_on_holo_dark);
 		}
 		else
 		{
-			holder.imageCheck.setBackgroundResource(style % 2 == 1 ?
+			holder.btnMarking.setBackgroundResource(style % 2 == 1 ?
 					R.drawable.btn_check_off_holo_light :
 					R.drawable.btn_check_off_holo_dark);
 		}

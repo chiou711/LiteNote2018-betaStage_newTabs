@@ -83,7 +83,7 @@
 
         <!-- check box-->
         <ImageView
-            android:id="@+id/img_check"
+            android:id="@+id/btn_marking"
             android:layout_width="45dp"
             android:layout_height="45dp"
             android:contentDescription="img_check"/>

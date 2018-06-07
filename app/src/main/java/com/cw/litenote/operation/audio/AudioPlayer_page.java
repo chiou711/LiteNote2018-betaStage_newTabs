@@ -462,14 +462,10 @@ public class AudioPlayer_page
 					// scroll backwards
 					else if (firstVisible_note_pos < AudioManager.mAudioPos)
 					{
-                        // for landscape: real item height could be larger than visible item height, so
+                        // when real item height could be larger than visible item height, so
                         // scroll twice here in odder to do scroll successfully, otherwise scroll could fail
-					    if(Util.isLandscapeOrientation(MainAct.mAct)) {
-                            listView.scrollListBy(offset / 2);
-                            listView.scrollListBy(offset / 2);
-                        }
-                        else
-                            listView.scrollListBy(offset);
+                        listView.scrollListBy(offset / 2);
+                        listView.scrollListBy(offset / 2);
 						System.out.println("-----scroll backwards (to bottom) " + offset);
 					}
 
