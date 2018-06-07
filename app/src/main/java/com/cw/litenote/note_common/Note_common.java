@@ -165,8 +165,14 @@ public class Note_common {
 	                		if(Uri.parse(pictureUriInDB).isAbsolute())
 	                		{
 	                			int style =  Util.getCurrentPageStyle(TabsHost.getFocus_tabPos());
-	                			new UtilImage_bitmapLoader(enlargedImage, pictureUriInDB, progressBarExpand,
-	                					(style % 2 == 1 ? UilCommon.optionsForRounded_light: UilCommon.optionsForRounded_dark), act);
+	                			new UtilImage_bitmapLoader(enlargedImage,
+                                                           pictureUriInDB,
+                                                           progressBarExpand,
+//	                					                   (style % 2 == 1 ?
+//                                                            UilCommon.optionsForRounded_light:
+//                                                            UilCommon.optionsForRounded_dark),
+                                                           UilCommon.optionsForFadeIn,
+                                                           act);
 	                			bShowEnlargedImage = true;
 	                		}
 	                		else
@@ -388,8 +394,13 @@ public class Note_common {
 			if(!Util.isEmptyString(pictureUriInDB))
 			{
 				int style =  Util.getCurrentPageStyle(TabsHost.getFocus_tabPos());
-				new UtilImage_bitmapLoader(picImageView, pictureUriInDB, progressBar,
-    					(style % 2 == 1 ? UilCommon.optionsForRounded_light: UilCommon.optionsForRounded_dark), act);
+				new UtilImage_bitmapLoader(picImageView,
+                                           pictureUriInDB, progressBar,
+//    					                   (style % 2 == 1 ?
+//                                            UilCommon.optionsForRounded_light:
+//                                            UilCommon.optionsForRounded_dark),
+                                           UilCommon.optionsForFadeIn,
+                                           act);
 			}
 			else
 			{

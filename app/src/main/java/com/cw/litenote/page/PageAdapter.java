@@ -55,14 +55,14 @@ import static com.cw.litenote.page.Page.mDb_page;
 // Pager adapter
 public class PageAdapter extends SimpleDragSortCursorAdapter // DragSortCursorAdapter //ResourceDragSortCursorAdapter//SimpleDragSortCursorAdapter
 {
-	FragmentActivity mAct;
-	Cursor cursor;
-    int count;
-	String linkUri;
-	int style;
+	private FragmentActivity mAct;
+	private Cursor cursor;
+	private int count;
+	private String linkUri;
+	private int style;
 	int page_pos;
 
-	public PageAdapter(Context context, int layout, Cursor c,
+	PageAdapter(Context context, int layout, Cursor c,
 				String[] from, int[] to, int page_position)
 	{
 		super(context, layout, c, from, to, page_position);
@@ -91,8 +91,6 @@ public class PageAdapter extends SimpleDragSortCursorAdapter // DragSortCursorAd
 		ImageView imageAudio;
 		TextView audioName;
 		TextView textTitle;
-		View rowDivider;
-		View textBodyBlock;
 		TextView textBody;
 		TextView textTime;
 		ImageView imageDragger;
@@ -184,11 +182,9 @@ public class PageAdapter extends SimpleDragSortCursorAdapter // DragSortCursorAd
 			holder.imageDragger = (ImageView) convertView.findViewById(R.id.img_dragger);
 			holder.progressBar = (ProgressBar) convertView.findViewById(R.id.thumb_progress);
 			holder.textTitle = (TextView) convertView.findViewById(R.id.row_title);
-//			holder.rowDivider = convertView.findViewById(R.id.row_divider);
 			holder.textBody = (TextView) convertView.findViewById(R.id.row_body);
 			holder.textTime = (TextView) convertView.findViewById(R.id.row_time);
 			convertView.setTag(holder);
-
 		}
 		else
 		{
@@ -411,9 +407,10 @@ public class PageAdapter extends SimpleDragSortCursorAdapter // DragSortCursorAd
 				new UtilImage_bitmapLoader(holder.thumbPicture,
 										   pictureUri,
 										   holder.progressBar,
-										   (style % 2 == 1 ?
-											UilCommon.optionsForRounded_light:
-											UilCommon.optionsForRounded_dark),
+//										   (style % 2 == 1 ?
+//											UilCommon.optionsForRounded_light:
+//											UilCommon.optionsForRounded_dark),
+                                           UilCommon.optionsForFadeIn,
 										   mAct);
 			}
 			catch(Exception e)
@@ -554,7 +551,6 @@ public class PageAdapter extends SimpleDragSortCursorAdapter // DragSortCursorAd
 	  	}
 	  	else
 	  	{
-//			holder.rowDivider.setVisibility(View.INVISIBLE);
             holder.textBody.setVisibility(View.GONE);
             holder.textTime.setVisibility(View.GONE);
 	  	}

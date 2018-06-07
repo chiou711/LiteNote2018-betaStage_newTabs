@@ -24,12 +24,12 @@ import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListene
 
 public class UtilImage_bitmapLoader
 {
-	Bitmap thumbnail;
-	AsyncTaskVideoBitmap mVideoAsyncTask;
-	SimpleImageLoadingListener mSimpleUilListener, mSimpleUilListenerForVideo;
-	ImageLoadingProgressListener mUilProgressListener;
-	ProgressBar mProgressBar;
-	ImageView mPicImageView;
+	private Bitmap thumbnail;
+	private AsyncTaskVideoBitmap mVideoAsyncTask;
+	private SimpleImageLoadingListener mSimpleUilListener, mSimpleUilListenerForVideo;
+	private ImageLoadingProgressListener mUilProgressListener;
+	private ProgressBar mProgressBar;
+	private ImageView mPicImageView;
   
 
 	public UtilImage_bitmapLoader(ImageView picImageView,
@@ -117,8 +117,8 @@ public class UtilImage_bitmapLoader
 //			mPicImageView.setVisibility(View.GONE);
 //		}
 	}
-  
-    public void setLoadingListeners()
+
+	private  void setLoadingListeners()
     {
         // set image loading listener
         mSimpleUilListener = new SimpleImageLoadingListener() 

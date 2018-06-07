@@ -64,7 +64,7 @@ public class UilCommon
 			.bitmapConfig(Bitmap.Config.RGB_565)
 			.considerExifParams(true)
 			.displayer(new RoundedBitmapDisplayer(0));//ori 20
-		
+
 		optionsForRounded_light = optionsForRounded
 			.showImageForEmptyUri(R.drawable.btn_radio_off_holo_light)
 			.showImageOnFail(R.drawable.ic_not_found)
