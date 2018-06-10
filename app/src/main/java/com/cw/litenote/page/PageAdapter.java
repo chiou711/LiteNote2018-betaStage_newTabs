@@ -25,12 +25,15 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.cw.litenote.R;
+import com.cw.litenote.db.DB_drawer;
 import com.cw.litenote.db.DB_page;
+import com.cw.litenote.folder.FolderUi;
 import com.cw.litenote.main.MainAct;
 import com.cw.litenote.note.Note;
 import com.cw.litenote.note.Note_edit;
 import com.cw.litenote.operation.audio.AudioManager;
 import com.cw.litenote.operation.audio.AudioPlayer_page;
+import com.cw.litenote.tabs.AudioUi_page;
 import com.cw.litenote.tabs.TabsHost;
 import com.cw.litenote.util.ColorSet;
 import com.cw.litenote.util.CustomWebView;
@@ -169,7 +172,7 @@ public class PageAdapter extends SimpleDragSortCursorAdapter // DragSortCursorAd
 //    			default:
 //    				break;
 //    		}
-    		
+
 			holder = new ViewHolder();
 			holder.rowId= (TextView) convertView.findViewById(R.id.row_id);
 			holder.audioBlock = convertView.findViewById(R.id.audio_block);
@@ -193,6 +196,26 @@ public class PageAdapter extends SimpleDragSortCursorAdapter // DragSortCursorAd
 			holder = (ViewHolder) convertView.getTag();
 		}
 
+        // drag
+        if(pref_show_note_attribute.getString("KEY_ENABLE_DRAGGABLE", "no").equalsIgnoreCase("yes"))
+            holder.btnDrag.setVisibility(View.VISIBLE);
+        else
+            holder.btnDrag.setVisibility(View.GONE);
+
+        // marking
+        int marking = mDb_page.getNoteMarking(position,true);
+        if(marking == 1)
+        {
+            holder.btnMarking.setBackgroundResource(style % 2 == 1 ?
+                    R.drawable.btn_check_on_holo_light :
+                    R.drawable.btn_check_on_holo_dark);
+        }
+        else
+        {
+            holder.btnMarking.setBackgroundResource(style % 2 == 1 ?
+                    R.drawable.btn_check_off_holo_light :
+                    R.drawable.btn_check_off_holo_dark);
+        }
         // on mark
         holder.btnMarking.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -259,13 +282,173 @@ public class PageAdapter extends SimpleDragSortCursorAdapter // DragSortCursorAd
                 mAct.startActivity(i);            }
         });
 
+        // show audio button
+        mDb_page = new DB_page(mAct, TabsHost.getCurrentPageTableId());
+        String audioUri = mDb_page.getNoteAudioUri(position,true);
+
+        if( !Util.isEmptyString(audioUri) && (marking == 1))
+            convertView.findViewById(R.id.btn_play_audio).setVisibility(View.VISIBLE);
+        else
+            convertView.findViewById(R.id.btn_play_audio).setVisibility(View.GONE);
+
+		// on audio
+		convertView.findViewById(R.id.btn_play_audio).setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+                AudioManager.setAudioPlayMode(AudioManager.PAGE_PLAY_MODE);
+
+                mDb_page = new DB_page(mAct, TabsHost.getCurrentPageTableId());
+
+                int notesCount = mDb_page.getNotesCount(true);
+                if(position >= notesCount) //end of list
+                    return ;
+
+
+                int marking = mDb_page.getNoteMarking(position,true);
+                String uriString = mDb_page.getNoteAudioUri(position,true);
+
+                boolean isAudioUri = false;
+                if( !Util.isEmptyString(uriString) && (marking == 1))
+                    isAudioUri = true;
+
+                if(position < notesCount) // avoid footer error
+                {
+                    if(isAudioUri)
+                    {
+                        // cancel playing
+                        if(AudioManager.mMediaPlayer != null)
+                        {
+                            if(AudioManager.mMediaPlayer.isPlaying())
+                                AudioManager.mMediaPlayer.pause();
+
+                            if(TabsHost.audioPlayer_page != null) {
+                                AudioPlayer_page.mAudioHandler.removeCallbacks(TabsHost.audioPlayer_page.page_runnable);
+                            }
+                            AudioManager.mMediaPlayer.release();
+                            AudioManager.mMediaPlayer = null;
+                        }
+
+                        AudioManager.setPlayerState(AudioManager.PLAYER_AT_PLAY);
+
+                        // create new Intent to play audio
+                        AudioManager.mAudioPos = position;
+                        AudioManager.setAudioPlayMode(AudioManager.PAGE_PLAY_MODE);
+
+                        TabsHost.audioUi_page = new AudioUi_page(mAct, TabsHost.getCurrentPage().drag_listView);
+                        TabsHost.audioUi_page.initAudioBlock(MainAct.mAct);
+
+                        TabsHost.audioPlayer_page = new AudioPlayer_page(mAct,TabsHost.audioUi_page);
+                        AudioPlayer_page.prepareAudioInfo();
+                        TabsHost.audioPlayer_page.runAudioState();
+
+                        // update audio play position
+                        TabsHost.audioPlayTabPos = page_pos;
+                        TabsHost.mTabsPagerAdapter.notifyDataSetChanged();
+
+                        UtilAudio.updateAudioPanel(TabsHost.audioUi_page.audioPanel_play_button,
+                                TabsHost.audioUi_page.audio_panel_title_textView);
+
+                        // update playing page position
+                        MainAct.mPlaying_pagePos = TabsHost.getFocus_tabPos();
+
+                        // update playing page table Id
+                        MainAct.mPlaying_pageTableId = TabsHost.getCurrentPageTableId();
+
+                        // update playing folder position
+                        MainAct.mPlaying_folderPos = FolderUi.getFocus_folderPos();
+
+                        // update playing folder table Id
+                        DB_drawer dB_drawer = new DB_drawer(mAct);
+                        MainAct.mPlaying_folderTableId = dB_drawer.getFolderTableId(MainAct.mPlaying_folderPos,true);
+                    }
+                }
+
+                // redraw list view item
+                //                    int first = drag_listView.getFirstVisiblePosition();
+                //                    int last = drag_listView.getLastVisiblePosition();
+                //                    for(int i=first; i<=last; i++) {
+                //                        View view = drag_listView.getChildAt(i-first);
+                //                        drag_listView.getAdapter().getView(i, view, drag_listView);
+                //                    }
+                //            mItemAdapter.notifyDataSetChanged();
+
+                TabsHost.getPage_rowItemView(position);
+
+        }
+		});
+
+        // set audio name
+        String audio_name = null;
+        if(!Util.isEmptyString(audioUri))
+            audio_name = Util.getDisplayNameByUriString(audioUri, mAct);
+
+        if(Util.isUriExisted(audioUri, mAct))
+            holder.audioName.setText(audio_name);
+        else
+            holder.audioName.setText(R.string.file_not_found);
+
+//			holder.audioName.setTextSize(12.0f);
+
+        if(!Util.isEmptyString(audioUri))
+            holder.audioName.setTextColor(ColorSet.mText_ColorArray[style]);
+
+        // show audio highlight if audio is not at Stop
+        if( PageUi.isAudioPlayingPage() &&
+                (position == AudioManager.mAudioPos)  &&
+                (AudioManager.getPlayerState() != AudioManager.PLAYER_AT_STOP) &&
+                (AudioManager.getAudioPlayMode() == AudioManager.PAGE_PLAY_MODE) 	)
+        {
+//            System.out.println("PageAdapter / _getView / show highlight / position = " + position);
+            TabsHost.getCurrentPage().mHighlightPosition = position;
+            holder.audioBlock.setBackgroundResource(R.drawable.bg_highlight_border);
+            holder.audioBlock.setVisibility(View.VISIBLE);
+
+            // set type face
+//			holder.audioName.setTypeface(Typeface.DEFAULT, Typeface.BOLD);
+            holder.audioName.setTextColor(ColorSet.getHighlightColor(mAct));
+
+            // set icon
+            holder.iconAudio.setVisibility(View.VISIBLE);
+            holder.iconAudio.setImageResource(R.drawable.ic_audio);
+
+            // set animation
+//			Animation animation = AnimationUtils.loadAnimation(mContext , R.anim.right_in);
+//			holder.audioBlock.startAnimation(animation);
+        }
+        else
+        {
+
+//			System.out.println("PageAdapter / _getView / not show highlight ");
+            holder.audioBlock.setBackgroundResource(R.drawable.bg_gray_border);
+            holder.audioBlock.setVisibility(View.VISIBLE);
+
+            // set type face
+//			holder.audioName.setTypeface(Typeface.DEFAULT, Typeface.NORMAL);
+
+            // set icon
+            holder.iconAudio.setVisibility(View.VISIBLE);
+            if(style % 2 == 0)
+                holder.iconAudio.setImageResource(R.drawable.ic_audio_off_white);
+            else
+                holder.iconAudio.setImageResource(R.drawable.ic_audio_off_black);
+        }
+
+        // audio icon and block
+        if(Util.isEmptyString(audioUri))
+        {
+            holder.iconAudio.setVisibility(View.GONE);
+            holder.audioBlock.setVisibility(View.GONE);
+        }
+
         // on thumb nail
-        convertView.findViewById(R.id.row_thumb_nail).setOnClickListener(new View.OnClickListener() {
+//        convertView.findViewById(R.id.row_thumb_nail).setOnClickListener(new View.OnClickListener()
+        convertView.findViewById(R.id.btn_play_youtube).setOnClickListener(new View.OnClickListener()
+        {
             @Override
             public void onClick(View v) {
-				SharedPreferences pref_open_youtube = mAct.getSharedPreferences("show_note_attribute", 0);
-				if(pref_open_youtube.getString("KEY_VIEW_NOTE_LAUNCH_YOUTUBE", "no")
-									.equalsIgnoreCase("yes") )
+//				SharedPreferences pref_open_youtube = mAct.getSharedPreferences("show_note_attribute", 0);
+//				if(pref_open_youtube.getString("KEY_VIEW_NOTE_LAUNCH_YOUTUBE", "no")
+//									.equalsIgnoreCase("yes") )
 				{
 					TabsHost.getCurrentPage().currPlayPosition = position;
 					DB_page mDb_page = new DB_page(mAct, TabsHost.getCurrentPageTableId());
@@ -295,10 +478,8 @@ public class PageAdapter extends SimpleDragSortCursorAdapter // DragSortCursorAd
 		String strTitle = null;
 		String strBody = null;
         String pictureUri = null;
-        String audioUri = null;
         Long timeCreated = null;
         linkUri = null;
-        int marking = 0;
 
         if(cursor.moveToPosition(position)) {
             strTitle = cursor.getString(cursor.getColumnIndexOrThrow(KEY_NOTE_TITLE));
@@ -339,78 +520,16 @@ public class PageAdapter extends SimpleDragSortCursorAdapter // DragSortCursorAd
 			holder.textTitle.setTextColor(ColorSet.mText_ColorArray[style]);
 		}
 
-
-		// set audio name
-		String audio_name = null;
-		if(!Util.isEmptyString(audioUri))
-			audio_name = Util.getDisplayNameByUriString(audioUri, mAct);
-
-		if(Util.isUriExisted(audioUri, mAct))
-			holder.audioName.setText(audio_name);
-		else
-			holder.audioName.setText(R.string.file_not_found);
-
-//			holder.audioName.setTextSize(12.0f);
-
-		if(!Util.isEmptyString(audioUri))
-			holder.audioName.setTextColor(ColorSet.mText_ColorArray[style]);
-
-		// show audio highlight if audio is not at Stop
-		if( PageUi.isAudioPlayingPage() &&
-			(position == AudioManager.mAudioPos)  &&
-//			(AudioManager.mMediaPlayer != null) &&
-			(AudioManager.getPlayerState() != AudioManager.PLAYER_AT_STOP) &&
-			(AudioManager.getAudioPlayMode() == AudioManager.PAGE_PLAY_MODE) 	)
-		{
-//            System.out.println("PageAdapter / _getView / show highlight / position = " + position);
-			TabsHost.getCurrentPage().mHighlightPosition = position;
-			holder.audioBlock.setBackgroundResource(R.drawable.bg_highlight_border);
-			holder.audioBlock.setVisibility(View.VISIBLE);
-
-			// set type face
-//			holder.audioName.setTypeface(Typeface.DEFAULT, Typeface.BOLD);
-			holder.audioName.setTextColor(ColorSet.getHighlightColor(mAct));
-
-			// set icon
-			holder.iconAudio.setVisibility(View.VISIBLE);
-			holder.iconAudio.setImageResource(R.drawable.ic_audio);
-
-			// set animation
-//			Animation animation = AnimationUtils.loadAnimation(mContext , R.anim.right_in);
-//			holder.audioBlock.startAnimation(animation);
-		}
-		else
-		{
-
-//			System.out.println("PageAdapter / _getView / not show highlight ");
-			holder.audioBlock.setBackgroundResource(R.drawable.bg_gray_border);
-			holder.audioBlock.setVisibility(View.VISIBLE);
-
-			// set type face
-//			holder.audioName.setTypeface(Typeface.DEFAULT, Typeface.NORMAL);
-
-			// set icon
-			holder.iconAudio.setVisibility(View.VISIBLE);
-			if(style % 2 == 0)
-				holder.iconAudio.setImageResource(R.drawable.ic_audio_off_white);
-			else
-				holder.iconAudio.setImageResource(R.drawable.ic_audio_off_black);
-		}
-
-		// audio icon and block
-		if(Util.isEmptyString(audioUri))
-		{
-			holder.iconAudio.setVisibility(View.INVISIBLE);
-			holder.audioBlock.setVisibility(View.INVISIBLE);
-		}
-
-
 		// Show image thumb nail if picture Uri is none and YouTube link exists
 		if(Util.isEmptyString(pictureUri) &&
 		   Util.isYouTubeLink(linkUri)      )
 		{
 			pictureUri = "http://img.youtube.com/vi/"+Util.getYoutubeId(linkUri)+"/0.jpg";
+            convertView.findViewById(R.id.btn_play_youtube).setVisibility(View.VISIBLE);
 		}
+		else
+            convertView.findViewById(R.id.btn_play_youtube).setVisibility(View.GONE);
+
 //		System.out.println("PageAdapter / _getView / pictureUri = " + pictureUri);
 
 		// show thumb nail if picture Uri exists
@@ -574,27 +693,6 @@ public class PageAdapter extends SimpleDragSortCursorAdapter // DragSortCursorAd
             holder.textBody.setVisibility(View.GONE);
             holder.textTime.setVisibility(View.GONE);
 	  	}
-
-
-	  	// drag
-	  	if(pref_show_note_attribute.getString("KEY_ENABLE_DRAGGABLE", "no").equalsIgnoreCase("yes"))
-	  		holder.btnDrag.setVisibility(View.VISIBLE);
-	  	else
-	  		holder.btnDrag.setVisibility(View.GONE);
-
-	  	// marking
-        if(marking == 1)
-        {
-			holder.btnMarking.setBackgroundResource(style % 2 == 1 ?
-					R.drawable.btn_check_on_holo_light :
-					R.drawable.btn_check_on_holo_dark);
-		}
-		else
-		{
-			holder.btnMarking.setBackgroundResource(style % 2 == 1 ?
-					R.drawable.btn_check_off_holo_light :
-					R.drawable.btn_check_off_holo_dark);
-		}
 
 		return convertView;
 	}

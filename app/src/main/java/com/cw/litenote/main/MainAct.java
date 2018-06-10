@@ -842,15 +842,15 @@ public class MainAct extends AppCompatActivity implements OnBackStackChangedList
 
 
 		// enable click launch YouTube
-		mPref_show_note_attribute = getSharedPreferences("show_note_attribute", 0);
-		if(mPref_show_note_attribute.getString("KEY_VIEW_NOTE_LAUNCH_YOUTUBE", "no").equalsIgnoreCase("yes"))
-			menu.findItem(R.id.CLICK_LAUNCH_YOUTUBE)
-					.setIcon(R.drawable.btn_check_on_holo_light)
-					.setTitle(R.string.click_launch_youtube);
-		else
-			menu.findItem(R.id.CLICK_LAUNCH_YOUTUBE)
-					.setIcon(R.drawable.btn_check_off_holo_light)
-					.setTitle(R.string.click_launch_youtube) ;
+//		mPref_show_note_attribute = getSharedPreferences("show_note_attribute", 0);
+//		if(mPref_show_note_attribute.getString("KEY_VIEW_NOTE_LAUNCH_YOUTUBE", "no").equalsIgnoreCase("yes"))
+//			menu.findItem(R.id.CLICK_LAUNCH_YOUTUBE)
+//					.setIcon(R.drawable.btn_check_on_holo_light)
+//					.setTitle(R.string.click_launch_youtube);
+//		else
+//			menu.findItem(R.id.CLICK_LAUNCH_YOUTUBE)
+//					.setIcon(R.drawable.btn_check_off_holo_light)
+//					.setTitle(R.string.click_launch_youtube) ;
 
 		//
 	    // Group 1 sub_menu for drawer operation
@@ -1198,24 +1198,24 @@ public class MainAct extends AppCompatActivity implements OnBackStackChangedList
                 TabsHost.reloadCurrentPage();
                 return true;
 
-			case MenuId.CLICK_LAUNCH_YOUTUBE:
-				mPref_show_note_attribute = mContext.getSharedPreferences("show_note_attribute", 0);
-				if(mPref_show_note_attribute.getString("KEY_VIEW_NOTE_LAUNCH_YOUTUBE", "no").equalsIgnoreCase("yes")) {
-					mPref_show_note_attribute.edit().putString("KEY_VIEW_NOTE_LAUNCH_YOUTUBE", "no").apply();
-					Toast.makeText(mAct,getResources().getString(R.string.click_launch_youtube) +
-                                        ": " +
-                                        getResources().getString(R.string.set_disable),
-                                   Toast.LENGTH_SHORT).show();
-				}
-				else {
-					mPref_show_note_attribute.edit().putString("KEY_VIEW_NOTE_LAUNCH_YOUTUBE", "yes").apply();
-					Toast.makeText(mAct,getResources().getString(R.string.click_launch_youtube) +
-                                        ": " +
-                                        getResources().getString(R.string.set_enable),
-                                   Toast.LENGTH_SHORT).show();
-				}
-				invalidateOptionsMenu();
-				return true;
+//			case MenuId.CLICK_LAUNCH_YOUTUBE:
+//				mPref_show_note_attribute = mContext.getSharedPreferences("show_note_attribute", 0);
+//				if(mPref_show_note_attribute.getString("KEY_VIEW_NOTE_LAUNCH_YOUTUBE", "no").equalsIgnoreCase("yes")) {
+//					mPref_show_note_attribute.edit().putString("KEY_VIEW_NOTE_LAUNCH_YOUTUBE", "no").apply();
+//					Toast.makeText(mAct,getResources().getString(R.string.click_launch_youtube) +
+//                                        ": " +
+//                                        getResources().getString(R.string.set_disable),
+//                                   Toast.LENGTH_SHORT).show();
+//				}
+//				else {
+//					mPref_show_note_attribute.edit().putString("KEY_VIEW_NOTE_LAUNCH_YOUTUBE", "yes").apply();
+//					Toast.makeText(mAct,getResources().getString(R.string.click_launch_youtube) +
+//                                        ": " +
+//                                        getResources().getString(R.string.set_enable),
+//                                   Toast.LENGTH_SHORT).show();
+//				}
+//				invalidateOptionsMenu();
+//				return true;
 
 			// sub menu for backup
             case MenuId.IMPORT_FROM_WEB:

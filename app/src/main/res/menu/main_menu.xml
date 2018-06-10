@@ -126,12 +126,12 @@
                     app:showAsAction="never"
                     android:title="@string/preview_note_body"
                     android:icon="@drawable/btn_check_off_holo_light"/>
-                <item
-                    android:id="@+id/CLICK_LAUNCH_YOUTUBE"
-                    android:orderInCategory="3"
-                    app:showAsAction="never"
-                    android:title="@string/click_launch_youtube"
-                    android:icon="@drawable/btn_check_off_holo_light"/>
+                <!--<item-->
+                    <!--android:id="@+id/CLICK_LAUNCH_YOUTUBE"-->
+                    <!--android:orderInCategory="3"-->
+                    <!--app:showAsAction="never"-->
+                    <!--android:title="@string/click_launch_youtube"-->
+                    <!--android:icon="@drawable/btn_check_off_holo_light"/>-->
             </menu>
         </item>
 

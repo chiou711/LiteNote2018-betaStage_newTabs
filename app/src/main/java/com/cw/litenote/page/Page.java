@@ -36,6 +36,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.AbsListView;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.SeekBar;
 
@@ -96,14 +97,14 @@ public class Page extends UilListViewBaseFragment
 		// -since Honeycomb (Android:3.0 API:11) execution was switched back to sequential;
 		// a new method AsyncTask().executeOnExecutor(Executor) however, was added for parallel execution.
 
-		// show scroll thumb
-        //todo TBD
+		// show scroll thumb: always
 //		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
 //			drag_listView.setFastScrollAlwaysVisible(true);
-//
-//		drag_listView.setScrollbarFadingEnabled(true);
-//		drag_listView.setScrollBarStyle(ListView.SCROLLBARS_OUTSIDE_OVERLAY);
-//		Util.setScrollThumb(getActivity(),drag_listView);
+
+		// show scroll thumb: when touched
+		drag_listView.setScrollbarFadingEnabled(true);
+		drag_listView.setScrollBarStyle(ListView.SCROLLBARS_OUTSIDE_OVERLAY);
+		Util.setScrollThumb(getActivity(),drag_listView);
 
 		mStyle = Util.getCurrentPageStyle(page_pos);
 //    	System.out.println("Page / _onActivityCreated / mStyle = " + mStyle);
@@ -171,7 +172,7 @@ public class Page extends UilListViewBaseFragment
 
         listView.setDropListener(onDrop);
         listView.setDragListener(onDrag);
-        listView.setAudioListener(onAudio);
+//        listView.setAudioListener(onAudio);
         listView.setOnScrollListener(onScroll);
 
         //init
@@ -287,85 +288,6 @@ public class Page extends UilListViewBaseFragment
 		public void audio(int position)
 		{
 	//			System.out.println("Page / _onAudio");
-
-			AudioManager.setAudioPlayMode(AudioManager.PAGE_PLAY_MODE);
-
-			mDb_page = new DB_page(mAct, TabsHost.getCurrentPageTableId());
-
-			int notesCount = mDb_page.getNotesCount(true);
-			if(position >= notesCount) //end of list
-				return ;
-
-
-			int marking = mDb_page.getNoteMarking(position,true);
-			String uriString = mDb_page.getNoteAudioUri(position,true);
-
-			boolean isAudioUri = false;
-			if( !Util.isEmptyString(uriString) && (marking == 1))
-				isAudioUri = true;
-
-			if(position < notesCount) // avoid footer error
-			{
-				if(isAudioUri)
-				{
-					// cancel playing
-					if(AudioManager.mMediaPlayer != null)
-					{
-						if(AudioManager.mMediaPlayer.isPlaying())
-							AudioManager.mMediaPlayer.pause();
-
-						if(TabsHost.audioPlayer_page != null) {
-							AudioPlayer_page.mAudioHandler.removeCallbacks(TabsHost.audioPlayer_page.page_runnable);
-						}
-						AudioManager.mMediaPlayer.release();
-						AudioManager.mMediaPlayer = null;
-					}
-
-					AudioManager.setPlayerState(AudioManager.PLAYER_AT_PLAY);
-
-					// create new Intent to play audio
-					AudioManager.mAudioPos = position;
-					AudioManager.setAudioPlayMode(AudioManager.PAGE_PLAY_MODE);
-
-					TabsHost.audioUi_page = new AudioUi_page(mAct, drag_listView);
-					TabsHost.audioUi_page.initAudioBlock(MainAct.mAct);
-
-					TabsHost.audioPlayer_page = new AudioPlayer_page(mAct,TabsHost.audioUi_page);
-					AudioPlayer_page.prepareAudioInfo();
-					TabsHost.audioPlayer_page.runAudioState();
-
-					// update audio play position
-					TabsHost.audioPlayTabPos = page_pos;
-					TabsHost.mTabsPagerAdapter.notifyDataSetChanged();
-
-					UtilAudio.updateAudioPanel(TabsHost.audioUi_page.audioPanel_play_button,
-							TabsHost.audioUi_page.audio_panel_title_textView);
-
-					// update playing page position
-					MainAct.mPlaying_pagePos = TabsHost.getFocus_tabPos();
-
-					// update playing page table Id
-					MainAct.mPlaying_pageTableId = TabsHost.getCurrentPageTableId();
-
-					// update playing folder position
-					MainAct.mPlaying_folderPos = FolderUi.getFocus_folderPos();
-
-					// update playing folder table Id
-					DB_drawer dB_drawer = new DB_drawer(mAct);
-					MainAct.mPlaying_folderTableId = dB_drawer.getFolderTableId(MainAct.mPlaying_folderPos,true);
-				}
-			}
-
-			// redraw list view item
-	//                    int first = drag_listView.getFirstVisiblePosition();
-	//                    int last = drag_listView.getLastVisiblePosition();
-	//                    for(int i=first; i<=last; i++) {
-	//                        View view = drag_listView.getChildAt(i-first);
-	//                        drag_listView.getAdapter().getView(i, view, drag_listView);
-	//                    }
-	//            mItemAdapter.notifyDataSetChanged();
-
-			TabsHost.getPage_rowItemView(position);
 		}
 	};
 
