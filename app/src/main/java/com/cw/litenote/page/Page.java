@@ -107,7 +107,7 @@ public class Page extends UilListViewBaseFragment
 		Util.setScrollThumb(getActivity(),drag_listView);
 
 		mStyle = Util.getCurrentPageStyle(page_pos);
-//    	System.out.println("Page / _onActivityCreated / mStyle = " + mStyle);
+//    	System.out.println("Page / _onCreateView / mStyle = " + mStyle);
 
 		UilCommon.init();
 

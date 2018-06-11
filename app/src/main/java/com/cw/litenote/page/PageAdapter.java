@@ -59,18 +59,18 @@ import static com.cw.litenote.page.Page.mDb_page;
 // Pager adapter
 public class PageAdapter extends SimpleDragSortCursorAdapter // DragSortCursorAdapter //ResourceDragSortCursorAdapter//SimpleDragSortCursorAdapter
 {
-	private FragmentActivity mAct;
+	private AppCompatActivity mAct;
 	private Cursor cursor;
 	private int count;
 	private String linkUri;
 	private int style;
-	int page_pos;
+	private int page_pos;
 
 	PageAdapter(Context context, int layout, Cursor c,
 				String[] from, int[] to, int page_position)
 	{
 		super(context, layout, c, from, to, page_position);
-		mAct = (FragmentActivity) context;
+		mAct = (AppCompatActivity) context;
 		cursor = c;
         page_pos = page_position;
 		this.style = Util.getCurrentPageStyle(page_position);
@@ -80,7 +80,7 @@ public class PageAdapter extends SimpleDragSortCursorAdapter // DragSortCursorAd
 		else
 		    count = 0;
 
-//        System.out.println("PageAdapter / _Page_new_adapter / count =" + count);
+//        System.out.println("PageAdapter / _constructor / count =" + count);
 
         // add this for fixing java.lang.IllegalStateException: attempt to re-open an already-closed object
         mDb_page.open();
@@ -89,7 +89,12 @@ public class PageAdapter extends SimpleDragSortCursorAdapter // DragSortCursorAd
 	}
 
     private class ViewHolder {
-		ImageView btnMarking;
+        ImageView btnMarking;
+        ImageView btnViewNote;
+        ImageView btnEditNote;
+        ImageView btnPlayAudio;
+        ImageView btnPlayYouTube;
+        ImageView btnPlayWeb;
 		TextView rowId;
 		View audioBlock;
 		ImageView iconAudio;
@@ -123,14 +128,13 @@ public class PageAdapter extends SimpleDragSortCursorAdapter // DragSortCursorAd
 	@SuppressLint("ClickableViewAccessibility")
     @Override
 	public View getView(final int position, View convertView, ViewGroup parent) {
-//		System.out.println("PageAdapter / _getView / position = " +  position);
-		final ViewHolder holder;
+		System.out.println("PageAdapter / _getView / position = " +  position);
+		ViewHolder holder;
 
 		SharedPreferences pref_show_note_attribute = mAct.getSharedPreferences("show_note_attribute", 0);
 
 		if (convertView == null)
 		{
-//            convertView = mAct.getLayoutInflater().inflate(R.layout.page_view_row, parent, false);
             convertView = mAct.getLayoutInflater().inflate(R.layout.page_view_card, parent, false);
 
 			// set rectangular background
@@ -179,7 +183,12 @@ public class PageAdapter extends SimpleDragSortCursorAdapter // DragSortCursorAd
 			holder.iconAudio = (ImageView) convertView.findViewById(R.id.img_audio);
 			holder.audioName = (TextView) convertView.findViewById(R.id.row_audio_name);
 			holder.btnMarking = (ImageView) convertView.findViewById(R.id.btn_marking);
-			holder.thumbBlock = convertView.findViewById(R.id.row_thumb_nail);
+            holder.btnViewNote = (ImageView) convertView.findViewById(R.id.btn_view_note);
+            holder.btnEditNote = (ImageView) convertView.findViewById(R.id.btn_edit_note);
+            holder.btnPlayAudio = (ImageView) convertView.findViewById(R.id.btn_play_audio);
+            holder.btnPlayYouTube = (ImageView) convertView.findViewById(R.id.btn_play_youtube);
+            holder.btnPlayWeb = (ImageView) convertView.findViewById(R.id.btn_play_web);
+            holder.thumbBlock = convertView.findViewById(R.id.row_thumb_nail);
 			holder.thumbPicture = (ImageView) convertView.findViewById(R.id.thumb_picture);
 			holder.thumbAudio = (ImageView) convertView.findViewById(R.id.thumb_audio);
 			holder.thumbWeb = (CustomWebView) convertView.findViewById(R.id.thumb_web);
@@ -196,14 +205,40 @@ public class PageAdapter extends SimpleDragSortCursorAdapter // DragSortCursorAd
 			holder = (ViewHolder) convertView.getTag();
 		}
 
-        // drag
-        if(pref_show_note_attribute.getString("KEY_ENABLE_DRAGGABLE", "no").equalsIgnoreCase("yes"))
-            holder.btnDrag.setVisibility(View.VISIBLE);
-        else
-            holder.btnDrag.setVisibility(View.GONE);
+        // get DB data
+        String strTitle = null;
+        String strBody = null;
+        String pictureUri = null;
+        String audioUri = null;
+        Long timeCreated = null;
+        linkUri = null;
 
-        // marking
-        int marking = mDb_page.getNoteMarking(position,true);
+        if(cursor.moveToPosition(position)) {
+            strTitle = cursor.getString(cursor.getColumnIndexOrThrow(KEY_NOTE_TITLE));
+            strBody = cursor.getString(cursor.getColumnIndexOrThrow(KEY_NOTE_BODY));
+            pictureUri = cursor.getString(cursor.getColumnIndexOrThrow(KEY_NOTE_PICTURE_URI));
+            audioUri = cursor.getString(cursor.getColumnIndexOrThrow(KEY_NOTE_AUDIO_URI));
+            linkUri = cursor.getString(cursor.getColumnIndexOrThrow(KEY_NOTE_LINK_URI));
+//            marking = cursor.getInt(cursor.getColumnIndexOrThrow(KEY_NOTE_MARKING));
+            timeCreated = cursor.getLong(cursor.getColumnIndex(KEY_NOTE_CREATED));
+        }
+
+        /**
+         *  control block
+         */
+        // show row Id
+        holder.rowId.setText(String.valueOf(position+1));
+        holder.rowId.setTextColor(ColorSet.mText_ColorArray[style]);
+
+        int pageTableId = TabsHost.getCurrentPageTableId();
+        System.out.println("PageAdapter / _getView / pageTableId = "+pageTableId);
+        mDb_page = new DB_page(mAct, pageTableId);
+
+        // show marking check box
+        int marking = 0;
+        if(mDb_page.getNotesCount(true)>0)
+            marking = mDb_page.getNoteMarking(position,true);
+
         if(marking == 1)
         {
             holder.btnMarking.setBackgroundResource(style % 2 == 1 ?
@@ -216,7 +251,8 @@ public class PageAdapter extends SimpleDragSortCursorAdapter // DragSortCursorAd
                     R.drawable.btn_check_off_holo_light :
                     R.drawable.btn_check_off_holo_dark);
         }
-        // on mark
+
+        // on mark note
         holder.btnMarking.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -246,8 +282,14 @@ public class PageAdapter extends SimpleDragSortCursorAdapter // DragSortCursorAd
             }
         });
 
-        // on view
-        convertView.findViewById(R.id.btn_view_note).setOnClickListener(new View.OnClickListener() {
+        // show drag button
+        if(pref_show_note_attribute.getString("KEY_ENABLE_DRAGGABLE", "no").equalsIgnoreCase("yes"))
+            holder.btnDrag.setVisibility(View.VISIBLE);
+        else
+            holder.btnDrag.setVisibility(View.GONE);
+
+        // on view note
+        holder.btnViewNote.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 TabsHost.getCurrentPage().currPlayPosition = position;
@@ -264,8 +306,8 @@ public class PageAdapter extends SimpleDragSortCursorAdapter // DragSortCursorAd
             }
         });
 
-        // on edit
-        convertView.findViewById(R.id.btn_edit_note).setOnClickListener(new View.OnClickListener() {
+        // on edit note
+        holder.btnEditNote.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(mAct, Note_edit.class);
@@ -283,26 +325,20 @@ public class PageAdapter extends SimpleDragSortCursorAdapter // DragSortCursorAd
         });
 
         // show audio button
-        mDb_page = new DB_page(mAct, TabsHost.getCurrentPageTableId());
-        String audioUri = mDb_page.getNoteAudioUri(position,true);
-
         if( !Util.isEmptyString(audioUri) && (marking == 1))
-            convertView.findViewById(R.id.btn_play_audio).setVisibility(View.VISIBLE);
+            holder.btnPlayAudio.setVisibility(View.VISIBLE);
         else
-            convertView.findViewById(R.id.btn_play_audio).setVisibility(View.GONE);
+            holder.btnPlayAudio.setVisibility(View.GONE);
 
-		// on audio
-		convertView.findViewById(R.id.btn_play_audio).setOnClickListener(new View.OnClickListener() {
+		// on play audio
+        holder.btnPlayAudio.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
                 AudioManager.setAudioPlayMode(AudioManager.PAGE_PLAY_MODE);
-
                 mDb_page = new DB_page(mAct, TabsHost.getCurrentPageTableId());
-
                 int notesCount = mDb_page.getNotesCount(true);
                 if(position >= notesCount) //end of list
                     return ;
-
 
                 int marking = mDb_page.getNoteMarking(position,true);
                 String uriString = mDb_page.getNoteAudioUri(position,true);
@@ -374,14 +410,73 @@ public class PageAdapter extends SimpleDragSortCursorAdapter // DragSortCursorAd
 
                 TabsHost.getPage_rowItemView(position);
 
-        }
+            }
 		});
+
+        // show/hide play YouTube button, on play Web button
+        if(!Util.isEmptyString(linkUri) &&
+           linkUri.startsWith("http")      )
+        {
+            if(Util.isYouTubeLink(linkUri))
+            {
+                // YouTube
+                holder.btnPlayYouTube.setVisibility(View.VISIBLE);
+                holder.btnPlayWeb.setVisibility(View.GONE);
+            }
+            else
+            {
+                // Web
+                holder.btnPlayYouTube.setVisibility(View.GONE);
+                holder.btnPlayWeb.setVisibility(View.VISIBLE);
+            }
+        }
+        else
+        {
+            holder.btnPlayYouTube.setVisibility(View.GONE);
+            holder.btnPlayWeb.setVisibility(View.GONE);
+        }
+
+        // on play YouTube
+        holder.btnPlayYouTube.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v) {
+                TabsHost.getCurrentPage().currPlayPosition = position;
+                DB_page mDb_page = new DB_page(mAct, TabsHost.getCurrentPageTableId());
+                mDb_page.open();
+                int count = mDb_page.getNotesCount(false);
+                String linkStr = mDb_page.getNoteLinkUri(position, false);
+                mDb_page.close();
+
+                if (position < count) {
+                    if (Util.isYouTubeLink(linkStr)) {
+                        AudioManager.stopAudioPlayer();
+
+                        // apply native YouTube
+                        Util.openLink_YouTube(mAct, linkStr);
+                    }
+                }
+            }
+        });
+
+        // on play Web
+        holder.btnPlayWeb.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v) {
+                DB_page mDb_page = new DB_page(mAct, TabsHost.getCurrentPageTableId());
+                linkUri = mDb_page.getNoteLinkUri(position, true);
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(linkUri));
+                MainAct.mAct.startActivity(intent);
+            }
+        });
 
         // set audio name
         String audio_name = null;
         if(!Util.isEmptyString(audioUri))
             audio_name = Util.getDisplayNameByUriString(audioUri, mAct);
 
+        // show audio name
         if(Util.isUriExisted(audioUri, mAct))
             holder.audioName.setText(audio_name);
         else
@@ -394,9 +489,9 @@ public class PageAdapter extends SimpleDragSortCursorAdapter // DragSortCursorAd
 
         // show audio highlight if audio is not at Stop
         if( PageUi.isAudioPlayingPage() &&
-                (position == AudioManager.mAudioPos)  &&
-                (AudioManager.getPlayerState() != AudioManager.PLAYER_AT_STOP) &&
-                (AudioManager.getAudioPlayMode() == AudioManager.PAGE_PLAY_MODE) 	)
+            (position == AudioManager.mAudioPos)  &&
+            (AudioManager.getPlayerState() != AudioManager.PLAYER_AT_STOP) &&
+            (AudioManager.getAudioPlayMode() == AudioManager.PAGE_PLAY_MODE) 	)
         {
 //            System.out.println("PageAdapter / _getView / show highlight / position = " + position);
             TabsHost.getCurrentPage().mHighlightPosition = position;
@@ -433,68 +528,16 @@ public class PageAdapter extends SimpleDragSortCursorAdapter // DragSortCursorAd
                 holder.iconAudio.setImageResource(R.drawable.ic_audio_off_black);
         }
 
-        // audio icon and block
+        // show audio icon and block
         if(Util.isEmptyString(audioUri))
         {
             holder.iconAudio.setVisibility(View.GONE);
             holder.audioBlock.setVisibility(View.GONE);
         }
 
-        // on thumb nail
-//        convertView.findViewById(R.id.row_thumb_nail).setOnClickListener(new View.OnClickListener()
-        convertView.findViewById(R.id.btn_play_youtube).setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v) {
-//				SharedPreferences pref_open_youtube = mAct.getSharedPreferences("show_note_attribute", 0);
-//				if(pref_open_youtube.getString("KEY_VIEW_NOTE_LAUNCH_YOUTUBE", "no")
-//									.equalsIgnoreCase("yes") )
-				{
-					TabsHost.getCurrentPage().currPlayPosition = position;
-					DB_page mDb_page = new DB_page(mAct, TabsHost.getCurrentPageTableId());
-					mDb_page.open();
-					int count = mDb_page.getNotesCount(false);
-					String linkStr = mDb_page.getNoteLinkUri(position, false);
-					mDb_page.close();
-
-					if (position < count) {
-						if (Util.isYouTubeLink(linkStr)) {
-							AudioManager.stopAudioPlayer();
-
-							// apply native YouTube
-							Util.openLink_YouTube(mAct, linkStr);
-						}
-					}
-				}
-            }
-        });
-
-
-		// show row Id
-		holder.rowId.setText(String.valueOf(position+1));
-		holder.rowId.setTextColor(ColorSet.mText_ColorArray[style]);
-		
-		// show check box, title , picture
-		String strTitle = null;
-		String strBody = null;
-        String pictureUri = null;
-        Long timeCreated = null;
-        linkUri = null;
-
-        if(cursor.moveToPosition(position)) {
-            strTitle = cursor.getString(cursor.getColumnIndexOrThrow(KEY_NOTE_TITLE));
-            strBody = cursor.getString(cursor.getColumnIndexOrThrow(KEY_NOTE_BODY));
-            pictureUri = cursor.getString(cursor.getColumnIndexOrThrow(KEY_NOTE_PICTURE_URI));
-            audioUri = cursor.getString(cursor.getColumnIndexOrThrow(KEY_NOTE_AUDIO_URI));
-            linkUri = cursor.getString(cursor.getColumnIndexOrThrow(KEY_NOTE_LINK_URI));
-            marking = cursor.getInt(cursor.getColumnIndexOrThrow(KEY_NOTE_MARKING));
-			timeCreated = cursor.getLong(cursor.getColumnIndex(KEY_NOTE_CREATED));
-        }
-
-		// set title
+		// show text title
 		if( Util.isEmptyString(strTitle) )
 		{
-
 			if(Util.isYouTubeLink(linkUri)) {
 				strTitle = Util.getYouTubeTitle(linkUri);
 				holder.textTitle.setVisibility(View.VISIBLE);
@@ -520,19 +563,16 @@ public class PageAdapter extends SimpleDragSortCursorAdapter // DragSortCursorAd
 			holder.textTitle.setTextColor(ColorSet.mText_ColorArray[style]);
 		}
 
-		// Show image thumb nail if picture Uri is none and YouTube link exists
+		// set YouTube thumb nail if picture Uri is none and YouTube link exists
 		if(Util.isEmptyString(pictureUri) &&
 		   Util.isYouTubeLink(linkUri)      )
 		{
 			pictureUri = "http://img.youtube.com/vi/"+Util.getYoutubeId(linkUri)+"/0.jpg";
-            convertView.findViewById(R.id.btn_play_youtube).setVisibility(View.VISIBLE);
 		}
-		else
-            convertView.findViewById(R.id.btn_play_youtube).setVisibility(View.GONE);
 
 //		System.out.println("PageAdapter / _getView / pictureUri = " + pictureUri);
 
-		// show thumb nail if picture Uri exists
+		// case 1: show thumb nail if picture Uri exists
 		if(UtilImage.hasImageExtension(pictureUri, mAct ) ||
 		   UtilVideo.hasVideoExtension(pictureUri, mAct )   )
 		{
@@ -561,7 +601,7 @@ public class PageAdapter extends SimpleDragSortCursorAdapter // DragSortCursorAd
 				holder.thumbWeb.setVisibility(View.GONE);
 			}
 		}
-		// show audio thumb nail if picture Uri is none and audio Uri exists
+		// case 2: show audio thumb nail if picture Uri is none and audio Uri exists
 		else if((Util.isEmptyString(pictureUri) && UtilAudio.hasAudioExtension(audioUri) ) )
 		{
 			holder.thumbBlock.setVisibility(View.VISIBLE);
@@ -585,7 +625,7 @@ public class PageAdapter extends SimpleDragSortCursorAdapter // DragSortCursorAd
                 holder.thumbWeb.setVisibility(View.GONE);
             }
 		}
-		// set web title and web view thumb nail of link if no title content
+		// case 3: set web title and web view thumb nail of link if no title content
 		else if(!Util.isEmptyString(linkUri) &&
                 linkUri.startsWith("http")   &&
 				!Util.isYouTubeLink(linkUri)   )
@@ -609,20 +649,19 @@ public class PageAdapter extends SimpleDragSortCursorAdapter // DragSortCursorAd
 			holder.thumbWeb.loadUrl(linkUri);
 			holder.thumbWeb.setVisibility(View.VISIBLE);
 
-			// no interactive response
-			holder.thumbWeb.setOnTouchListener(new View.OnTouchListener() {
-				@Override
-				public boolean onTouch(View v, MotionEvent event) {
-                    if( (event.getAction() == MotionEvent.ACTION_POINTER_UP) ||
-                        (event.getAction() == MotionEvent.ACTION_UP)            )
-                    {
-                        //todo TBD
-                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(linkUri));
-                        mAct.startActivity(intent);
-                    }
-					return true;
-				}
-			});
+//			// no interactive response
+//			holder.thumbWeb.setOnTouchListener(new View.OnTouchListener() {
+//				@Override
+//				public boolean onTouch(View v, MotionEvent event) {
+//                    if( (event.getAction() == MotionEvent.ACTION_POINTER_UP) ||
+//                        (event.getAction() == MotionEvent.ACTION_UP)            )
+//                    {
+//                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(linkUri));
+//                        mAct.startActivity(intent);
+//                    }
+//					return true;
+//				}
+//			});
 
 			holder.thumbPicture.setVisibility(View.GONE);
 			holder.thumbAudio.setVisibility(View.GONE);
@@ -663,8 +702,7 @@ public class PageAdapter extends SimpleDragSortCursorAdapter // DragSortCursorAd
 			holder.thumbWeb.setVisibility(View.GONE);
 		}
 
-
-		// Show note body or not
+		// Show text body
 	  	if(pref_show_note_attribute.getString("KEY_SHOW_BODY", "yes").equalsIgnoreCase("yes"))
 	  	{
 	  		// test only: enabled for showing picture path
