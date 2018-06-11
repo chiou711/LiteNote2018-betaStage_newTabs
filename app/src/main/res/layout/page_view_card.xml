@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- whole -->
 <!-- [id | check | drag-drop |audio name] --> <!-- controls -->
-<!-- [          title text              ] -->
-<!-- [          thumb nail              ] -->
-<!-- [          body text               ] -->
+<!-- [ thumb nail   ][          title text              ] -->
+<!-- [              ][          body text               ] -->
 
 
 
@@ -37,8 +36,8 @@
                 android:id="@+id/row_id"
                 android:layout_width="wrap_content"
                 android:layout_height="50dp"
-                android:layout_marginLeft="3dp"
-                android:layout_marginStart="3dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginStart="5dp"
                 android:gravity="center_vertical"
                 android:maxLines="1"
                 android:textSize="14sp"
@@ -62,8 +61,8 @@
             <!-- view note -->
             <ImageView
                 android:id="@+id/btn_view_note"
-                android:layout_width="45dp"
-                android:layout_height="45dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:layout_marginStart="3dp"
                 android:layout_marginLeft="3dp"
                 android:contentDescription="@string/view_note_title"
@@ -72,8 +71,8 @@
             <!-- edit note -->
             <ImageView
                 android:id="@+id/btn_edit_note"
-                android:layout_width="45dp"
-                android:layout_height="45dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:layout_marginStart="3dp"
                 android:layout_marginLeft="3dp"
                 android:contentDescription="@string/edit_note_title"
@@ -82,8 +81,8 @@
             <!-- play audio -->
             <ImageView
                 android:id="@+id/btn_play_audio"
-                android:layout_width="45dp"
-                android:layout_height="45dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:layout_marginStart="3dp"
                 android:layout_marginLeft="3dp"
                 android:contentDescription="@string/note_audio"
@@ -92,8 +91,8 @@
             <!-- play YouTube -->
             <ImageView
                 android:id="@+id/btn_play_youtube"
-                android:layout_width="45dp"
-                android:layout_height="45dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:layout_marginStart="3dp"
                 android:layout_marginLeft="3dp"
                 android:contentDescription="@string/note_youtube_link"
@@ -116,7 +115,7 @@
         <LinearLayout
             android:id="@+id/audio_block"
             android:layout_width="match_parent"
-            android:layout_height="60dp"
+            android:layout_height="40dp"
             android:layout_margin="5dp"
             android:background="@drawable/bg_gray_border"
             android:orientation="horizontal">
@@ -142,15 +141,16 @@
         </LinearLayout>
         <!-- audio block end -->
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
         <!-- thumb nail start -->
         <FrameLayout
             android:id="@+id/row_thumb_nail"
-            android:layout_width="match_parent"
-            android:layout_height="150dp"
-            android:layout_below="@+id/row_title"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
             android:layout_gravity="center"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentLeft="true"
             android:layout_margin="3dp"
             android:visibility="visible">
 
@@ -160,7 +160,7 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
                 android:contentDescription="img_thumb_picture"
-                android:scaleType="fitCenter"/>
+                android:scaleType="centerCrop"/>
 
             <ImageView
                 android:id="@+id/thumb_audio"
@@ -168,7 +168,7 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
                 android:contentDescription="img_thumb_audio"
-                android:scaleType="fitCenter"/>
+                android:scaleType="centerCrop"/>
 
             <com.cw.litenote.util.CustomWebView
                 android:id="@+id/thumb_web"
@@ -176,7 +176,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:contentDescription="img_thumb_web"
-                android:scaleType="fitCenter"/>
+                android:scaleType="centerCrop"/>
 
             <ProgressBar
                 android:id="@+id/thumb_progress"
@@ -187,33 +187,32 @@
         </FrameLayout>
         <!-- thumb nail end -->
 
-        <!-- text title start -->
-        <TextView
-            android:id="@+id/row_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:contentDescription="@string/note_text"
-            android:layout_below="@+id/row_controls"
-            android:background="@drawable/bg_gray_border"
-            android:layout_margin="5dp"
-            android:gravity="center_vertical"
-            android:maxLines="2"
-            android:minHeight="15dp"
-            android:paddingLeft="5dp"
-            android:paddingRight="5dp"
-            android:textSize="12sp"
-            android:textStyle="bold"
-            />
-        <!-- text title end-->
 
         <!-- text body start -->
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/row_thumb_nail"
-            android:layout_margin="1dp"
+            android:layout_width="0dp"
+            android:layout_height="100dp"
+            android:layout_weight="1"
+            android:layout_margin="5dp"
+            android:background="@drawable/bg_gray_border"
             android:orientation="vertical">
+
+            <!-- text title start -->
+            <TextView
+                android:id="@+id/row_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top"
+                android:contentDescription="@string/note_text"
+                android:gravity="center_vertical"
+                android:maxLines="2"
+                android:minHeight="15dp"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                />
+            <!-- text title end-->
 
             <TextView
                 android:id="@+id/row_body"
@@ -221,7 +220,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:maxLines="2"
-                android:minHeight="25dp"
+                android:minHeight="40dp"
                 android:paddingEnd="5dp"
                 android:paddingLeft="5dp"
                 android:paddingRight="5dp"
@@ -232,14 +231,15 @@
                 android:id="@+id/row_time"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="end"
+                android:gravity="bottom|end"
                 android:maxLines="1"
-                android:minHeight="12dp"
-                android:paddingLeft="12sp"
-                android:paddingRight="12sp"
-                android:textSize="12sp"/>
+                android:minHeight="8dp"
+                android:paddingLeft="5sp"
+                android:paddingRight="5sp"
+                android:textSize="10sp"/>
         </LinearLayout>
         <!-- text body end-->
+        </LinearLayout>
 
     </LinearLayout>
 
