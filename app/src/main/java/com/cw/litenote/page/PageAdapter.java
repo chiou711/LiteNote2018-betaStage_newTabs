@@ -212,6 +212,7 @@ public class PageAdapter extends SimpleDragSortCursorAdapter // DragSortCursorAd
         String audioUri = null;
         Long timeCreated = null;
         linkUri = null;
+        int marking = 0;
 
         if(cursor.moveToPosition(position)) {
             strTitle = cursor.getString(cursor.getColumnIndexOrThrow(KEY_NOTE_TITLE));
@@ -219,7 +220,7 @@ public class PageAdapter extends SimpleDragSortCursorAdapter // DragSortCursorAd
             pictureUri = cursor.getString(cursor.getColumnIndexOrThrow(KEY_NOTE_PICTURE_URI));
             audioUri = cursor.getString(cursor.getColumnIndexOrThrow(KEY_NOTE_AUDIO_URI));
             linkUri = cursor.getString(cursor.getColumnIndexOrThrow(KEY_NOTE_LINK_URI));
-//            marking = cursor.getInt(cursor.getColumnIndexOrThrow(KEY_NOTE_MARKING));
+            marking = cursor.getInt(cursor.getColumnIndexOrThrow(KEY_NOTE_MARKING));
             timeCreated = cursor.getLong(cursor.getColumnIndex(KEY_NOTE_CREATED));
         }
 
@@ -230,15 +231,8 @@ public class PageAdapter extends SimpleDragSortCursorAdapter // DragSortCursorAd
         holder.rowId.setText(String.valueOf(position+1));
         holder.rowId.setTextColor(ColorSet.mText_ColorArray[style]);
 
-        int pageTableId = TabsHost.getCurrentPageTableId();
-        System.out.println("PageAdapter / _getView / pageTableId = "+pageTableId);
-        mDb_page = new DB_page(mAct, pageTableId);
 
         // show marking check box
-        int marking = 0;
-        if(mDb_page.getNotesCount(true)>0)
-            marking = mDb_page.getNoteMarking(position,true);
-
         if(marking == 1)
         {
             holder.btnMarking.setBackgroundResource(style % 2 == 1 ?
@@ -259,7 +253,7 @@ public class PageAdapter extends SimpleDragSortCursorAdapter // DragSortCursorAd
 
                 System.out.println("PageAdapter / _getView / btnMarking / _onClick");
                 // toggle marking
-                int markingNow = toggleNoteMarking(MainAct.mAct,position);
+                toggleNoteMarking(MainAct.mAct,position);
 
                 // Stop if unmarked item is at playing state
                 if(AudioManager.mAudioPos == position) {
@@ -293,8 +287,8 @@ public class PageAdapter extends SimpleDragSortCursorAdapter // DragSortCursorAd
             @Override
             public void onClick(View v) {
                 TabsHost.getCurrentPage().currPlayPosition = position;
-                DB_page mDb_page = new DB_page(mAct,TabsHost.getCurrentPageTableId());
-                int count = mDb_page.getNotesCount(true);
+                DB_page db_page = new DB_page(mAct,TabsHost.getCurrentPageTableId());
+                int count = db_page.getNotesCount(true);
                 if(position < count)
                 {
                     // apply Note class
@@ -311,16 +305,16 @@ public class PageAdapter extends SimpleDragSortCursorAdapter // DragSortCursorAd
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(mAct, Note_edit.class);
-                mDb_page = new DB_page(mAct, TabsHost.getCurrentPageTableId());
-                Long rowId = mDb_page.getNoteId(position,true);
+                DB_page db_page = new DB_page(mAct, TabsHost.getCurrentPageTableId());
+                Long rowId = db_page.getNoteId(position,true);
                 i.putExtra("list_view_position", position);
                 i.putExtra(DB_page.KEY_NOTE_ID, rowId);
-                i.putExtra(DB_page.KEY_NOTE_TITLE, mDb_page.getNoteTitle_byId(rowId));
-                i.putExtra(DB_page.KEY_NOTE_PICTURE_URI , mDb_page.getNotePictureUri_byId(rowId));
-                i.putExtra(DB_page.KEY_NOTE_AUDIO_URI , mDb_page.getNoteAudioUri_byId(rowId));
-                i.putExtra(DB_page.KEY_NOTE_LINK_URI , mDb_page.getNoteLinkUri_byId(rowId));
-                i.putExtra(DB_page.KEY_NOTE_BODY, mDb_page.getNoteBody_byId(rowId));
-                i.putExtra(DB_page.KEY_NOTE_CREATED, mDb_page.getNoteCreatedTime_byId(rowId));
+                i.putExtra(DB_page.KEY_NOTE_TITLE, db_page.getNoteTitle_byId(rowId));
+                i.putExtra(DB_page.KEY_NOTE_PICTURE_URI , db_page.getNotePictureUri_byId(rowId));
+                i.putExtra(DB_page.KEY_NOTE_AUDIO_URI , db_page.getNoteAudioUri_byId(rowId));
+                i.putExtra(DB_page.KEY_NOTE_LINK_URI , db_page.getNoteLinkUri_byId(rowId));
+                i.putExtra(DB_page.KEY_NOTE_BODY, db_page.getNoteBody_byId(rowId));
+                i.putExtra(DB_page.KEY_NOTE_CREATED, db_page.getNoteCreatedTime_byId(rowId));
                 mAct.startActivity(i);            }
         });
 
@@ -335,13 +329,13 @@ public class PageAdapter extends SimpleDragSortCursorAdapter // DragSortCursorAd
 			@Override
 			public void onClick(View v) {
                 AudioManager.setAudioPlayMode(AudioManager.PAGE_PLAY_MODE);
-                mDb_page = new DB_page(mAct, TabsHost.getCurrentPageTableId());
-                int notesCount = mDb_page.getNotesCount(true);
+                DB_page db_page = new DB_page(mAct, TabsHost.getCurrentPageTableId());
+                int notesCount = db_page.getNotesCount(true);
                 if(position >= notesCount) //end of list
                     return ;
 
-                int marking = mDb_page.getNoteMarking(position,true);
-                String uriString = mDb_page.getNoteAudioUri(position,true);
+                int marking = db_page.getNoteMarking(position,true);
+                String uriString = db_page.getNoteAudioUri(position,true);
 
                 boolean isAudioUri = false;
                 if( !Util.isEmptyString(uriString) && (marking == 1))
@@ -442,11 +436,11 @@ public class PageAdapter extends SimpleDragSortCursorAdapter // DragSortCursorAd
             @Override
             public void onClick(View v) {
                 TabsHost.getCurrentPage().currPlayPosition = position;
-                DB_page mDb_page = new DB_page(mAct, TabsHost.getCurrentPageTableId());
-                mDb_page.open();
-                int count = mDb_page.getNotesCount(false);
-                String linkStr = mDb_page.getNoteLinkUri(position, false);
-                mDb_page.close();
+                DB_page db_page = new DB_page(mAct, TabsHost.getCurrentPageTableId());
+                db_page.open();
+                int count = db_page.getNotesCount(false);
+                String linkStr = db_page.getNoteLinkUri(position, false);
+                db_page.close();
 
                 if (position < count) {
                     if (Util.isYouTubeLink(linkStr)) {
@@ -464,8 +458,8 @@ public class PageAdapter extends SimpleDragSortCursorAdapter // DragSortCursorAd
         {
             @Override
             public void onClick(View v) {
-                DB_page mDb_page = new DB_page(mAct, TabsHost.getCurrentPageTableId());
-                linkUri = mDb_page.getNoteLinkUri(position, true);
+                DB_page db_page = new DB_page(mAct, TabsHost.getCurrentPageTableId());
+                linkUri = db_page.getNoteLinkUri(position, true);
                 Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(linkUri));
                 MainAct.mAct.startActivity(intent);
             }
