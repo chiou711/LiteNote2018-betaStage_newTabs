@@ -120,7 +120,6 @@ public class MainAct extends AppCompatActivity implements OnBackStackChangedList
         super.onCreate(savedInstanceState);
 
         mAct = this;
-        setContentView(R.layout.drawer);
 		mAppTitle = getTitle();
         mMainUi = new MainUi();
 
@@ -225,19 +224,14 @@ public class MainAct extends AppCompatActivity implements OnBackStackChangedList
 	        }
             dB_drawer.close();
 
-            initActionBar();
-
 	        // enable ActionBar app icon to behave as action to toggle nav drawer
 //	        getActionBar().setDisplayHomeAsUpEnabled(true);
 //	        getActionBar().setHomeButtonEnabled(true);
 //			getActionBar().setBackgroundDrawable(new ColorDrawable(ColorSet.getBarColor(mAct)));
 
-            // new drawer
-            drawer = new Drawer(mAct);
-            drawer.initDrawer();
+            // configure layout view
+            configLayoutView();
 
-            // new folder
-            mFolder = new Folder(mAct);
 
 	        mContext = getBaseContext();
 
@@ -430,10 +424,10 @@ public class MainAct extends AppCompatActivity implements OnBackStackChangedList
 
     @Override
     protected void onResumeFragments() {
-//    	System.out.println("MainAct / _onResumeFragments ");
+    	System.out.println("MainAct / _onResumeFragments ");
     	super.onResumeFragments();
 
-		// fix: home button failed after power off/on in Config fragment
+//		// fix: home button failed after power off/on in Config fragment
 		fragmentManager.popBackStack();
 
         DB_drawer dB_drawer = new DB_drawer(this);
@@ -491,6 +485,9 @@ public class MainAct extends AppCompatActivity implements OnBackStackChangedList
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         System.out.println("MainAct / _onConfigurationChanged");
+
+        configLayoutView();
+
         // Pass any configuration change to the drawer toggles
         drawer.drawerToggle.onConfigurationChanged(newConfig);
 
@@ -498,6 +495,7 @@ public class MainAct extends AppCompatActivity implements OnBackStackChangedList
 
         FolderUi.startTabsHostRun();
     }
+
 
     /**
      *  on Back button pressed
@@ -1288,6 +1286,26 @@ public class MainAct extends AppCompatActivity implements OnBackStackChangedList
 
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    // configure layout view
+    void configLayoutView()
+    {
+        setContentView(R.layout.drawer);
+        initActionBar();
+
+        // new drawer
+        drawer = new Drawer(mAct);
+        drawer.initDrawer();
+
+        // new folder
+        mFolder = new Folder(mAct);
+
+        DB_drawer dB_drawer = new DB_drawer(this);
+        if(dB_drawer.getFoldersCount(true)>0) {
+            FolderUi.selectFolder(this,FolderUi.getFocus_folderPos());
+            getSupportActionBar().setTitle(mFolderTitle);
         }
     }
 }
