@@ -68,7 +68,7 @@
                 android:layout_gravity="center_vertical"
                 android:gravity="center_vertical"
                 android:contentDescription="@string/drag_handler"
-                android:src="@drawable/ic_dragger_on"/>
+                android:src="@drawable/ic_drag_on"/>
 
             <!-- view note -->
             <ImageView

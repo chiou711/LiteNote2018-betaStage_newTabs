@@ -162,7 +162,7 @@ public class Folder
         DragSortController controller = new DragSortController(dslv);
         controller.setSortEnabled(true);
         controller.setDragInitMode(DragSortController.ON_DOWN); // click
-        controller.setDragHandleId(R.id.folder_dragger);// handler
+        controller.setDragHandleId(R.id.folder_drag);// handler
         controller.setBackgroundColor(Color.argb(128,128,64,0));// background color when dragging
 
         return controller;

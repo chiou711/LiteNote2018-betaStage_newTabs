@@ -17,7 +17,7 @@
             android:orderInCategory="1"
             app:showAsAction="ifRoom"
             android:title="@string/drag_folder"
-            android:icon="@drawable/ic_dragger_on"/>
+            android:icon="@drawable/ic_drag_on"/>
         <item
             android:id="@+id/DELETE_FOLDERS"
             android:orderInCategory="2"

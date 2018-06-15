@@ -3,7 +3,6 @@ package com.cw.litenote.folder;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.graphics.Color;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -13,7 +12,6 @@ import com.cw.litenote.R;
 import com.cw.litenote.db.DB_drawer;
 import com.cw.litenote.main.MainAct;
 import com.cw.litenote.operation.audio.AudioManager;
-import com.cw.litenote.util.ColorSet;
 import com.mobeta.android.dslv.SimpleDragSortCursorAdapter;
 
 /**
@@ -58,8 +56,9 @@ public class Folder_adapter extends SimpleDragSortCursorAdapter
 
             // set up ViewHolder for this ListView item
             viewHolder = new ViewHolder();
-            viewHolder.drawerTitle = (TextView) convertView.findViewById(R.id.folderText);
-            viewHolder.imageDragger = (ImageView) convertView.findViewById(R.id.folder_dragger);
+            viewHolder.audioPlayingIcon = (ImageView) convertView.findViewById(R.id.folder_audio);
+            viewHolder.folderTitle = (TextView) convertView.findViewById(R.id.folderText);
+            viewHolder.dragIcon = (ImageView) convertView.findViewById(R.id.folder_drag);
             convertView.setTag(viewHolder); // store as View's tag
         }
         else // get the ViewHolder from the convertView's tag
@@ -68,19 +67,19 @@ public class Folder_adapter extends SimpleDragSortCursorAdapter
         // set highlight of selected drawer
         if( (AudioManager.mMediaPlayer != null) &&
             (MainAct.mPlaying_folderPos == position)        )
-            viewHolder.drawerTitle.setTextColor(ColorSet.getHighlightColor(MainAct.mAct));
+            viewHolder.audioPlayingIcon.setVisibility(View.VISIBLE);
         else
-            viewHolder.drawerTitle.setTextColor(Color.argb(0xff, 0xff, 0xff, 0xff));
+            viewHolder.audioPlayingIcon.setVisibility(View.GONE);
 
         DB_drawer db_drawer = new DB_drawer(MainAct.mAct);
-        viewHolder.drawerTitle.setText(db_drawer.getFolderTitle(position,true));
+        viewHolder.folderTitle.setText(db_drawer.getFolderTitle(position,true));
 
         // dragger
         SharedPreferences pref = MainAct.mAct.getSharedPreferences("show_note_attribute", 0);;
         if(pref.getString("KEY_ENABLE_FOLDER_DRAGGABLE", "no").equalsIgnoreCase("yes"))
-            viewHolder.imageDragger.setVisibility(View.VISIBLE);
+            viewHolder.dragIcon.setVisibility(View.VISIBLE);
         else
-            viewHolder.imageDragger.setVisibility(View.GONE);
+            viewHolder.dragIcon.setVisibility(View.GONE);
 
         return convertView;
     }
@@ -88,7 +87,8 @@ public class Folder_adapter extends SimpleDragSortCursorAdapter
 
     private static class ViewHolder
     {
-        TextView drawerTitle; // refers to ListView item's ImageView
-        ImageView imageDragger;
+        ImageView audioPlayingIcon;
+        TextView folderTitle; // refers to ListView item's ImageView
+        ImageView dragIcon;
     }
 }

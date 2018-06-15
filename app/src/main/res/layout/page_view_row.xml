@@ -93,7 +93,7 @@
             android:id="@+id/img_dragger"
             android:layout_width="45dp"
             android:layout_height="45dp"
-            android:src="@drawable/ic_dragger_on"
+            android:src="@drawable/ic_drag_on"
             android:contentDescription="@string/drag_handler"/>
 
         <!-- audio block start -->
