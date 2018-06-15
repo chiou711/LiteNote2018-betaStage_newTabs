@@ -31,7 +31,7 @@ public class MenuId {
         static final int CONFIG = R.id.CONFIG;
         static final int ABOUT = R.id.ABOUT;
 
-//        static final int ADD_NEW_FOLDER = R.id.ADD_NEW_FOLDER;
-//        static final int ENABLE_FOLDER_DRAG_AND_DROP = R.id.ENABLE_FOLDER_DRAG_AND_DROP;
-//        static final int DELETE_FOLDERS = R.id.DELETE_FOLDERS;
+        static final int ADD_NEW_FOLDER = R.id.ADD_NEW_FOLDER;
+        static final int ENABLE_FOLDER_DRAG_AND_DROP = R.id.ENABLE_FOLDER_DRAG_AND_DROP;
+        static final int DELETE_FOLDERS = R.id.DELETE_FOLDERS;
 }

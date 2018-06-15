@@ -48,11 +48,9 @@ import com.mobeta.android.dslv.DragSortListView;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Handler;
 import android.os.StrictMode;
-import android.support.v4.app.FragmentActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -550,14 +548,7 @@ public class MainAct extends AppCompatActivity implements OnBackStackChangedList
 
             System.out.println("MainAct / _onBackStackChanged / init");
 
-            initActionBar();
-
-            // new drawer
-            if(drawer != null)
-                drawer = null;
-
-            drawer = new Drawer(mAct);
-            drawer.initDrawer();
+            configLayoutView();
 
             drawer.drawerToggle.syncState(); // make sure toggle icon state is correct
         }
@@ -716,7 +707,8 @@ public class MainAct extends AppCompatActivity implements OnBackStackChangedList
         // If the navigation drawer is open, hide action items related to the content view
         if(drawer.isDrawerOpen())
         {
-//            mMenu.setGroupVisible(R.id.group_folders, true);
+            if(Util.isLandscapeOrientation(mAct))
+                mMenu.setGroupVisible(R.id.group_folders, true);
 
 //            mMenu.findItem(R.id.DELETE_FOLDERS).setVisible(foldersCnt >0);
 //            mMenu.findItem(R.id.ENABLE_FOLDER_DRAG_AND_DROP).setVisible(foldersCnt >1);
@@ -726,7 +718,8 @@ public class MainAct extends AppCompatActivity implements OnBackStackChangedList
         }
         else if(!drawer.isDrawerOpen())
         {
-//            mMenu.setGroupVisible(R.id.group_folders, false);
+            if(Util.isLandscapeOrientation(mAct))
+                mMenu.setGroupVisible(R.id.group_folders, false);
 
             /**
              * Page group and more
@@ -892,6 +885,7 @@ public class MainAct extends AppCompatActivity implements OnBackStackChangedList
 		setMenuUiState(item.getItemId());
         DB_folder dB_folder = new DB_folder(this, Pref.getPref_focusView_folder_tableId(this));
         DB_page dB_page = new DB_page(this,TabsHost.getCurrentPageTableId());
+        DB_drawer dB_drawer = new DB_drawer(this);
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 
@@ -904,7 +898,6 @@ public class MainAct extends AppCompatActivity implements OnBackStackChangedList
 
             if(fragmentManager.getBackStackEntryCount() > 0 )
 			{
-                DB_drawer dB_drawer = new DB_drawer(this);
                 int foldersCnt = dB_drawer.getFoldersCount(true);
                 System.out.println("MainAct / _onOptionsItemSelected / Home key of Config is pressed / foldersCnt = " + foldersCnt);
 
@@ -941,57 +934,56 @@ public class MainAct extends AppCompatActivity implements OnBackStackChangedList
 
         switch (item.getItemId())
         {
-//	    	case MenuId.ADD_NEW_FOLDER:
-//	    		FolderUi.renewFirstAndLast_folderId();
-//                FolderUi.addNewFolder(mAct, FolderUi.mLastExist_folderTableId +1, mFolder.getAdapter());
-//				return true;
-//
-//	    	case MenuId.ENABLE_FOLDER_DRAG_AND_DROP:
-//            	if(mPref_show_note_attribute.getString("KEY_ENABLE_FOLDER_DRAGGABLE", "no")
-//            			                    .equalsIgnoreCase("yes"))
-//            	{
-//            		mPref_show_note_attribute.edit().putString("KEY_ENABLE_FOLDER_DRAGGABLE","no")
-//            								 .apply();
-//                    DragSortListView listView = (DragSortListView) findViewById(R.id.left_drawer);
-//					listView.setDragEnabled(false);
-//                    Toast.makeText(mAct,getResources().getString(R.string.drag_folder)+
-//                                        ": " +
-//                                        getResources().getString(R.string.set_disable),
-//                                   Toast.LENGTH_SHORT).show();
-//            	}
-//            	else
-//            	{
-//            		mPref_show_note_attribute.edit().putString("KEY_ENABLE_FOLDER_DRAGGABLE","yes")
-//            								 .apply();
-//                    DragSortListView listView = (DragSortListView) findViewById(R.id.left_drawer);
-//					listView.setDragEnabled(true);
-//                    Toast.makeText(mAct,getResources().getString(R.string.drag_folder) +
-//                                        ": " +
-//                                        getResources().getString(R.string.set_enable),
-//                                   Toast.LENGTH_SHORT).show();
-//            	}
-//                mFolder.getAdapter().notifyDataSetChanged();
-//                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
-//                return true;
-//
-//            case MenuId.DELETE_FOLDERS:
-//                mMenu.setGroupVisible(R.id.group_folders, false);
-//
-//                DB_drawer dB_drawer = new DB_drawer(this);
-//                if(dB_drawer.getFoldersCount(true)>0)
-//                {
-//                    drawer.closeDrawer();
-//                    mMenu.setGroupVisible(R.id.group_notes, false); //hide the menu
-//                    DeleteFolders delFoldersFragment = new DeleteFolders();
-//                    mFragmentTransaction = fragmentManager.beginTransaction();
-//                    mFragmentTransaction.setCustomAnimations(R.anim.fragment_slide_in_left, R.anim.fragment_slide_out_left, R.anim.fragment_slide_in_right, R.anim.fragment_slide_out_right);
-//                    mFragmentTransaction.replace(R.id.content_frame, delFoldersFragment).addToBackStack("delete_folders").commit();
-//                }
-//                else
-//                {
-//                    Toast.makeText(this, R.string.config_export_none_toast, Toast.LENGTH_SHORT).show();
-//                }
-//                return true;
+	    	case MenuId.ADD_NEW_FOLDER:
+	    		FolderUi.renewFirstAndLast_folderId();
+                FolderUi.addNewFolder(this, FolderUi.mLastExist_folderTableId +1, mFolder.getAdapter());
+				return true;
+
+	    	case MenuId.ENABLE_FOLDER_DRAG_AND_DROP:
+                if(MainAct.mPref_show_note_attribute.getString("KEY_ENABLE_FOLDER_DRAGGABLE", "no")
+                        .equalsIgnoreCase("yes"))
+                {
+                    mPref_show_note_attribute.edit().putString("KEY_ENABLE_FOLDER_DRAGGABLE","no")
+                            .apply();
+                    DragSortListView listView = (DragSortListView) this.findViewById(R.id.drawer_listview);
+                    listView.setDragEnabled(false);
+                    Toast.makeText(this,getResources().getString(R.string.drag_folder)+
+                                    ": " +
+                                    getResources().getString(R.string.set_disable),
+                            Toast.LENGTH_SHORT).show();
+                }
+                else
+                {
+                    mPref_show_note_attribute.edit().putString("KEY_ENABLE_FOLDER_DRAGGABLE","yes")
+                            .apply();
+                    DragSortListView listView = (DragSortListView) this.findViewById(R.id.drawer_listview);
+                    listView.setDragEnabled(true);
+                    Toast.makeText(this,getResources().getString(R.string.drag_folder) +
+                                    ": " +
+                                    getResources().getString(R.string.set_enable),
+                            Toast.LENGTH_SHORT).show();
+                }
+                mFolder.getAdapter().notifyDataSetChanged();
+                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+                return true;
+
+            case MenuId.DELETE_FOLDERS:
+                mMenu.setGroupVisible(R.id.group_folders, false);
+
+                if(dB_drawer.getFoldersCount(true)>0)
+                {
+                    drawer.closeDrawer();
+                    mMenu.setGroupVisible(R.id.group_notes, false); //hide the menu
+                    DeleteFolders delFoldersFragment = new DeleteFolders();
+                    mFragmentTransaction = fragmentManager.beginTransaction();
+                    mFragmentTransaction.setCustomAnimations(R.anim.fragment_slide_in_left, R.anim.fragment_slide_out_left, R.anim.fragment_slide_in_right, R.anim.fragment_slide_out_right);
+                    mFragmentTransaction.replace(R.id.content_frame, delFoldersFragment).addToBackStack("delete_folders").commit();
+                }
+                else
+                {
+                    Toast.makeText(this, R.string.config_export_none_toast, Toast.LENGTH_SHORT).show();
+                }
+                return true;
 
 			case MenuId.ADD_NEW_NOTE:
 				Add_note_option.addNewNote(this);
@@ -1034,10 +1026,10 @@ public class MainAct extends AppCompatActivity implements OnBackStackChangedList
                     AudioManager.mAudioPos = 0;
 
                     Page page = TabsHost.getCurrentPage();
-                    TabsHost.audioUi_page = new AudioUi_page(mAct,page.drag_listView);
-                    TabsHost.audioUi_page.initAudioBlock(mAct);
+                    TabsHost.audioUi_page = new AudioUi_page(this,page.drag_listView);
+                    TabsHost.audioUi_page.initAudioBlock(this);
 
-                    TabsHost.audioPlayer_page = new AudioPlayer_page(mAct,TabsHost.audioUi_page);
+                    TabsHost.audioPlayer_page = new AudioPlayer_page(this,TabsHost.audioUi_page);
                     TabsHost.audioPlayer_page.prepareAudioInfo();
                     TabsHost.audioPlayer_page.runAudioState();
 
@@ -1057,7 +1049,6 @@ public class MainAct extends AppCompatActivity implements OnBackStackChangedList
                     // update playing folder position
                     mPlaying_folderPos = FolderUi.getFocus_folderPos();
 
-                    DB_drawer dB_drawer = new DB_drawer(mAct);
                     MainAct.mPlaying_folderTableId = dB_drawer.getFolderTableId(MainAct.mPlaying_folderPos,true);
                 }
         		return true;
@@ -1129,16 +1120,15 @@ public class MainAct extends AppCompatActivity implements OnBackStackChangedList
                         currentMaxPageTableId = id;
                 }
 
-				PageUi.addNewPage(mAct, currentMaxPageTableId + 1);
-
+				PageUi.addNewPage(this, currentMaxPageTableId + 1);
                 return true;
 
             case MenuId.CHANGE_PAGE_COLOR:
-            	PageUi.changePageColor(mAct);
+            	PageUi.changePageColor(this);
                 return true;
 
             case MenuId.SHIFT_PAGE:
-			    PageUi.shiftPage(mAct);
+			    PageUi.shiftPage(this);
 			return true;
 
 			case MenuId.DELETE_PAGES:
@@ -1160,14 +1150,14 @@ public class MainAct extends AppCompatActivity implements OnBackStackChangedList
 				mPref_show_note_attribute = mContext.getSharedPreferences("show_note_attribute", 0);
 				if(mPref_show_note_attribute.getString("KEY_ENABLE_DRAGGABLE", "no").equalsIgnoreCase("yes")) {
                     mPref_show_note_attribute.edit().putString("KEY_ENABLE_DRAGGABLE", "no").apply();
-                    Toast.makeText(mAct,getResources().getString(R.string.drag_note)+
+                    Toast.makeText(this,getResources().getString(R.string.drag_note)+
                                         ": " +
                                         getResources().getString(R.string.set_disable),
                                    Toast.LENGTH_SHORT).show();
                 }
 				else {
                     mPref_show_note_attribute.edit().putString("KEY_ENABLE_DRAGGABLE", "yes").apply();
-                    Toast.makeText(mAct,getResources().getString(R.string.drag_note) +
+                    Toast.makeText(this,getResources().getString(R.string.drag_note) +
                                         ": " +
                                         getResources().getString(R.string.set_enable),
                                    Toast.LENGTH_SHORT).show();
@@ -1180,14 +1170,14 @@ public class MainAct extends AppCompatActivity implements OnBackStackChangedList
             	mPref_show_note_attribute = mContext.getSharedPreferences("show_note_attribute", 0);
             	if(mPref_show_note_attribute.getString("KEY_SHOW_BODY", "yes").equalsIgnoreCase("yes")) {
                     mPref_show_note_attribute.edit().putString("KEY_SHOW_BODY", "no").apply();
-                    Toast.makeText(mAct,getResources().getString(R.string.preview_note_body) +
+                    Toast.makeText(this,getResources().getString(R.string.preview_note_body) +
 										": " +
 										getResources().getString(R.string.set_disable),
 									Toast.LENGTH_SHORT).show();
                 }
             	else {
                     mPref_show_note_attribute.edit().putString("KEY_SHOW_BODY", "yes").apply();
-                    Toast.makeText(mAct,getResources().getString(R.string.preview_note_body) +
+                    Toast.makeText(this,getResources().getString(R.string.preview_note_body) +
 										": " +
 										getResources().getString(R.string.set_enable),
 								   Toast.LENGTH_SHORT).show();
@@ -1200,14 +1190,14 @@ public class MainAct extends AppCompatActivity implements OnBackStackChangedList
 //				mPref_show_note_attribute = mContext.getSharedPreferences("show_note_attribute", 0);
 //				if(mPref_show_note_attribute.getString("KEY_VIEW_NOTE_LAUNCH_YOUTUBE", "no").equalsIgnoreCase("yes")) {
 //					mPref_show_note_attribute.edit().putString("KEY_VIEW_NOTE_LAUNCH_YOUTUBE", "no").apply();
-//					Toast.makeText(mAct,getResources().getString(R.string.click_launch_youtube) +
+//					Toast.makeText(this,getResources().getString(R.string.click_launch_youtube) +
 //                                        ": " +
 //                                        getResources().getString(R.string.set_disable),
 //                                   Toast.LENGTH_SHORT).show();
 //				}
 //				else {
 //					mPref_show_note_attribute.edit().putString("KEY_VIEW_NOTE_LAUNCH_YOUTUBE", "yes").apply();
-//					Toast.makeText(mAct,getResources().getString(R.string.click_launch_youtube) +
+//					Toast.makeText(this,getResources().getString(R.string.click_launch_youtube) +
 //                                        ": " +
 //                                        getResources().getString(R.string.set_enable),
 //                                   Toast.LENGTH_SHORT).show();
@@ -1296,11 +1286,11 @@ public class MainAct extends AppCompatActivity implements OnBackStackChangedList
         initActionBar();
 
         // new drawer
-        drawer = new Drawer(mAct);
+        drawer = new Drawer(this);
         drawer.initDrawer();
 
         // new folder
-        mFolder = new Folder(mAct);
+        mFolder = new Folder(this);
 
         DB_drawer dB_drawer = new DB_drawer(this);
         if(dB_drawer.getFoldersCount(true)>0) {
