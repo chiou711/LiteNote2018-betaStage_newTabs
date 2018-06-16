@@ -100,6 +100,7 @@ public class TabsHost extends AppCompatDialogFragment implements TabLayout.OnTab
 
         // mTabsPagerAdapter
         mTabsPagerAdapter = new TabsPagerAdapter(MainAct.mAct,MainAct.mAct.getSupportFragmentManager());
+//        mTabsPagerAdapter = new TabsPagerAdapter(MainAct.mAct,getChildFragmentManager());
 
         // add pages to mTabsPagerAdapter
         addPages(mTabsPagerAdapter);
@@ -265,7 +266,6 @@ public class TabsHost extends AppCompatDialogFragment implements TabLayout.OnTab
                 mFocusPageTableId = pageTableId;
             }
         }
-        mViewPager.setCurrentItem(getFocus_tabPos());
 
         System.out.println("TabsHost / _onResume / _getFocus_tabPos = " + getFocus_tabPos());
 

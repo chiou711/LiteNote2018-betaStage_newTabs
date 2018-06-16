@@ -85,7 +85,7 @@ public class MainAct extends AppCompatActivity implements OnBackStackChangedList
 	static NoisyAudioStreamReceiver noisyAudioStreamReceiver;
 	static IntentFilter intentFilter;
     public static AppCompatActivity mAct;//TODO static issue
-	public static FragmentManager fragmentManager;
+	public static FragmentManager mFragmentManager;
 	public static FragmentManager.OnBackStackChangedListener mOnBackStackChangedListener;
 	public static int mLastOkTabId = 1;
 	public static SharedPreferences mPref_show_note_attribute;
@@ -233,9 +233,9 @@ public class MainAct extends AppCompatActivity implements OnBackStackChangedList
 	        mContext = getBaseContext();
 
 			// add on back stack changed listener
-	        fragmentManager = getSupportFragmentManager();
+	        mFragmentManager = getSupportFragmentManager();
 			mOnBackStackChangedListener = this;
-	        fragmentManager.addOnBackStackChangedListener(mOnBackStackChangedListener);
+	        mFragmentManager.addOnBackStackChangedListener(mOnBackStackChangedListener);
 
 			// register an audio stream receiver for earphone jack connection on/off
 			if(noisyAudioStreamReceiver == null)
@@ -375,8 +375,8 @@ public class MainAct extends AppCompatActivity implements OnBackStackChangedList
     @Override
     protected void onSaveInstanceState(Bundle outState)
     {
-       super.onSaveInstanceState(outState);//todo Why exception? java.lang.IllegalStateException: Failure saving state: active Page{345719e6} has cleared index: -1
-//  	   System.out.println("MainAct / onSaveInstanceState / getFocus_folderPos() = " + FolderUi.getFocus_folderPos());
+       super.onSaveInstanceState(outState);
+  	   System.out.println("MainAct / onSaveInstanceState / getFocus_folderPos() = " + FolderUi.getFocus_folderPos());
        outState.putInt("NowFolderPosition", FolderUi.getFocus_folderPos());
        outState.putInt("Playing_pageId", mPlaying_pagePos);
        outState.putInt("Playing_folderPos", mPlaying_folderPos);
@@ -415,7 +415,7 @@ public class MainAct extends AppCompatActivity implements OnBackStackChangedList
     protected void onResume()
     {
         super.onResume();
-//    	System.out.println("MainAct / _onResume");
+    	System.out.println("MainAct / _onResume");
     }
 
 
@@ -425,7 +425,7 @@ public class MainAct extends AppCompatActivity implements OnBackStackChangedList
     	super.onResumeFragments();
 
 //		// fix: home button failed after power off/on in Config fragment
-		fragmentManager.popBackStack();
+		mFragmentManager.popBackStack();
 
         DB_drawer dB_drawer = new DB_drawer(this);
 		if(dB_drawer.getFoldersCount(true)>0) {
@@ -530,7 +530,7 @@ public class MainAct extends AppCompatActivity implements OnBackStackChangedList
 
     @Override
     public void onBackStackChanged() {
-        int backStackEntryCount = fragmentManager.getBackStackEntryCount();
+        int backStackEntryCount = mFragmentManager.getBackStackEntryCount();
         System.out.println("MainAct / _onBackStackChanged / backStackEntryCount = " + backStackEntryCount);
 
         if(backStackEntryCount == 1) // fragment
@@ -892,10 +892,10 @@ public class MainAct extends AppCompatActivity implements OnBackStackChangedList
 		if( (item.getItemId() == android.R.id.home ))
     	{
 
-            System.out.println("MainAct / _onOptionsItemSelected / Home key of Config is pressed / fragmentManager.getBackStackEntryCount() =" +
-            fragmentManager.getBackStackEntryCount());
+            System.out.println("MainAct / _onOptionsItemSelected / Home key of Config is pressed / mFragmentManager.getBackStackEntryCount() =" +
+            mFragmentManager.getBackStackEntryCount());
 
-            if(fragmentManager.getBackStackEntryCount() > 0 )
+            if(mFragmentManager.getBackStackEntryCount() > 0 )
 			{
                 int foldersCnt = dB_drawer.getFoldersCount(true);
                 System.out.println("MainAct / _onOptionsItemSelected / Home key of Config is pressed / foldersCnt = " + foldersCnt);
@@ -910,7 +910,7 @@ public class MainAct extends AppCompatActivity implements OnBackStackChangedList
                 }
                 else
                 {
-                    fragmentManager.popBackStack();
+                    mFragmentManager.popBackStack();
 
                     initActionBar();
 
@@ -974,7 +974,7 @@ public class MainAct extends AppCompatActivity implements OnBackStackChangedList
                     drawer.closeDrawer();
                     mMenu.setGroupVisible(R.id.group_notes, false); //hide the menu
                     DeleteFolders delFoldersFragment = new DeleteFolders();
-                    mFragmentTransaction = fragmentManager.beginTransaction();
+                    mFragmentTransaction = mFragmentManager.beginTransaction();
                     mFragmentTransaction.setCustomAnimations(R.anim.fragment_slide_in_left, R.anim.fragment_slide_out_left, R.anim.fragment_slide_in_right, R.anim.fragment_slide_out_right);
                     mFragmentTransaction.replace(R.id.content_frame, delFoldersFragment).addToBackStack("delete_folders").commit();
                 }
@@ -1135,7 +1135,7 @@ public class MainAct extends AppCompatActivity implements OnBackStackChangedList
 				{
                     mMenu.setGroupVisible(R.id.group_notes, false); //hide the menu
 					DeletePages delPgsFragment = new DeletePages();
-					mFragmentTransaction = fragmentManager.beginTransaction();
+					mFragmentTransaction = mFragmentManager.beginTransaction();
 					mFragmentTransaction.setCustomAnimations(R.anim.fragment_slide_in_left, R.anim.fragment_slide_out_left, R.anim.fragment_slide_in_right, R.anim.fragment_slide_out_right);
 					mFragmentTransaction.replace(R.id.content_frame, delPgsFragment).addToBackStack("delete_pages").commit();
 				}
@@ -1257,7 +1257,7 @@ public class MainAct extends AppCompatActivity implements OnBackStackChangedList
         		setTitle(R.string.settings);
 
             	mConfigFragment = new Config();
-            	mFragmentTransaction = fragmentManager.beginTransaction();
+            	mFragmentTransaction = mFragmentManager.beginTransaction();
 				mFragmentTransaction.setCustomAnimations(R.anim.fragment_slide_in_left, R.anim.fragment_slide_out_left, R.anim.fragment_slide_in_right, R.anim.fragment_slide_out_right);
                 mFragmentTransaction.replace(R.id.content_frame, mConfigFragment).addToBackStack("config").commit();
                 return true;
@@ -1268,7 +1268,7 @@ public class MainAct extends AppCompatActivity implements OnBackStackChangedList
                 setTitle(R.string.about_title);
 
                 mAboutFragment = new About();
-                mFragmentTransaction = fragmentManager.beginTransaction();
+                mFragmentTransaction = mFragmentManager.beginTransaction();
                 mFragmentTransaction.setCustomAnimations(R.anim.fragment_slide_in_left, R.anim.fragment_slide_out_left, R.anim.fragment_slide_in_right, R.anim.fragment_slide_out_right);
                 mFragmentTransaction.replace(R.id.content_frame, mAboutFragment).addToBackStack("about").commit();
                 return true;
