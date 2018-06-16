@@ -8,8 +8,8 @@ import com.cw.litenote.util.Util;
 
 import android.app.Activity;
 import android.os.Handler;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.MediaController;
@@ -27,9 +27,9 @@ public class VideoPlayer
 	private static String mPlayingPath;
     private static String mCurrentPicStr;
 
-	public VideoPlayer(FragmentActivity fragmentActivity,ViewPager pager,String picString)
+	public VideoPlayer(AppCompatActivity act, ViewPager pager, String picString)
 	{
-		mAct = fragmentActivity;
+		mAct = act;
 		mPlayingPath = picString;
 		int state = UtilVideo.getVideoState();
 		if(state == UtilVideo.VIDEO_AT_PLAY)

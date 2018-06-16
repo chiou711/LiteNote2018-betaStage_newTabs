@@ -77,7 +77,7 @@ public class Config extends Fragment
 		recover_all_settings_button();
 
 		// set Back pressed listener
-		((MainAct)getActivity()).setOnBackPressedListener(new BaseBackPressedListener(getActivity()));
+		((MainAct)getActivity()).setOnBackPressedListener(new BaseBackPressedListener(MainAct.mAct));
 
 		return mRootView;
 	}   	

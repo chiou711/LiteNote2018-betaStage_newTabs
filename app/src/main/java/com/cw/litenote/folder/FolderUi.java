@@ -9,7 +9,6 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -60,7 +59,7 @@ public class FolderUi
      */
     static private int mAddFolderAt;
     static private SharedPreferences mPref_add_new_folder_location;
-    public static void addNewFolder(final FragmentActivity act, final int newTableId, final SimpleDragSortCursorAdapter folderAdapter)
+    public static void addNewFolder(final AppCompatActivity act, final int newTableId, final SimpleDragSortCursorAdapter folderAdapter)
     {
         // get folder name
         final String hintFolderName = act.getResources()
@@ -229,7 +228,7 @@ public class FolderUi
 	 */
 	private static int mFirstExist_folderId = 0;
 	public static int mLastExist_folderTableId;
-	private static void deleteFolder( final FragmentActivity act, int position,SimpleDragSortCursorAdapter folderAdapter) {
+	private static void deleteFolder( final AppCompatActivity act, int position,SimpleDragSortCursorAdapter folderAdapter) {
 
         System.out.println("FolderUi / _deleteFolder");
         // Before delete: renew first FolderId and last FolderId
@@ -493,7 +492,7 @@ public class FolderUi
     }	
     
     // select folder
-    public static void selectFolder(FragmentActivity act,final int position)
+    public static void selectFolder(AppCompatActivity act,final int position)
     {
     	System.out.println("FolderUi / _selectFolder / position = " + position);
         DB_drawer dB_drawer = new DB_drawer(act);
@@ -581,7 +580,7 @@ public class FolderUi
         }
     };
     
-    public static int getFolder_pagesCount(FragmentActivity act,int folderPos)
+    public static int getFolder_pagesCount(AppCompatActivity act,int folderPos)
     {
         DB_drawer dB_drawer = new DB_drawer(act);
 //        System.out.println("FolderUi / _getFolder_pagesCount / folderPos = " + folderPos);
@@ -603,7 +602,7 @@ public class FolderUi
     }
 
     // List all folder tables
-    public static void listAllFolderTables(FragmentActivity act)
+    public static void listAllFolderTables(AppCompatActivity act)
     {
         DB_drawer dB_drawer = new DB_drawer(act);
         // list all folder tables

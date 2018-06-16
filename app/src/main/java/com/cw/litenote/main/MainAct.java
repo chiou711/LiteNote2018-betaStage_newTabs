@@ -25,7 +25,6 @@ import com.cw.litenote.page.Page;
 import com.cw.litenote.page.PageUi;
 import com.cw.litenote.tabs.AudioUi_page;
 import com.cw.litenote.tabs.TabsHost;
-import com.cw.litenote.util.ColorSet;
 import com.cw.litenote.util.DeleteFileAlarmReceiver;
 import com.cw.litenote.operation.import_export.Export_toSDCardFragment;
 import com.cw.litenote.operation.import_export.Import_filesList;
@@ -376,7 +375,7 @@ public class MainAct extends AppCompatActivity implements OnBackStackChangedList
     @Override
     protected void onSaveInstanceState(Bundle outState)
     {
-       super.onSaveInstanceState(outState);
+       super.onSaveInstanceState(outState);//todo Why exception? java.lang.IllegalStateException: Failure saving state: active Page{345719e6} has cleared index: -1
 //  	   System.out.println("MainAct / onSaveInstanceState / getFocus_folderPos() = " + FolderUi.getFocus_folderPos());
        outState.putInt("NowFolderPosition", FolderUi.getFocus_folderPos());
        outState.putInt("Playing_pageId", mPlaying_pagePos);

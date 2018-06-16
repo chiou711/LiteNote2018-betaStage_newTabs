@@ -6,7 +6,7 @@ import com.cw.litenote.util.Util;
 
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
-import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AppCompatActivity;
 
 /**
  * Audio Url verification task
@@ -16,12 +16,12 @@ import android.support.v4.app.FragmentActivity;
 class Async_audioUrlVerify extends AsyncTask<String,Integer,String>
 {
 	ProgressDialog mUrlVerifyDialog;
-	private FragmentActivity act;
+	private AppCompatActivity act;
 	Async_audioPrepare mAsyncTaskAudioPrepare;
     static boolean mIsOkUrl;
 	private String audioStr;
 
-	Async_audioUrlVerify(FragmentActivity act,String audioStr)
+	Async_audioUrlVerify(AppCompatActivity act, String audioStr)
 	{
 	    this.act = act;
 		this.audioStr = audioStr;

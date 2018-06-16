@@ -3,7 +3,7 @@ package com.cw.litenote.note;
 import android.app.AlertDialog;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
-import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
@@ -52,7 +52,7 @@ public class View_note_option {
     static long noteId;
     static GridIconAdapter mGridIconAdapter;
 
-    public static void note_option(final FragmentActivity act,long _noteId)
+    public static void note_option(final AppCompatActivity act, long _noteId)
     {
         AbsListView gridView;
         noteId = _noteId;
@@ -111,7 +111,7 @@ public class View_note_option {
     }
     private static AlertDialog dlgAddNew;
 
-    private static void startAddNoteActivity(FragmentActivity act,int optionId)
+    private static void startAddNoteActivity(AppCompatActivity act,int optionId)
     {
         System.out.println("View_note_option / _startAddNoteActivity / optionId = " + optionId);
 
@@ -175,8 +175,8 @@ public class View_note_option {
      * Created by cw on 2017/10/7.
      */
     static class GridIconAdapter extends BaseAdapter {
-        private FragmentActivity act;
-        GridIconAdapter(FragmentActivity fragAct){act = fragAct;}
+        private AppCompatActivity act;
+        GridIconAdapter(AppCompatActivity fragAct){act = fragAct;}
 
         @Override
         public int getCount() {

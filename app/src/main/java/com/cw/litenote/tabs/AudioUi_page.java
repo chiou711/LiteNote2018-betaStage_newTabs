@@ -4,7 +4,7 @@ import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.widget.ImageView;
@@ -29,7 +29,7 @@ import static android.os.Build.VERSION_CODES.M;
 
 public class AudioUi_page {
 
-    FragmentActivity mAct;
+    AppCompatActivity mAct;
     View audio_panel;
     public TextView audioPanel_curr_pos;
     public TextView audio_panel_title_textView;
@@ -38,7 +38,7 @@ public class AudioUi_page {
     public static int mProgress;
     DragSortListView listView;
 
-    public AudioUi_page(FragmentActivity act, DragSortListView _listView)
+    public AudioUi_page(AppCompatActivity act, DragSortListView _listView)
     {
         this.mAct = act;
         listView = _listView;
@@ -63,7 +63,7 @@ public class AudioUi_page {
     /**
      * init audio block
      */
-    public void initAudioBlock(FragmentActivity act)
+    public void initAudioBlock(AppCompatActivity act)
     {
         System.out.println("AudioUi_page / _initAudioBlock");
 

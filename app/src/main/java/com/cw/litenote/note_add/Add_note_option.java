@@ -6,7 +6,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
@@ -56,7 +56,7 @@ public class Add_note_option {
     private final static int ID_NEW_BACK = 9;
     private final static int ID_NEW_SETTING = 10;
 
-    public static void addNewNote(final FragmentActivity act)
+    public static void addNewNote(final AppCompatActivity act)
     {
         AbsListView gridView;
 
@@ -156,7 +156,7 @@ public class Add_note_option {
 
     private static AlertDialog dlgAddNew;
 
-    private static void startAddNoteActivity(FragmentActivity act,int option)
+    private static void startAddNoteActivity(AppCompatActivity act, int option)
     {
         System.out.println("MainUi / _startAddNoteActivity / option = " + option);
 
@@ -287,8 +287,8 @@ public class Add_note_option {
      * Created by cw on 2017/10/7.
      */
     static class GridIconAdapter extends BaseAdapter {
-        private FragmentActivity act;
-        GridIconAdapter(FragmentActivity fragAct){act = fragAct;}
+        private AppCompatActivity act;
+        GridIconAdapter(AppCompatActivity fragAct){act = fragAct;}
 
         @Override
         public int getCount() {

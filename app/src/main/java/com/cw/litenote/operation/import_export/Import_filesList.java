@@ -96,7 +96,7 @@ public class Import_filesList extends ListFragment
             }
         });
 
-        ((MainAct)getActivity()).setOnBackPressedListener(new BaseBackPressedListener(getActivity()));
+        ((MainAct)getActivity()).setOnBackPressedListener(new BaseBackPressedListener(MainAct.mAct));
 
         return rootView;
     }

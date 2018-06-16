@@ -1,8 +1,8 @@
 package com.cw.litenote.tabs;
 
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v7.app.AppCompatActivity;
 import android.view.ViewGroup;
 
 import com.cw.litenote.db.DB_folder;
@@ -21,7 +21,7 @@ public class TabsPagerAdapter extends FragmentPagerAdapter {
     public ArrayList<Page> fragmentList = new ArrayList<>();
     DB_folder dbFolder;
 
-    TabsPagerAdapter(FragmentActivity act, FragmentManager fm)
+    TabsPagerAdapter(AppCompatActivity act, FragmentManager fm)
     {
         super(fm);
         int folderTableId = Pref.getPref_focusView_folder_tableId(act);

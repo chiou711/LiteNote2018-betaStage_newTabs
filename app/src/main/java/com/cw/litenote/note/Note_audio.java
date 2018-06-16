@@ -6,8 +6,8 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
 import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,14 +34,14 @@ import static android.os.Build.VERSION_CODES.M;
 
 public class Note_audio
 {
-    private FragmentActivity act;
+    private AppCompatActivity act;
     private TextView audio_title;
     private ViewGroup audioBlock;
     private static String mAudioUriInDB;
     private ViewPager mPager;
 
     // constructor
-    Note_audio(FragmentActivity act,String audioUriInDB)
+    Note_audio(AppCompatActivity act,String audioUriInDB)
     {
         this.act = act;
         mAudioUriInDB = audioUriInDB;
@@ -88,7 +88,7 @@ public class Note_audio
     }
 
     // initialize audio progress
-    public static void initAudioProgress(FragmentActivity act,String audioUriInDB,ViewPager _pager)
+    public static void initAudioProgress(AppCompatActivity act,String audioUriInDB,ViewPager _pager)
     {
         SeekBar seekBar = (SeekBar) act.findViewById(R.id.pager_img_audio_seek_bar);
         ImageView mPager_audio_play_button = (ImageView) act.findViewById(R.id.pager_btn_audio_play);
@@ -149,7 +149,7 @@ public class Note_audio
     }
 
     // show audio name
-    static void showAudioName(FragmentActivity act)
+    static void showAudioName(AppCompatActivity act)
     {
         TextView audio_title_text_view = (TextView) act.findViewById(R.id.pager_audio_title);
         // title: set marquee
@@ -172,7 +172,7 @@ public class Note_audio
     public static int mAnchorPosition;
 
     // set audio block listener
-    private static void setAudioBlockListener(final FragmentActivity act, final String audioStr, final ViewPager _pager)
+    private static void setAudioBlockListener(final AppCompatActivity act, final String audioStr, final ViewPager _pager)
     {
         SeekBar seekBarProgress = (SeekBar) act.findViewById(R.id.pager_img_audio_seek_bar);
         ImageView mPager_audio_play_button = (ImageView) act.findViewById(R.id.pager_btn_audio_play);
@@ -255,7 +255,7 @@ public class Note_audio
     }
 
     // play audio in pager
-    private static void playAudioInPager(FragmentActivity act, String audioStr, ViewPager pager)
+    private static void playAudioInPager(AppCompatActivity act, String audioStr, ViewPager pager)
     {
         if(AudioManager.getAudioPlayMode()  == AudioManager.PAGE_PLAY_MODE)
             AudioManager.stopAudioPlayer();
@@ -283,7 +283,7 @@ public class Note_audio
     }
 
     // update audio progress
-    public static void updateAudioProgress(FragmentActivity act)
+    public static void updateAudioProgress(AppCompatActivity act)
     {
         SeekBar seekBar = (SeekBar) act.findViewById(R.id.pager_img_audio_seek_bar);
         int currentPos=0;
@@ -311,7 +311,7 @@ public class Note_audio
     }
 
     // update audio play state
-    public static void updateAudioPlayState(FragmentActivity act)
+    public static void updateAudioPlayState(AppCompatActivity act)
     {
         ImageView audio_play_btn = (ImageView) act.findViewById(R.id.pager_btn_audio_play);
 

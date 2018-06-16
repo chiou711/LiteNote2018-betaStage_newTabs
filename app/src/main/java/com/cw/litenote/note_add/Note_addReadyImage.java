@@ -13,7 +13,7 @@ import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,7 +21,7 @@ import android.widget.Toast;
  * Note: 
  * Note_common: used to do DB operation
  */
-public class Note_addReadyImage extends FragmentActivity {
+public class Note_addReadyImage extends AppCompatActivity {
 
     Long rowId;
     Note_common note_common;

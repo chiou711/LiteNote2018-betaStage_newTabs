@@ -1,7 +1,7 @@
 package com.cw.litenote.operation.import_export;
 
 import android.os.AsyncTask;
-import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -22,14 +22,14 @@ class Import_fileView_asyncTask extends AsyncTask<Void, Integer, Void> {
 
     private ProgressBar progressBar;
     private boolean enableSaveDB;
-    private FragmentActivity act;
+    private AppCompatActivity act;
     private View rootView;
     private TextView titleViewText;
     private TextView bodyViewText;
     private View file_view;
     private File file;
 
-    Import_fileView_asyncTask(FragmentActivity _act, View _rootView, String _filePath)
+    Import_fileView_asyncTask(AppCompatActivity _act, View _rootView, String _filePath)
     {
         act = _act;
         rootView = _rootView;

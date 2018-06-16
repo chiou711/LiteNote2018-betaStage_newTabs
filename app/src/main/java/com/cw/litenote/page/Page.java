@@ -4,15 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.cw.litenote.R;
-import com.cw.litenote.db.DB_drawer;
 import com.cw.litenote.db.DB_page;
 import com.cw.litenote.folder.FolderUi;
 import com.cw.litenote.operation.audio.AudioManager;
 import com.cw.litenote.operation.audio.AudioPlayer_page;
 import com.cw.litenote.main.MainAct;
-import com.cw.litenote.tabs.AudioUi_page;
 import com.cw.litenote.tabs.TabsHost;
-import com.cw.litenote.util.audio.UtilAudio;
 import com.cw.litenote.util.preferences.Pref;
 import com.cw.litenote.util.uil.UilCommon;
 import com.cw.litenote.util.uil.UilListViewBaseFragment;
@@ -28,7 +25,6 @@ import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
@@ -497,7 +493,7 @@ public class Page extends UilListViewBaseFragment
 		}
 	}
 
-    public int getNotesCountInPage(FragmentActivity mAct)
+    public int getNotesCountInPage(AppCompatActivity mAct)
     {
         DB_page mDb_page = new DB_page(mAct,page_tableId );
         mDb_page.open();

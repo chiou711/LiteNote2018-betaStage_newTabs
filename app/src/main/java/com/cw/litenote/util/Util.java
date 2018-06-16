@@ -74,7 +74,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Vibrator;
 import android.provider.MediaStore;
-import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -124,7 +124,7 @@ public class Util
 
 	public Util(){}
     
-	public Util(FragmentActivity activity) {
+	public Util(AppCompatActivity activity) {
 		mContext = activity;
 		mAct = activity;
 	}
@@ -1669,7 +1669,7 @@ public class Util
 	// "video is not available" message could show up.
 	// At this case, one solution is to switch current mobile website to desktop website by browser setting.
 	// So, base on URI key words to decide "YouTube App" or "browser" launch.
-	public static void openLink_YouTube(Activity act, String linkUri)
+	public static void openLink_YouTube(AppCompatActivity act, String linkUri)
 	{
 		// by YouTube App
 		if(linkUri.contains("youtu.be") || linkUri.contains("youtube.com"))

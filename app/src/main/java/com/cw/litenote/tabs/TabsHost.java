@@ -25,7 +25,6 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -100,7 +99,7 @@ public class TabsHost extends AppCompatDialogFragment implements TabLayout.OnTab
         mViewPager = (ViewPager) rootView.findViewById(R.id.tabs_pager);
 
         // mTabsPagerAdapter
-        mTabsPagerAdapter = new TabsPagerAdapter(getActivity(),getActivity().getSupportFragmentManager());
+        mTabsPagerAdapter = new TabsPagerAdapter(MainAct.mAct,MainAct.mAct.getSupportFragmentManager());
 
         // add pages to mTabsPagerAdapter
         addPages(mTabsPagerAdapter);
@@ -303,7 +302,7 @@ public class TabsHost extends AppCompatDialogFragment implements TabLayout.OnTab
             (AudioManager.getPlayerState() != AudioManager.PLAYER_AT_STOP) &&
             (AudioManager.getAudioPlayMode() == AudioManager.PAGE_PLAY_MODE)   )
         {
-            audioUi_page.initAudioBlock(getActivity());
+            audioUi_page.initAudioBlock(MainAct.mAct);
 
             audioPlayer_page.page_runnable.run();
 
@@ -435,7 +434,7 @@ public class TabsHost extends AppCompatDialogFragment implements TabLayout.OnTab
      * edit page title
      *
      */
-    static void editPageTitle(final int tabPos, final FragmentActivity act)
+    static void editPageTitle(final int tabPos, final AppCompatActivity act)
     {
         final DB_folder mDbFolder = mTabsPagerAdapter.dbFolder;
 
@@ -519,7 +518,7 @@ public class TabsHost extends AppCompatDialogFragment implements TabLayout.OnTab
      * delete page
      *
      */
-    public static  void deletePage(int tabPos, final FragmentActivity activity)
+    public static  void deletePage(int tabPos, final AppCompatActivity activity)
     {
 
         final DB_folder mDbFolder = mTabsPagerAdapter.dbFolder;

@@ -6,7 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.SharedPreferences;
-import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -43,7 +43,7 @@ public class PageUi
 	 * Change Page Color
 	 *
 	 */
-	public static void changePageColor(final FragmentActivity act)
+	public static void changePageColor(final AppCompatActivity act)
 	{
 		// set color
 		final Builder builder = new Builder(act);
@@ -119,7 +119,7 @@ public class PageUi
      *      left to right order: NegativeButton(button 2), NeutralButton(button 3), PositiveButton(button 1)
 	 *
 	 */
-	public static void shiftPage(final FragmentActivity act)
+	public static void shiftPage(final AppCompatActivity act)
 	{
 	    Builder builder = new Builder(act);
 	    builder.setTitle(R.string.rearrange_page_title)
@@ -351,7 +351,7 @@ public class PageUi
 	 */
     static int mAddAt;
     static SharedPreferences mPref_add_new_page_location;
-	public static  void addNewPage(final FragmentActivity act, final int newTabId) {
+	public static  void addNewPage(final AppCompatActivity act, final int newTabId) {
         // get tab name
         String pageName = Define.getTabTitle(act, newTabId);
 
@@ -484,7 +484,7 @@ public class PageUi
 	 * Insert Page to Rightmost
 	 * 
 	 */
-	public static void insertPage_rightmost(final FragmentActivity act, int newTblId, String tabName)
+	public static void insertPage_rightmost(final AppCompatActivity act, int newTblId, String tabName)
 	{
 		DB_folder dbFolder = new DB_folder(act,Pref.getPref_focusView_folder_tableId(act));
 	    // insert tab name
@@ -521,7 +521,7 @@ public class PageUi
 	 * Insert Page to Leftmost
 	 * 
 	 */
-	private static void insertPage_leftmost(final FragmentActivity act, int newTabId, String tabName)
+	private static void insertPage_leftmost(final AppCompatActivity act, int newTabId, String tabName)
 	{
 		DB_folder dbFolder = new DB_folder(act,Pref.getPref_focusView_folder_tableId(act));
 		
@@ -572,7 +572,7 @@ public class PageUi
 	 * Update Final page which was focus view
 	 * 
 	 */
-	protected static void updateFinalPageViewed(FragmentActivity act)
+	protected static void updateFinalPageViewed(AppCompatActivity act)
 	{
 	    // get final viewed table Id
 	    int tableId = Pref.getPref_focusView_page_tableId(act);

@@ -110,7 +110,7 @@ public class MailPagesFragment extends Fragment{
         //Send e-Mail 1: show list for selection
         list_selPage = new List_selectPage(getActivity(),rootView , mListView);
 
-		((MainAct)getActivity()).setOnBackPressedListener(new BaseBackPressedListener(getActivity()));
+		((MainAct)getActivity()).setOnBackPressedListener(new BaseBackPressedListener(MainAct.mAct));
 
 		return rootView;
 	}

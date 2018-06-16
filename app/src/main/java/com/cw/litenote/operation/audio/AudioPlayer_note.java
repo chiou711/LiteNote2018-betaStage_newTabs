@@ -7,8 +7,8 @@ import android.media.MediaPlayer.OnPreparedListener;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Handler;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
 import com.cw.litenote.R;
@@ -24,12 +24,12 @@ public class AudioPlayer_note
     private static AudioManager mAudioManager; // slide show being played
 	public static int mAudioPos; // index of current media to play
 	private static int mPlaybackTime; // time in miniSeconds from which media should play
-    private FragmentActivity act;
+    private AppCompatActivity act;
 	private ViewPager notePager;
     private Async_audioUrlVerify mAudioUrlVerifyTask;
     static Handler mAudioHandler; // used to update the slide show
 
-    public AudioPlayer_note(FragmentActivity act, ViewPager pager){
+    public AudioPlayer_note(AppCompatActivity act, ViewPager pager){
         this.act = act;
         this.notePager = pager;
 

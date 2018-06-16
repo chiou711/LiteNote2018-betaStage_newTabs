@@ -5,7 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
-import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
@@ -41,9 +41,9 @@ public class Checked_notes_option {
     public static int MOVE_TO = 0;
     private static int COPY_TO = 1;
     private DB_page mDb_page;
-    private FragmentActivity mAct;
+    private AppCompatActivity mAct;
 
-    public Checked_notes_option(FragmentActivity act){
+    public Checked_notes_option(AppCompatActivity act){
         mDb_page = new DB_page(act, TabsHost.getCurrentPageTableId());
         mAct = act;
     }
@@ -72,7 +72,7 @@ public class Checked_notes_option {
     private final static int DELETE_CHECKED_NOTE = 7;
 
 
-    public void open_option_grid(final FragmentActivity act)
+    public void open_option_grid(final AppCompatActivity act)
     {
         AbsListView gridView;
 
@@ -157,7 +157,7 @@ public class Checked_notes_option {
 
     private static AlertDialog dlgAddNew;
 
-    private void startCheckedOperation(FragmentActivity act, int option)
+    private void startCheckedOperation(AppCompatActivity act, int option)
     {
         System.out.println("Checked_notes_option / _startCheckedOperation / option = " + option);
 
@@ -362,7 +362,7 @@ public class Checked_notes_option {
      *   operate checked to: move to, copy to
      *
      */
-    private void operateCheckedTo(final FragmentActivity act,final String[] copyItems, final String[] copyItemsPicture, final String[] copyItemsLink,
+    private void operateCheckedTo(final AppCompatActivity act,final String[] copyItems, final String[] copyItemsPicture, final String[] copyItemsLink,
                           final String[] copyItemsAudio, final String[] copyItemsBody,
                           final Long[] copyItemsTime, final int action)
     {
@@ -459,7 +459,7 @@ public class Checked_notes_option {
     /**
      * delete checked notes
      */
-    private void deleteCheckedNotes(FragmentActivity act)
+    private void deleteCheckedNotes(AppCompatActivity act)
     {
         final Context context = act;
 
@@ -514,9 +514,9 @@ public class Checked_notes_option {
      * Created by cw on 2017/10/7.
      */
     static class GridIconAdapter extends BaseAdapter {
-        private FragmentActivity act;
+        private AppCompatActivity act;
         boolean hasNoCheckedItems;
-        GridIconAdapter(FragmentActivity fragAct,boolean hasNoCheckedItems)
+        GridIconAdapter(AppCompatActivity fragAct,boolean hasNoCheckedItems)
         {
             this.hasNoCheckedItems = hasNoCheckedItems;
             act = fragAct;

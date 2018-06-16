@@ -11,7 +11,7 @@ import com.cw.litenote.tabs.TabsHost;
 import com.cw.litenote.util.ColorSet;
 import com.cw.litenote.util.Util;
 
-import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.widget.ImageView;
@@ -21,7 +21,7 @@ import static android.content.Context.TELEPHONY_SERVICE;
 
 public class UtilAudio {
 
-	public static void setPhoneListener(FragmentActivity act)
+	public static void setPhoneListener(AppCompatActivity act)
 	{
 		// To Registers a listener object to receive notification when incoming call
 		TelephonyManager telMgr = (TelephonyManager) act.getSystemService(TELEPHONY_SERVICE);

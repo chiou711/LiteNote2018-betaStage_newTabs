@@ -41,7 +41,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class Note extends AppCompatActivity //FragmentActivity
+public class Note extends AppCompatActivity
 {
     /**
      * The pager widget, which handles animation and allows swiping horizontally to access previous

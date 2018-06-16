@@ -1,6 +1,7 @@
 package com.cw.litenote.util;
 
-import android.support.v4.app.FragmentActivity;
+
+import android.support.v7.app.AppCompatActivity;
 
 /**
  * Created by CW on 2016/6/3.
@@ -8,9 +9,9 @@ import android.support.v4.app.FragmentActivity;
  */
 
 public class BaseBackPressedListener implements OnBackPressedListener {
-    final FragmentActivity activity;
+    final AppCompatActivity activity;
 
-    public BaseBackPressedListener(FragmentActivity activity) {
+    public BaseBackPressedListener(AppCompatActivity activity) {
         this.activity = activity;
     }
 

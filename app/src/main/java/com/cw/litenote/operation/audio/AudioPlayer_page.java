@@ -9,7 +9,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Handler;
-import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.SeekBar;
@@ -32,12 +32,12 @@ public class AudioPlayer_page
     private static AudioManager mAudioManager; // slide show being played
 	private static int mPlaybackTime; // time in miniSeconds from which media should play
 	private static int mAudio_tryTimes; // use to avoid useless looping in Continue mode
-    private FragmentActivity act;
+    private AppCompatActivity act;
     private Async_audioUrlVerify mAudioUrlVerifyTask;
 	private AudioUi_page audioUi_page;
     public static Handler mAudioHandler;
 
-	public AudioPlayer_page(FragmentActivity act, AudioUi_page audioUi_page){
+	public AudioPlayer_page(AppCompatActivity act, AudioUi_page audioUi_page){
 		this.act = act;
 		this.audioUi_page = audioUi_page;
 
@@ -104,7 +104,7 @@ public class AudioPlayer_page
 
 
 	// set list view footer audio control
-	private void showAudioPanel(FragmentActivity act,boolean enable)
+	private void showAudioPanel(AppCompatActivity act,boolean enable)
 	{
 		System.out.println("AudioPlayer_page / _showAudioPanel / enable = " + enable);
 		View audio_panel = act.findViewById(R.id.audio_panel);

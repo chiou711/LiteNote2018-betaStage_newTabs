@@ -21,6 +21,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
 import com.cw.litenote.R;
+import com.cw.litenote.main.MainAct;
 import com.cw.litenote.util.ColorSet;
 import com.cw.litenote.util.Util;
 
@@ -58,7 +59,7 @@ public class Import_fileView extends Fragment
 
         Import_fileView_asyncTask task = null;
 		if(savedInstanceState == null) {
-			task = new Import_fileView_asyncTask(getActivity(),rootView,filePath);
+			task = new Import_fileView_asyncTask(MainAct.mAct,rootView,filePath);
 			task.enableSaveDB(false);// view
 			task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 		}
@@ -143,7 +144,7 @@ public class Import_fileView extends Fragment
 
 			public void onClick(View view)
 			{
-				Import_fileView_asyncTask task = new Import_fileView_asyncTask(getActivity(),rootView,filePath);
+				Import_fileView_asyncTask task = new Import_fileView_asyncTask(MainAct.mAct,rootView,filePath);
 				task.enableSaveDB(true);//confirm
 				task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 			}

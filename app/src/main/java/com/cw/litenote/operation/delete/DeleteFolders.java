@@ -7,7 +7,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -38,7 +38,7 @@ public class DeleteFolders extends Fragment{
     ListView mListView;
 	List_selectFolder list_selFolder;
 	View rootView;
-    FragmentActivity act;
+    AppCompatActivity act;
 
 	public DeleteFolders(){}
 
@@ -52,7 +52,7 @@ public class DeleteFolders extends Fragment{
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		rootView = inflater.inflate(R.layout.select_page_list, container, false);
-        act = getActivity();
+        act = MainAct.mAct;
 
 		// title
 		title = (TextView) rootView.findViewById(R.id.select_list_title);

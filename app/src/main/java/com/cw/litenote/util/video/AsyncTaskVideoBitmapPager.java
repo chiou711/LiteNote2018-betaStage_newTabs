@@ -11,14 +11,14 @@ import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
-import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ProgressBar;
 
 // pager video async task
 public class AsyncTaskVideoBitmapPager extends AsyncTask<String,Integer,String>
 {
-	 FragmentActivity mAct;
+	AppCompatActivity mAct;
 	 String mPictureUri;
 	 VideoViewCustom mVideoView;
 	 MediaMetadataRetriever mmr;
@@ -27,7 +27,7 @@ public class AsyncTaskVideoBitmapPager extends AsyncTask<String,Integer,String>
 	 public static String mRotationStr = null;
 	 ProgressBar mProgressBar;
 	 
-	 public AsyncTaskVideoBitmapPager(FragmentActivity act, String mPictureString,VideoViewCustom view, ProgressBar spinner) 
+	 public AsyncTaskVideoBitmapPager(AppCompatActivity act, String mPictureString, VideoViewCustom view, ProgressBar spinner)
 	 {
 		 mAct = act;
 		 mPictureUri = mPictureString;

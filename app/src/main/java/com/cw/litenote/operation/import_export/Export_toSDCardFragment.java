@@ -104,7 +104,7 @@ public class Export_toSDCardFragment extends Fragment {
 		// step 1: show list for Select
 		mList_selPage = new List_selectPage(getActivity(),rootView,mListView);
 
-		((MainAct)getActivity()).setOnBackPressedListener(new BaseBackPressedListener(getActivity()));
+		((MainAct)getActivity()).setOnBackPressedListener(new BaseBackPressedListener(MainAct.mAct));
 
 		return rootView;
 	}

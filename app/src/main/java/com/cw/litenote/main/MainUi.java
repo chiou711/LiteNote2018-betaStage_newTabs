@@ -4,9 +4,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
-import android.view.Menu;
 import android.view.View;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
@@ -36,7 +35,7 @@ public class MainUi {
      * Add note with Intent link
      */
     String title;
-    String addNote_IntentLink(Intent intent,final FragmentActivity act)
+    String addNote_IntentLink(Intent intent,final AppCompatActivity act)
     {
         Bundle extras = intent.getExtras();
         String pathOri = null;
@@ -181,7 +180,7 @@ public class MainUi {
     /**
      *  get YouTube link
      */
-    String getYouTubeLink(FragmentActivity act,int pos)
+    String getYouTubeLink(AppCompatActivity act,int pos)
     {
         DB_page dB_page = new DB_page(act, TabsHost.getCurrentPageTableId());
 
@@ -205,7 +204,7 @@ public class MainUi {
     /**
      *  launch next YouTube intent
      */
-    void launchNextYouTubeIntent(FragmentActivity act,Handler handler,Runnable runCountDown)
+    void launchNextYouTubeIntent(AppCompatActivity act, Handler handler, Runnable runCountDown)
     {
         //System.out.println("MainUi / _launchNextYouTubeIntent");
         SharedPreferences pref_open_youtube;

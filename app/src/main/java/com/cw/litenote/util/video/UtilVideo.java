@@ -25,7 +25,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.provider.MediaStore;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -38,7 +37,7 @@ public class UtilVideo
 	// Play mode setting, true:media control widget / false:custom control buttons
 	public static boolean hasMediaControlWidget = false;// true;//      
 	
-	public static FragmentActivity mAct;
+	public static AppCompatActivity mAct;
 	private static final String TAG_VIDEO = "UtilVideo";
 	public final static int VIDEO_AT_STOP = 0;
 	public final static int VIDEO_AT_PLAY = 1;

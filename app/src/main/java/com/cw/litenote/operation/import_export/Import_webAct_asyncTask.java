@@ -1,7 +1,7 @@
 package com.cw.litenote.operation.import_export;
 
 import android.os.AsyncTask;
-import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -21,11 +21,11 @@ class Import_webAct_asyncTask extends AsyncTask<Void, Integer, Void> {
 
     private ProgressBar progressBar;
     private boolean enableSaveDB;
-    private FragmentActivity act;
+    private AppCompatActivity act;
     private File file;
     private View contentBlock;
 
-    Import_webAct_asyncTask(FragmentActivity _act, String _filePath)
+    Import_webAct_asyncTask(AppCompatActivity _act, String _filePath)
     {
         act = _act;
         Util.lockOrientation(act);

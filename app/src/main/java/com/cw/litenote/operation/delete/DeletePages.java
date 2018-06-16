@@ -3,10 +3,9 @@ package com.cw.litenote.operation.delete;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -25,7 +24,6 @@ import com.cw.litenote.main.MainAct;
 import com.cw.litenote.operation.List_selectPage;
 import com.cw.litenote.operation.audio.AudioManager;
 import com.cw.litenote.util.BaseBackPressedListener;
-import com.cw.litenote.util.ColorSet;
 import com.cw.litenote.util.Util;
 import com.cw.litenote.util.preferences.Pref;
 
@@ -36,7 +34,7 @@ public class DeletePages extends Fragment{
     ListView mListView;
 	List_selectPage list_selPage;
 	public static View rootView;
-    FragmentActivity act;
+    AppCompatActivity act;
 
 	public DeletePages(){}
 
@@ -49,7 +47,7 @@ public class DeletePages extends Fragment{
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		rootView = inflater.inflate(R.layout.select_page_list, container, false);
-        act = getActivity();
+        act = MainAct.mAct;
 
         // title
         title = (TextView) rootView.findViewById(R.id.select_list_title);
