@@ -47,17 +47,24 @@
 		</activity>
 
         <activity android:name=".note_add.Note_addText"
-            	  android:windowSoftInputMode="adjustPan" >
+                  android:theme="@style/MyTheme"
+                  android:windowSoftInputMode="adjustPan" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".main.MainAct" />
         </activity>
-        <activity android:name=".note_add.Note_addAudio"/>
-        <activity android:name=".note_add.Note_addCameraImage"/>
-        <activity android:name=".note_add.Note_addReadyImage"/>
-        <activity android:name=".note_add.Note_addCameraVideo"/>
-        <activity android:name=".note_add.Note_addReadyVideo"/>
-        <activity android:name=".note.Note_edit" />
+        <activity android:name=".note_add.Note_addAudio"
+                  android:theme="@style/MyTheme" />
+        <activity android:name=".note_add.Note_addCameraImage"
+                  android:theme="@style/MyTheme" />
+        <activity android:name=".note_add.Note_addReadyImage"
+                  android:theme="@style/MyTheme" />
+        <activity android:name=".note_add.Note_addCameraVideo"
+                  android:theme="@style/MyTheme" />
+        <activity android:name=".note_add.Note_addReadyVideo"
+                  android:theme="@style/MyTheme" />
+        <activity android:name=".note.Note_edit"
+                  android:theme="@style/MyTheme" />
         <activity android:name=".note.Note"
                   android:theme="@style/MyTheme"
             	  android:configChanges="orientation|keyboard|keyboardHidden|screenSize|screenLayout|uiMode" />
@@ -66,10 +73,14 @@
                                                 onCreate/onStart/onRestoreInstanceState/onResume    -->
 
         <activity android:name=".operation.youtube.YouTubePlayerAct"
+                  android:theme="@style/MyTheme"
                   android:configChanges="orientation|screenSize|keyboardHidden"/>
-        <activity android:name=".operation.import_export.Import_webAct"/>
-        <activity android:name=".operation.gallery.GalleryGridAct" />
-        <activity android:name=".operation.gallery.GalleryPagerAct" />
+        <activity android:name=".operation.import_export.Import_webAct"
+                  android:theme="@style/MyTheme" />
+        <activity android:name=".operation.gallery.GalleryGridAct"
+                  android:theme="@style/MyTheme" />
+        <activity android:name=".operation.gallery.GalleryPagerAct"
+                  android:theme="@style/MyTheme" />
       	<activity android:name=".operation.slideshow.SlideshowPlayer"
                   android:theme="@android:style/Theme.NoTitleBar"/>
         <receiver

@@ -116,8 +116,8 @@ public class TabsHost extends AppCompatDialogFragment implements TabLayout.OnTab
 //        mTabLayout.setTabMode(TabLayout.MODE_FIXED);
         mTabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
 
-//        mTabLayout.setBackgroundColor(ColorSet.getBarColor(getActivity()));
-        mTabLayout.setBackgroundColor(ColorSet.getButtonColor(getActivity()));
+//        mTabLayout.setBackgroundColor(ColorSet.getBarColor(MainAct.mAct));
+        mTabLayout.setBackgroundColor(ColorSet.getButtonColor(MainAct.mAct));
 //        mTabLayout.setBackgroundColor(Color.parseColor("#FF303030"));
 
         // tab indicator
@@ -126,8 +126,8 @@ public class TabsHost extends AppCompatDialogFragment implements TabLayout.OnTab
 //        mTabLayout.setSelectedTabIndicatorHeight((int) (5 * getResources().getDisplayMetrics().density));
 
         mTabLayout.setTabTextColors(
-                ContextCompat.getColor(getActivity(),R.color.colorGray), //normal
-                ContextCompat.getColor(getActivity(),R.color.colorWhite) //selected
+                ContextCompat.getColor(MainAct.mAct,R.color.colorGray), //normal
+                ContextCompat.getColor(MainAct.mAct,R.color.colorWhite) //selected
         );
 
         mFooterMessage = (TextView) rootView.findViewById(R.id.footerText);
@@ -229,8 +229,8 @@ public class TabsHost extends AppCompatDialogFragment implements TabLayout.OnTab
 
         // set text color
         mTabLayout.setTabTextColors(
-                ContextCompat.getColor(getActivity(),R.color.colorGray), //normal
-                ContextCompat.getColor(getActivity(),R.color.colorWhite) //selected
+                ContextCompat.getColor(MainAct.mAct,R.color.colorGray), //normal
+                ContextCompat.getColor(MainAct.mAct,R.color.colorWhite) //selected
         );
 
         // set long click listener
@@ -261,7 +261,7 @@ public class TabsHost extends AppCompatDialogFragment implements TabLayout.OnTab
         {
             int pageTableId = mTabsPagerAdapter.dbFolder.getPageTableId(i, true);
 
-            if(pageTableId == Pref.getPref_focusView_page_tableId(getActivity())) {
+            if(pageTableId == Pref.getPref_focusView_page_tableId(MainAct.mAct)) {
                 setFocus_tabPos(i);
                 mFocusPageTableId = pageTableId;
             }
@@ -330,7 +330,7 @@ public class TabsHost extends AppCompatDialogFragment implements TabLayout.OnTab
                 store_listView_vScroll(listView);
 
             for (int i = 0; i < fragmentList.size(); i++) {
-                getActivity().getSupportFragmentManager().beginTransaction().remove(fragmentList.get(i)).commit();
+                MainAct.mAct.getSupportFragmentManager().beginTransaction().remove(fragmentList.get(i)).commit();
             }
         }
     }

@@ -206,13 +206,8 @@ public class MainUi {
      */
     void launchNextYouTubeIntent(AppCompatActivity act, Handler handler, Runnable runCountDown)
     {
-        //System.out.println("MainUi / _launchNextYouTubeIntent");
-        SharedPreferences pref_open_youtube;
-        pref_open_youtube = act.getSharedPreferences("show_note_attribute", 0);
-
         String link = getYouTubeLink(act,TabsHost.getCurrentPage().currPlayPosition);
-        if( Util.isYouTubeLink(link) &&
-            pref_open_youtube.getString("KEY_VIEW_NOTE_LAUNCH_YOUTUBE", "no").equalsIgnoreCase("yes") )
+        if( Util.isYouTubeLink(link) )
         {
             Util.openLink_YouTube(act, link);
             cancelYouTubeHandler(handler,runCountDown);
