@@ -126,7 +126,7 @@ public class PageAdapter extends SimpleDragSortCursorAdapter // DragSortCursorAd
 	@SuppressLint("ClickableViewAccessibility")
     @Override
 	public View getView(final int position, View convertView, ViewGroup parent) {
-		System.out.println("PageAdapter / _getView / position = " +  position);
+//		System.out.println("PageAdapter / _getView / position = " +  position);
 		ViewHolder holder;
 
 		SharedPreferences pref_show_note_attribute = mAct.getSharedPreferences("show_note_attribute", 0);

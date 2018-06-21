@@ -384,24 +384,24 @@ public class Page extends UilListViewBaseFragment
 
 		@Override
 		public void onScrollStateChanged(AbsListView view, int scrollState) {
-            mFirstVisibleIndex = drag_listView.getFirstVisiblePosition();
-            View v = drag_listView.getChildAt(0);
-            mFirstVisibleIndexTop = (v == null) ? 0 : v.getTop();
-
-            if( (TabsHost.getFocus_tabPos() == MainAct.mPlaying_pagePos)&&
-                    (MainAct.mPlaying_folderPos == FolderUi.getFocus_folderPos()) &&
-                    (AudioManager.getPlayerState() == AudioManager.PLAYER_AT_PLAY) &&
-                    (drag_listView.getChildAt(0) != null)                    )
-            {
-                // do nothing when playing audio
-                System.out.println("_onScrollStateChanged / do nothing");
-            }
-            else
-            {
-                // keep index and top position
-                Pref.setPref_focusView_list_view_first_visible_index(getActivity(), mFirstVisibleIndex);
-                Pref.setPref_focusView_list_view_first_visible_index_top(getActivity(), mFirstVisibleIndexTop);
-            }
+//            mFirstVisibleIndex = drag_listView.getFirstVisiblePosition();
+//            View v = drag_listView.getChildAt(0);
+//            mFirstVisibleIndexTop = (v == null) ? 0 : v.getTop();
+//
+//            if( (TabsHost.getFocus_tabPos() == MainAct.mPlaying_pagePos)&&
+//                    (MainAct.mPlaying_folderPos == FolderUi.getFocus_folderPos()) &&
+//                    (AudioManager.getPlayerState() == AudioManager.PLAYER_AT_PLAY) &&
+//                    (drag_listView.getChildAt(0) != null)                    )
+//            {
+//                // do nothing when playing audio
+//                System.out.println("_onScrollStateChanged / do nothing");
+//            }
+//            else
+//            {
+//                // keep index and top position
+//                Pref.setPref_focusView_list_view_first_visible_index(getActivity(), mFirstVisibleIndex);
+//                Pref.setPref_focusView_list_view_first_visible_index_top(getActivity(), mFirstVisibleIndexTop);
+//            }
 		}
 
 		@Override
