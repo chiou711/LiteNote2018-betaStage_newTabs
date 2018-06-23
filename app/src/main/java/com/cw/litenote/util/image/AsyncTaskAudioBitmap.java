@@ -86,10 +86,8 @@ public class AsyncTaskAudioBitmap extends AsyncTask<String,Integer,String>
 		 if(bitmap != null)
 		 {
 			 ((ViewGroup) mImageView.getParent()).setVisibility(View.VISIBLE);
-             if(enRounded) {
-//				 mImageView.setImageBitmap(UtilImage.getRoundedCornerBitmap(bitmap, 10));
-				 mImageView.setImageBitmap(UtilImage.getRoundedCornerBitmap(bitmap, 0));
-			 }
+             if(enRounded)
+				 mImageView.setImageBitmap(UtilImage.getRoundedCornerBitmap(bitmap, 10));
              else
 				 mImageView.setImageBitmap(bitmap);
 
@@ -100,5 +98,6 @@ public class AsyncTaskAudioBitmap extends AsyncTask<String,Integer,String>
 			 mImageView.setVisibility(View.GONE);
 			 ((ViewGroup) mImageView.getParent()).setVisibility(View.GONE);
 		 }
+
 	 }
 }

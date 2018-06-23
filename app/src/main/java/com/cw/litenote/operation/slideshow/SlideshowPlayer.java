@@ -12,14 +12,14 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.view.WindowManager.LayoutParams;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class SlideshowPlayer extends AppCompatActivity
+public class SlideshowPlayer extends FragmentActivity
 {
 	private String STATE_SLIDE_INDEX = "STATE_SLIDE_INDEX";
 	private String STATE_SLIDE_ENABLE = "STATE_SLIDE_ENABLE";

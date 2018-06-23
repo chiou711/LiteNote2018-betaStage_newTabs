@@ -10,7 +10,6 @@ import com.cw.litenote.util.image.AsyncTaskAudioBitmap;
 import com.cw.litenote.util.image.TouchImageView;
 import com.cw.litenote.util.image.UtilImage;
 import com.cw.litenote.util.image.UtilImage_bitmapLoader;
-import com.cw.litenote.util.preferences.Pref;
 import com.cw.litenote.util.video.UtilVideo;
 import com.cw.litenote.util.video.VideoViewCustom;
 import com.cw.litenote.util.ColorSet;

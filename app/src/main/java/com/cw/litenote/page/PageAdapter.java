@@ -607,7 +607,7 @@ public class PageAdapter extends SimpleDragSortCursorAdapter // DragSortCursorAd
                         audioUri,
                         holder.thumbAudio,
                         holder.progressBar,
-                        true);
+                        false);
                 audioAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, "Searching media ...");
             } catch (Exception e) {
                 Log.e("PageAdapter", "AsyncTaskAudioBitmap error");
