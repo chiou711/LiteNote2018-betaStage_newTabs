@@ -143,7 +143,7 @@ public class Add_note_option {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 System.out.println("MainUi / _addNewNote / _OnItemClickListener / position = " + position +" id = " + id);
-                startAddNoteActivity(act, addNoteList.get(position).option_id);
+                startAddNoteOption(act, addNoteList.get(position).option_id);
             }
         });
 
@@ -156,9 +156,9 @@ public class Add_note_option {
 
     private static AlertDialog dlgAddNew;
 
-    private static void startAddNoteActivity(AppCompatActivity act, int option)
+    private static void startAddNoteOption(AppCompatActivity act, int option)
     {
-        System.out.println("MainUi / _startAddNoteActivity / option = " + option);
+        System.out.println("MainUi / _startAddNoteOption / option = " + option);
 
         SharedPreferences mPref_add_new_note_location = act.getSharedPreferences("add_new_note_option", 0);
         boolean bTop = mPref_add_new_note_location.getString("KEY_ADD_NEW_NOTE_TO","bottom").equalsIgnoreCase("top");
@@ -251,7 +251,7 @@ public class Add_note_option {
 
             case ID_NEW_YOUTUBE_LINK:
             {
-                Intent	intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.youtube.com"));
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.youtube.com"));
                 act.startActivityForResult(intent, Util.YOUTUBE_ADD_NEW_LINK_INTENT);
             }
             break;

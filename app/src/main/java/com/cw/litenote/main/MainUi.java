@@ -71,9 +71,9 @@ public class MainUi {
             }
 
             System.out.println("MainUi / _addNote_IntentLink / path = " + path);
-            final DB_page dB_page = new DB_page(act, TabsHost.getCurrentPageTableId());
+            DB_page dB_page = new DB_page(act, TabsHost.getCurrentPageTableId());
             dB_page.open();
-            final long rowId = dB_page.insertNote("", "", "", "", path, "", 0, (long) 0);// add new note, get return row Id
+            dB_page.insertNote("", "", "", "", path, "", 0, (long) 0);// add new note, get return row Id
             dB_page.close();
 
             // save to top or to bottom
@@ -81,7 +81,14 @@ public class MainUi {
             int count = dB_page.getNotesCount(true);
             SharedPreferences pref_show_note_attribute = act.getSharedPreferences("add_new_note_option", 0);
 
-            // YouTube
+            // swap if new position is top
+            boolean isAddedToTop = pref_show_note_attribute.getString("KEY_ADD_NEW_NOTE_TO","bottom").equalsIgnoreCase("top");
+            if( isAddedToTop && (count > 1) )
+            {
+                Page.swap(dB_page);
+            }
+
+            // update title: YouTube
             if( Util.isYouTubeLink(path))
             {
                 title = Util.getYouTubeTitle(path);
@@ -91,13 +98,14 @@ public class MainUi {
                         .equalsIgnoreCase("yes"))
                 {
                     Date now = new Date();
-                    dB_page.updateNote(rowId, title, "", "", "", path, "", 0, now.getTime(), true); // update note
-                }
 
-                if( pref_show_note_attribute.getString("KEY_ADD_NEW_NOTE_TO","bottom").equalsIgnoreCase("top") &&
-                        (count > 1)        )
-                {
-                    Page.swap(dB_page);
+                    long row_id;
+                    if(isAddedToTop)
+                        row_id = dB_page.getNoteId(0,true);
+                    else
+                        row_id = dB_page.getNoteId(count-1,true);
+
+                    dB_page.updateNote(row_id, title, "", "", "", path, "", 0, now.getTime(), true); // update note
                 }
 
                 Toast.makeText(act,
@@ -105,21 +113,24 @@ public class MainUi {
                         Toast.LENGTH_SHORT)
                         .show();
             }
-            // Web page
+            // update title: Web page
             else if(!Util.isEmptyString(path) &&
                     path.startsWith("http")   &&
                     !Util.isYouTubeLink(path)   )
             {
+//                System.out.println("MainUi / _addNote_IntentLink / Web page");
                 title = path; //set default
                 final CustomWebView web = new CustomWebView(act);
                 web.loadUrl(path);
                 web.setVisibility(View.INVISIBLE);
+
                 web.setWebChromeClient(new WebChromeClient() {
                     @Override
                     public void onReceivedTitle(WebView view, String titleReceived) {
                         super.onReceivedTitle(view, titleReceived);
+//                        System.out.println("MainUi / _addNote_IntentLink / Web page / onReceivedTitle");
                         if (!TextUtils.isEmpty(titleReceived) &&
-                                !titleReceived.equalsIgnoreCase("about:blank"))
+                           !titleReceived.equalsIgnoreCase("about:blank"))
                         {
                             SharedPreferences pref_show_note_attribute = act.getSharedPreferences("add_new_note_option", 0);
                             if(pref_show_note_attribute
@@ -127,14 +138,14 @@ public class MainUi {
                                     .equalsIgnoreCase("yes"))
                             {
                                 Date now = new Date();
-                                dB_page.updateNote(rowId, titleReceived, "", "", "", link, "", 0, now.getTime(), true); // update note
-                            }
+                                DB_page dB_page = new DB_page(act, TabsHost.getCurrentPageTableId());
+                                long row_id;
+                                if(isAddedToTop)
+                                    row_id = dB_page.getNoteId(0,true);
+                                else
+                                    row_id = dB_page.getNoteId(count-1,true);
 
-                            int count = dB_page.getNotesCount(true);
-                            if( pref_show_note_attribute.getString("KEY_ADD_NEW_NOTE_TO","bottom").equalsIgnoreCase("top") &&
-                                    (count > 1)        )
-                            {
-                                Page.swap(dB_page);
+                                dB_page.updateNote(row_id, titleReceived, "", "", "", link, "", 0, now.getTime(), true); // update note
                             }
 
                             Toast.makeText(act,
@@ -144,9 +155,6 @@ public class MainUi {
                             CustomWebView.pauseWebView(web);
                             CustomWebView.blankWebView(web);
 
-                            //todo TBD
-//                            if(Page.mItemAdapter != null)
-//                                Page.mItemAdapter.notifyDataSetChanged();
                             title = titleReceived;
                         }
                     }
