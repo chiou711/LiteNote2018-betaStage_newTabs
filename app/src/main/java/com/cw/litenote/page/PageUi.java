@@ -484,7 +484,7 @@ public class PageUi
 	 * Insert Page to Rightmost
 	 * 
 	 */
-	public static void insertPage_rightmost(final AppCompatActivity act, int newTblId, String tabName)
+	private static void insertPage_rightmost(final AppCompatActivity act, int newTblId, String tabName)
 	{
 		DB_folder dbFolder = new DB_folder(act,Pref.getPref_focusView_folder_tableId(act));
 	    // insert tab name

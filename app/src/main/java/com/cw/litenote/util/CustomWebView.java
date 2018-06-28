@@ -119,7 +119,7 @@ public class CustomWebView extends WebView {
 	// Pause Web view
 	public static void pauseWebView(CustomWebView webView)
 	{
-		System.out.println("CustomWebView / _closeWebView");
+//		System.out.println("CustomWebView / _closeWebView");
 		if( webView!= null)
 		{
 			try {

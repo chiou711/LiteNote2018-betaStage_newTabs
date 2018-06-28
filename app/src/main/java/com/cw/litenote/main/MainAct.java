@@ -187,7 +187,8 @@ public class MainAct extends AppCompatActivity implements OnBackStackChangedList
 		String intentLink = mMainUi.addNote_IntentLink(getIntent(),mAct);
         if(!Util.isEmptyString(intentLink))
 		{
-			finish(); // LiteNote not running at first, keep closing
+            finish(); // LiteNote not running at first, keep closing
+            return;
 		}
 		else
 		{
@@ -408,7 +409,7 @@ public class MainAct extends AppCompatActivity implements OnBackStackChangedList
     @Override
     protected void onPause() {
     	super.onPause();
-//    	System.out.println("MainAct / _onPause");
+    	System.out.println("MainAct / _onPause");
     }
 
 	@Override

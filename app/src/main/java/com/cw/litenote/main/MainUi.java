@@ -71,7 +71,7 @@ public class MainUi {
             }
 
             System.out.println("MainUi / _addNote_IntentLink / path = " + path);
-            DB_page dB_page = new DB_page(act, TabsHost.getCurrentPageTableId());
+            DB_page dB_page = new DB_page(act,Pref.getPref_focusView_page_tableId(MainAct.mAct));//todo ?
             dB_page.open();
             dB_page.insertNote("", "", "", "", path, "", 0, (long) 0);// add new note, get return row Id
             dB_page.close();
@@ -138,7 +138,7 @@ public class MainUi {
                                     .equalsIgnoreCase("yes"))
                             {
                                 Date now = new Date();
-                                DB_page dB_page = new DB_page(act, TabsHost.getCurrentPageTableId());
+                                DB_page dB_page = new DB_page(act, Pref.getPref_focusView_page_tableId(MainAct.mAct));//todo ?
                                 long row_id;
                                 if(isAddedToTop)
                                     row_id = dB_page.getNoteId(0,true);

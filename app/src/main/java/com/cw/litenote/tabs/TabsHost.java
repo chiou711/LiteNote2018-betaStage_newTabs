@@ -330,9 +330,15 @@ public class TabsHost extends AppCompatDialogFragment implements TabLayout.OnTab
                 store_listView_vScroll(listView);
 
             for (int i = 0; i < fragmentList.size(); i++) {
-                MainAct.mAct.getSupportFragmentManager().beginTransaction().remove(fragmentList.get(i)).commit();
+                MainAct.mAct.getSupportFragmentManager().beginTransaction().remove(fragmentList.get(i)).commit();//todo exception! Activity has been destroyed
             }
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        System.out.println("TabsHost / _onDestroy");
     }
 
     // store scroll of list view
