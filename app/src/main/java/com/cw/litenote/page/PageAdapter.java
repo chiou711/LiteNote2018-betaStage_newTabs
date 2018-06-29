@@ -131,7 +131,7 @@ public class PageAdapter extends SimpleDragSortCursorAdapter // DragSortCursorAd
 
 		SharedPreferences pref_show_note_attribute = mAct.getSharedPreferences("show_note_attribute", 0);
 
-		if (convertView == null)
+//		if (convertView == null)
 		{
             convertView = mAct.getLayoutInflater().inflate(R.layout.page_view_card, parent, false);
 
@@ -197,11 +197,11 @@ public class PageAdapter extends SimpleDragSortCursorAdapter // DragSortCursorAd
 			holder.textTime = (TextView) convertView.findViewById(R.id.row_time);
 			convertView.setTag(holder);
 		}
-		else
-		{
-//			System.out.println("PageAdapter / _getView / convertView != null");
-			holder = (ViewHolder) convertView.getTag();
-		}
+//		else
+//		{
+////			System.out.println("PageAdapter / _getView / convertView != null");
+//			holder = (ViewHolder) convertView.getTag();
+//		}
 
         // get DB data
         String strTitle = null;
