@@ -18,7 +18,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.mobeta.android.dslv;
 
 import android.content.Context;
@@ -38,18 +37,17 @@ import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.Checkable;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
+import com.cw.litenote.R;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-
-import com.cw.litenote.R;
 
 /**
  * ListView subclass that mediates drag and drop resorting of items.
@@ -165,12 +163,6 @@ public class DragSortListView extends ListView {
      * is dropped.
      */
     private DropListener mDropListener;
-
-    //cw
-    private MarkListener mMarkListener;
-
-    //cw
-    private AudioListener mAudioListener;
 
     /**
      * A listener that receives a callback when the floating View
@@ -607,7 +599,7 @@ public class DragSortListView extends ListView {
      * @param adapter The ListAdapter providing data to back
      * DragSortListView.
      *
-     * @see android.widget.ListView#setAdapter(android.widget.ListAdapter)
+     * @see ListView#setAdapter(ListAdapter)
      */
     @Override
     public void setAdapter(ListAdapter adapter) {
@@ -624,12 +616,6 @@ public class DragSortListView extends ListView {
             if (adapter instanceof RemoveListener) {
                 setRemoveListener((RemoveListener) adapter);
             }
-            if (adapter instanceof MarkListener) { //cw
-                setMarkListener((MarkListener) adapter);
-            }
-            if (adapter instanceof AudioListener) { //cw
-                setAudioListener((AudioListener) adapter);
-            }            
         } else {
             mAdapterWrapper = null;
         }
@@ -747,7 +733,7 @@ public class DragSortListView extends ListView {
                 } else {
                     v = new DragSortItemView(getContext());
                 }
-                v.setLayoutParams(new AbsListView.LayoutParams(
+                v.setLayoutParams(new LayoutParams(
                         ViewGroup.LayoutParams.FILL_PARENT,
                         ViewGroup.LayoutParams.WRAP_CONTENT));
                 v.addView(child);
@@ -858,7 +844,8 @@ public class DragSortListView extends ListView {
     }
 
     private void printPosData() {
-        //Log.d("mobeta", "mSrcPos=" + mSrcPos + " mFirstExpPos=" + mFirstExpPos + " mSecondExpPos=" + mSecondExpPos);
+        Log.d("mobeta", "mSrcPos=" + mSrcPos + " mFirstExpPos=" + mFirstExpPos + " mSecondExpPos="
+                + mSecondExpPos);
     }
 
     private class HeightCache {
@@ -985,11 +972,7 @@ public class DragSortListView extends ListView {
 
     private boolean updatePositions() {
 
-    
-    	
         final int first = getFirstVisiblePosition();
-        
-        
         int startPos = mFirstExpPos;
         View startView = getChildAt(startPos - first);
 
@@ -1481,26 +1464,6 @@ public class DragSortListView extends ListView {
             }
         }
     }
-    
-    //cw
-    public void markItem(int which) {
-        if (mMarkListener != null) {
-            final int count = getInputAdapter().getCount();
-            if (which >= 0 && which < count ) {
-                mMarkListener.mark(which);
-            }
-        }
-    }
-    
-    //cw
-    public void audioItem(int which) {
-        if (mAudioListener != null) {
-            final int count = getInputAdapter().getCount();
-            if (which >= 0 && which < count ) {
-                mAudioListener.audio(which);
-            }
-        }
-    }    
 
     /**
      * Cancel a drag. Calls {@link #stopDrag(boolean, boolean)} with
@@ -1628,7 +1591,7 @@ public class DragSortListView extends ListView {
                 removeItem(mSrcPos - getHeaderViewsCount(), velocityX);
             } else {
                 if (mDropAnimator != null) {
-                    mDropAnimator.start(); 
+                    mDropAnimator.start();
                 } else {
                     dropFloatView();
                 }
@@ -1927,16 +1890,13 @@ public class DragSortListView extends ListView {
         } else {
             height = calcItemHeight(position, v, invalidChildHeight);
         }
-        
-//        System.out.println("height = " + height);
 
-        //cw: this causes a gap
         if (height != lp.height) {
             lp.height = height;
             v.setLayoutParams(lp);
         }
 
-        // Adjust item gravity 
+        // Adjust item gravity
         if (position == mFirstExpPos || position == mSecondExpPos) {
             if (position < mSrcPos) {
                 ((DragSortItemView) v).setGravity(Gravity.BOTTOM);
@@ -1945,7 +1905,7 @@ public class DragSortListView extends ListView {
             }
         }
 
-        // Finally adjust item visibility 
+        // Finally adjust item visibility
 
         int oldVis = v.getVisibility();
         int vis = View.VISIBLE;
@@ -2136,7 +2096,7 @@ public class DragSortListView extends ListView {
     private void measureItem(View item) {
         ViewGroup.LayoutParams lp = item.getLayoutParams();
         if (lp == null) {
-            lp = new AbsListView.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            lp = new LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             item.setLayoutParams(lp);
         }
         int wspec = ViewGroup.getChildMeasureSpec(mWidthMeasureSpec, getListPaddingLeft()
@@ -2206,7 +2166,7 @@ public class DragSortListView extends ListView {
                 doActionUpOrCancel();
                 break;
             case MotionEvent.ACTION_MOVE:
-                continueDrag((int) ev.getX(), (int) ev.getY()); 
+                continueDrag((int) ev.getX(), (int) ev.getY());
                 break;
         }
 
@@ -2364,7 +2324,7 @@ public class DragSortListView extends ListView {
         boolean updated = updatePositions();
 
         if (updated) {
-           adjustAllItems();
+            adjustAllItems();
             int scroll = adjustScroll(movePos, moveItem, oldFirstExpPos, oldSecondExpPos);
             // Log.d("mobeta", "  adjust scroll="+scroll);
 
@@ -2549,17 +2509,7 @@ public class DragSortListView extends ListView {
     public void setDropListener(DropListener l) {
         mDropListener = l;
     }
-    
-    //cw
-    public void setMarkListener(MarkListener l) {
-        mMarkListener = l;
-    }
 
-    //cw
-    public void setAudioListener(AudioListener l) {
-        mAudioListener = l;
-    }
-    
     /**
      * Probably a no-brainer, but make sure that your remove listener
      * calls {@link BaseAdapter#notifyDataSetChanged()} or something like it.
@@ -2602,26 +2552,11 @@ public class DragSortListView extends ListView {
     public interface RemoveListener {
         public void remove(int which);
     }
-    
-    //cw
-    public interface MarkListener {
-        public void mark(int which);
-    }
 
-    //cw
-    public interface AudioListener {
-        public void audio(int which);
-    }
-    
-    
-    //cw
-    public interface DragSortListener extends AudioListener, MarkListener, DropListener, DragListener, RemoveListener {
-//    public interface DragSortListener extends DropListener, DragListener, RemoveListener {
+    public interface DragSortListener extends DropListener, DragListener, RemoveListener {
     }
 
     public void setDragSortListener(DragSortListener l) {
-        setMarkListener(l);//cw
-        setAudioListener(l);//cw
         setDropListener(l);
         setDragListener(l);
         setRemoveListener(l);
@@ -2630,7 +2565,7 @@ public class DragSortListView extends ListView {
     /**
      * Completely custom scroll speed profile. Default increases linearly
      * with position and is constant in time. Create your own by implementing
-     * {@link DragSortListView.DragScrollProfile}.
+     * {@link DragScrollProfile}.
      * 
      * @param ssp
      */
@@ -2652,7 +2587,8 @@ public class DragSortListView extends ListView {
      * A word of warning about a "feature" in Android that you may run into when
      * dealing with movable list items: for an adapter that <em>does</em> have
      * stable IDs, ListView will attempt to locate each item based on its ID and
-     * move the check state from the item's old position to the new position ��     * which is all fine and good (and removes the need for calling this
+     * move the check state from the item's old position to the new position —
+     * which is all fine and good (and removes the need for calling this
      * function), except for the half-baked approach. Apparently to save time in
      * the naive algorithm used, ListView will only search for an ID in the
      * close neighborhood of the old position. If the user moves an item too far
@@ -3030,10 +2966,10 @@ public class DragSortListView extends ListView {
             if (!mFile.exists()) {
                 try {
                     mFile.createNewFile();
-                    //Log.d("mobeta", "file created");
+                    Log.d("mobeta", "file created");
                 } catch (IOException e) {
                     Log.w("mobeta", "Could not create dslv_state.txt");
-                    //Log.d("mobeta", e.getMessage());
+                    Log.d("mobeta", e.getMessage());
                 }
             }
 

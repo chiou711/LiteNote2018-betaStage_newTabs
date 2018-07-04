@@ -5,7 +5,6 @@ import java.util.List;
 
 import com.cw.litenote.R;
 import com.cw.litenote.db.DB_page;
-import com.cw.litenote.folder.FolderUi;
 import com.cw.litenote.operation.audio.AudioManager;
 import com.cw.litenote.operation.audio.AudioPlayer_page;
 import com.cw.litenote.main.MainAct;
@@ -278,15 +277,6 @@ public class Page extends UilListViewBaseFragment
         }
     };
 
-	// list view listener: on audio
-	public DragSortListView.AudioListener onAudio = new DragSortListView.AudioListener()
-	{   @Override
-		public void audio(int position)
-		{
-	//			System.out.println("Page / _onAudio");
-		}
-	};
-
 
     /**
      * Called in onCreateView. Override this to provide a custom
@@ -308,12 +298,6 @@ public class Page extends UilListViewBaseFragment
 	  	controller.setDragHandleId(R.id.img_dragger);// handler
 //        drag_controller.setDragInitMode(DragSortController.ON_LONG_PRESS); //long click to drag
 	  	controller.setBackgroundColor(Color.argb(128,128,64,0));// background color when dragging
-
-        // audio
-        controller.setAudioEnabled(true);
-//        drag_controller.setClickAudioId(R.id.img_audio);
-        controller.setClickAudioId(R.id.audio_block);
-        controller.setAudioMode(DragSortController.ON_DOWN);
 
         return controller;
     }

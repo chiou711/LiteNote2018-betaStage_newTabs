@@ -3,10 +3,8 @@ package com.mobeta.android.dslv;
 import android.content.Context;
 import android.view.Gravity;
 import android.view.View;
-import android.view.View.MeasureSpec;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
-import android.util.Log;
 
 /**
  * Lightweight ViewGroup that wraps list items obtained from user's
@@ -32,8 +30,8 @@ public class DragSortItemView extends ViewGroup {
 
         // always init with standard ListView layout params
         setLayoutParams(new AbsListView.LayoutParams(
-                ViewGroup.LayoutParams.FILL_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT));
+                LayoutParams.FILL_PARENT,
+                LayoutParams.WRAP_CONTENT));
 
         //setClipChildren(true);
     }
@@ -85,7 +83,7 @@ public class DragSortItemView extends ViewGroup {
         }
 
         if (heightMode == MeasureSpec.UNSPECIFIED) {
-            ViewGroup.LayoutParams lp = getLayoutParams();
+            LayoutParams lp = getLayoutParams();
 
             if (lp.height > 0) {
                 height = lp.height;

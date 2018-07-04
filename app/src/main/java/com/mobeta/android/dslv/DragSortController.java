@@ -42,13 +42,9 @@ public class DragSortController extends SimpleFloatViewManager implements View.O
      * The current remove mode.
      */
     private int mRemoveMode;
-    private int mMarkMode; //cw
-    private int mAudioMode; //cw
 
     private boolean mRemoveEnabled = false;
     private boolean mIsRemoving = false;
-    private boolean mMarkEnabled = false;//cw
-    private boolean mAudioEnabled = false;//cw
 
     private GestureDetector mDetector;
 
@@ -62,8 +58,6 @@ public class DragSortController extends SimpleFloatViewManager implements View.O
     private int mFlingHitPos = MISS;
 
     private int mClickRemoveHitPos = MISS;
-    private int mClickMarkHitPos = MISS; //cw
-    private int mClickAudioHitPos = MISS; //cw
 
     private int[] mTempLoc = new int[2];
 
@@ -80,10 +74,8 @@ public class DragSortController extends SimpleFloatViewManager implements View.O
     private int mDragHandleId;
 
     private int mClickRemoveId;
-    private int mFlingHandleId;
-    private int mClickMarkId;//cw
-    private int mClickAudioId;//cw
 
+    private int mFlingHandleId;
     private boolean mCanDrag;
 
     private DragSortListView mDslv;
@@ -135,7 +127,7 @@ public class DragSortController extends SimpleFloatViewManager implements View.O
     public int getDragInitMode() {
         return mDragInitMode;
     }
-    
+
     /**
      * Set how a drag is initiated. Needs to be one of
      * {@link ON_DOWN}, {@link ON_DRAG}, or {@link ON_LONG_PRESS}.
@@ -145,7 +137,7 @@ public class DragSortController extends SimpleFloatViewManager implements View.O
     public void setDragInitMode(int mode) {
         mDragInitMode = mode;
     }
-    
+
     /**
      * Enable/Disable list item sorting. Disabling is useful if only item
      * removal is desired. Prevents drags in the vertical direction.
@@ -169,28 +161,10 @@ public class DragSortController extends SimpleFloatViewManager implements View.O
     public void setRemoveMode(int mode) {
         mRemoveMode = mode;
     }
-    
-
 
     public int getRemoveMode() {
         return mRemoveMode;
     }
-    
-    //cw
-    public void setMarkMode(int mode) {
-        mMarkMode = mode;
-    }
-    public int getMarkMode() {
-        return mMarkMode;
-    }
-    
-    //cw
-    public void setAudioMode(int mode) {
-        mAudioMode = mode;
-    }
-    public int getAudioMode() {
-        return mAudioMode;
-    }    
 
     /**
      * Enable/Disable item removal without affecting remove mode.
@@ -198,25 +172,10 @@ public class DragSortController extends SimpleFloatViewManager implements View.O
     public void setRemoveEnabled(boolean enabled) {
         mRemoveEnabled = enabled;
     }
+
     public boolean isRemoveEnabled() {
         return mRemoveEnabled;
     }
-    
-    //cw
-    public void setMarkEnabled(boolean enabled) {
-        mMarkEnabled = enabled;
-    }
-    public boolean isMarkEnabled() {
-        return mMarkEnabled;
-    }
-    
-    //cw
-    public void setAudioEnabled(boolean enabled) {
-        mAudioEnabled = enabled;
-    }
-    public boolean isAudioEnabled() {
-        return mAudioEnabled;
-    }    
 
     /**
      * Set the resource id for the View that represents the drag
@@ -227,7 +186,7 @@ public class DragSortController extends SimpleFloatViewManager implements View.O
     public void setDragHandleId(int id) {
         mDragHandleId = id;
     }
-    
+
     /**
      * Set the resource id for the View that represents the fling
      * handle in a list item.
@@ -247,30 +206,8 @@ public class DragSortController extends SimpleFloatViewManager implements View.O
     public void setClickRemoveId(int id) {
         mClickRemoveId = id;
     }
-    
-    //cw
-    public void setClickMarkId(int id) {
-        mClickMarkId = id;
-    }
-    public int getClickMarkHitPos() {
-		return mClickMarkHitPos;
-	}
-	public void setClickMarkHitPos(int mClickMarkHitPos) {
-		this.mClickMarkHitPos = mClickMarkHitPos;
-	}
-	
-    //cw
-    public void setClickAudioId(int id) {
-        mClickAudioId = id;
-    }
-    public int getClickAudioHitPos() {
-		return mClickAudioHitPos;
-	}
-	public void setClickAudioHitPos(int mClickAudioHitPos) {
-		this.mClickAudioHitPos = mClickAudioHitPos;
-	}	
 
-	/**
+    /**
      * Sets flags to restrict certain motions of the floating View
      * based on DragSortController settings (such as remove mode).
      * Starts the drag on the DragSortListView.
@@ -358,7 +295,7 @@ public class DragSortController extends SimpleFloatViewManager implements View.O
     public int startDragPosition(MotionEvent ev) {
         return dragHandleHitPosition(ev);
     }
-    
+
     public int startFlingPosition(MotionEvent ev) {
         return mRemoveMode == FLING_REMOVE ? flingHandleHitPosition(ev) : MISS;
     }
@@ -376,17 +313,7 @@ public class DragSortController extends SimpleFloatViewManager implements View.O
     public int dragHandleHitPosition(MotionEvent ev) {
         return viewIdHitPosition(ev, mDragHandleId);
     }
-    
-    //cw
-    public int markClickHitPosition(MotionEvent ev) {
-        return viewIdHitPosition(ev, mClickMarkId);
-    }
-    
-    //cw
-    public int audioClickHitPosition(MotionEvent ev) {
-        return viewIdHitPosition(ev, mClickAudioId);
-    }    
-    
+
     public int flingHandleHitPosition(MotionEvent ev) {
         return viewIdHitPosition(ev, mFlingHandleId);
     }
@@ -434,7 +361,7 @@ public class DragSortController extends SimpleFloatViewManager implements View.O
         if (mRemoveEnabled && mRemoveMode == CLICK_REMOVE) {
             mClickRemoveHitPos = viewIdHitPosition(ev, mClickRemoveId);
         }
-        
+
         mHitPos = startDragPosition(ev);
         if (mHitPos != MISS && mDragInitMode == ON_DOWN) {
             startDrag(mHitPos, (int) ev.getX() - mItemX, (int) ev.getY() - mItemY);
@@ -505,26 +432,6 @@ public class DragSortController extends SimpleFloatViewManager implements View.O
                 mDslv.removeItem(mClickRemoveHitPos - mDslv.getHeaderViewsCount());
             }
         }
-        //cw
-        if(mMarkEnabled && mMarkMode == ON_DOWN)
-        {
-        	setClickMarkHitPos(viewIdHitPosition(ev, mClickMarkId));
-        	if(getClickMarkHitPos() != MISS)
-        	{
-            	mDslv.markItem(getClickMarkHitPos());
-        	}
-//        	System.out.println("mark / _onSingleTapUp");
-        }
-        //cw
-        if(mAudioEnabled && mAudioMode == ON_DOWN)
-        {
-        	setClickAudioHitPos(viewIdHitPosition(ev, mClickAudioId));
-        	if(getClickAudioHitPos() != MISS)
-        	{
-            	mDslv.audioItem(getClickAudioHitPos());
-        	}
-//        	System.out.println("audio / _onSingleTapUp");
-        }        
         return true;
     }
 
@@ -557,4 +464,5 @@ public class DragSortController extends SimpleFloatViewManager implements View.O
                     return false;
                 }
             };
+
 }

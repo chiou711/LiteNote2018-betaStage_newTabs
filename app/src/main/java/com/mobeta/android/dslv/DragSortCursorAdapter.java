@@ -51,7 +51,7 @@ public abstract class DragSortCursorAdapter extends CursorAdapter implements Dra
     /**
      * Swaps Cursor and clears list-Cursor mapping.
      *
-     * @see android.widget.CursorAdapter#swapCursor(android.database.Cursor)
+     * @see android.widget.CursorAdapter#swapCursor(Cursor)
      */
     @Override
     public Cursor swapCursor(Cursor newCursor) {
@@ -63,7 +63,7 @@ public abstract class DragSortCursorAdapter extends CursorAdapter implements Dra
     /**
      * Changes Cursor and clears list-Cursor mapping.
      *
-     * @see android.widget.CursorAdapter#changeCursor(android.database.Cursor)
+     * @see android.widget.CursorAdapter#changeCursor(Cursor)
      */
     @Override
     public void changeCursor(Cursor cursor) {
@@ -163,24 +163,8 @@ public abstract class DragSortCursorAdapter extends CursorAdapter implements Dra
     @Override
     public void drag(int from, int to) {
         // do nothing
-    	System.out.println("drag");
-    }
-    
-    
-    //cw
-    @Override
-    public void mark(int which) {
-        // do nothing
-    	System.out.println("mark");
     }
 
-    //cw
-    @Override
-    public void audio(int which) {
-        // do nothing
-    	System.out.println("audio");
-    }
-    
     /**
      * Remove unnecessary mappings from sparse array.
      */
