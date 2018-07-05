@@ -9,7 +9,8 @@
         <item name="windowActionBar">false</item>
         <item name="windowActionBarOverlay">true</item>
         <item name="windowNoTitle">true</item>
-        <item name="android:windowBackground">@color/bg_light</item>
+        <!-- Change Overflow Menu ListView Item Height & Property -->
+        <!--<item name="android:listPreferredItemHeightSmall">50dp</item>-->
     </style>
 
     <!--
@@ -54,5 +55,4 @@
     </style>
  -->
     <style name="ProgressBarStyle" parent="@android:style/Widget.ProgressBar.Horizontal"/>
-
 </resources>

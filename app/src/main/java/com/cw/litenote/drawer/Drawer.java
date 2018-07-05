@@ -35,6 +35,7 @@ public class Drawer {
         drawerLayout = (DrawerLayout) activity.findViewById(R.id.drawer_layout);
 
         mNavigationView = (NavigationView) activity.findViewById(R.id.nav_view);
+        mNavigationView.setItemIconTintList(null);// use original icon color
 
         mNavigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
